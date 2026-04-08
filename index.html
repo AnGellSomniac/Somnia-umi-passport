@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UMI — Universal Metaverse Identity</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.4/ethers.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --neon-cyan:#00f0ff;--neon-magenta:#ff00e5;--neon-green:#39ff14;
+    --bg-deep:#0a0a12;--bg-card:#11111d;--bg-glass:rgba(17,17,29,0.85);
+    --border-glow:rgba(0,240,255,0.15);--text-primary:#e8e8f0;--text-dim:#6a6a8a;
+  }
+  body{
+    font-family:'Rajdhani',sans-serif;background:var(--bg-deep);color:var(--text-primary);
+    min-height:100vh;overflow-x:hidden;
+  }
+  body::before{
+    content:'';position:fixed;inset:0;
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 10%,rgba(0,240,255,0.06),transparent),
+      radial-gradient(ellipse 60% 50% at 80% 90%,rgba(255,0,229,0.05),transparent),
+      linear-gradient(180deg,#0a0a12 0%,#0d0d1a 100%);
+    z-index:-2;
+  }
+  .grid-overlay{
+    position:fixed;inset:0;z-index:-1;opacity:0.03;
+    background-image:
+      linear-gradient(rgba(0,240,255,0.5) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(0,240,255,0.5) 1px,transparent 1px);
+    background-size:60px 60px;
+  }
+
+  /* HEADER */
+  .header{
+    padding:24px 40px;display:flex;align-items:center;justify-content:space-between;
+    border-bottom:1px solid var(--border-glow);backdrop-filter:blur(20px);
+    position:sticky;top:0;z-index:100;background:rgba(10,10,18,0.9);
+  }
+  .logo{display:flex;align-items:center;gap:14px}
+  .logo-icon{
+    width:42px;height:42px;border:2px solid var(--neon-cyan);border-radius:10px;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Orbitron';font-weight:900;font-size:14px;color:var(--neon-cyan);
+    box-shadow:0 0 20px rgba(0,240,255,0.2),inset 0 0 20px rgba(0,240,255,0.05);
+    animation:pulse-border 3s ease-in-out infinite;
+  }
+  @keyframes pulse-border{0%,100%{box-shadow:0 0 20px rgba(0,240,255,0.2)}50%{box-shadow:0 0 30px rgba(0,240,255,0.4)}}
+  .logo-text{font-family:'Orbitron';font-weight:700;font-size:20px;letter-spacing:3px}
+  .logo-sub{font-size:11px;color:var(--text-dim);letter-spacing:4px;text-transform:uppercase;margin-top:2px;font-family:'Share Tech Mono'}
+  .stats-bar{display:flex;gap:32px;align-items:center}
+  .stat{text-align:right}
+  .stat-label{font-family:'Share Tech Mono';font-size:10px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase}
+  .stat-value{font-family:'Orbitron';font-size:18px;color:var(--neon-cyan);font-weight:600}
+  .connect-btn{
+    font-family:'Orbitron';font-weight:600;font-size:12px;letter-spacing:2px;
+    padding:12px 28px;border:1px solid var(--neon-cyan);background:transparent;
+    color:var(--neon-cyan);cursor:pointer;position:relative;overflow:hidden;
+    clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));
+    transition:all 0.3s;text-transform:uppercase;
+  }
+  .connect-btn:hover{background:rgba(0,240,255,0.1);box-shadow:0 0 30px rgba(0,240,255,0.2)}
+  .connect-btn.connected{border-color:var(--neon-green);color:var(--neon-green)}
+
+  /* MAIN */
+  .main{max-width:1100px;margin:0 auto;padding:48px 24px}
+
+  /* PASSPORT CARD */
+  .passport{
+    border:1px solid var(--border-glow);background:var(--bg-card);
+    position:relative;overflow:hidden;
+    clip-path:polygon(0 0,calc(100% - 24px) 0,100% 24px,100% 100%,24px 100%,0 calc(100% - 24px));
+  }
+  .passport::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:3px;
+    background:linear-gradient(90deg,var(--neon-cyan),var(--neon-magenta),var(--neon-cyan));
+    background-size:200% 100%;animation:gradient-slide 4s linear infinite;
+  }
+  @keyframes gradient-slide{0%{background-position:0% 0}100%{background-position:200% 0}}
+  .passport-header{
+    padding:24px 32px 16px;display:flex;align-items:center;justify-content:space-between;
+    border-bottom:1px solid var(--border-glow);
+  }
+  .passport-title{font-family:'Orbitron';font-size:13px;letter-spacing:4px;color:var(--text-dim);text-transform:uppercase}
+  .passport-id{font-family:'Share Tech Mono';font-size:11px;color:var(--neon-cyan);opacity:0.6}
+  .passport-body{padding:40px 32px;display:flex;gap:40px;align-items:flex-start}
+  .avatar-section{flex-shrink:0;text-align:center}
+  .avatar-frame{
+    width:140px;height:140px;border:2px solid var(--border-glow);
+    position:relative;display:flex;align-items:center;justify-content:center;
+    background:rgba(0,240,255,0.03);overflow:hidden;
+    clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));
+  }
+  .avatar-frame img{width:100%;height:100%;object-fit:cover}
+  .avatar-placeholder{
+    font-family:'Orbitron';font-size:48px;font-weight:900;color:rgba(0,240,255,0.15);
+  }
+  .rank-badge{
+    margin-top:12px;padding:6px 16px;font-family:'Share Tech Mono';font-size:11px;
+    letter-spacing:2px;display:inline-block;
+    border:1px solid;
+  }
+  .rank-genesis{border-color:var(--neon-cyan);color:var(--neon-cyan);background:rgba(0,240,255,0.05)}
+  .rank-explorer{border-color:var(--neon-green);color:var(--neon-green);background:rgba(57,255,20,0.05)}
+  .rank-pioneer{border-color:var(--neon-magenta);color:var(--neon-magenta);background:rgba(255,0,229,0.05)}
+  .rank-legend{border-color:#ffd700;color:#ffd700;background:rgba(255,215,0,0.05)}
+  .profile-info{flex:1;min-width:0}
+  .nickname{font-family:'Orbitron';font-size:32px;font-weight:700;letter-spacing:1px;margin-bottom:4px}
+  .address-display{font-family:'Share Tech Mono';font-size:12px;color:var(--text-dim);margin-bottom:20px;word-break:break-all}
+  .bio-text{font-size:16px;line-height:1.7;color:var(--text-primary);opacity:0.85;margin-bottom:20px;max-width:500px}
+  .social-link{
+    display:inline-flex;align-items:center;gap:8px;color:var(--neon-cyan);
+    font-family:'Share Tech Mono';font-size:13px;text-decoration:none;
+    padding:8px 16px;border:1px solid var(--border-glow);transition:all 0.3s;
+  }
+  .social-link:hover{background:rgba(0,240,255,0.08);border-color:var(--neon-cyan)}
+  .profile-meta{display:flex;gap:32px;margin-top:24px;padding-top:20px;border-top:1px solid var(--border-glow)}
+  .meta-item .meta-label{font-family:'Share Tech Mono';font-size:10px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase}
+  .meta-item .meta-value{font-family:'Orbitron';font-size:14px;color:var(--text-primary);margin-top:4px}
+
+  /* EMPTY STATE */
+  .empty-state{
+    text-align:center;padding:80px 32px;
+  }
+  .empty-icon{font-size:64px;margin-bottom:24px;opacity:0.3}
+  .empty-title{font-family:'Orbitron';font-size:22px;font-weight:600;margin-bottom:12px;color:var(--text-dim)}
+  .empty-text{font-size:15px;color:var(--text-dim);margin-bottom:32px;max-width:400px;margin-left:auto;margin-right:auto;line-height:1.6}
+
+  /* FORM */
+  .form-section{margin-top:40px}
+  .form-card{
+    border:1px solid var(--border-glow);background:var(--bg-card);padding:32px;
+    clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));
+  }
+  .form-title{
+    font-family:'Orbitron';font-size:14px;letter-spacing:3px;color:var(--neon-cyan);
+    margin-bottom:28px;text-transform:uppercase;display:flex;align-items:center;gap:10px;
+  }
+  .form-title::before{content:'';width:24px;height:2px;background:var(--neon-cyan)}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .form-group{display:flex;flex-direction:column;gap:6px}
+  .form-group.full{grid-column:1/-1}
+  .form-label{font-family:'Share Tech Mono';font-size:11px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase}
+  .form-input{
+    font-family:'Rajdhani';font-size:15px;font-weight:500;padding:12px 16px;
+    background:rgba(0,0,0,0.3);border:1px solid var(--border-glow);color:var(--text-primary);
+    outline:none;transition:all 0.3s;
+  }
+  .form-input:focus{border-color:var(--neon-cyan);box-shadow:0 0 20px rgba(0,240,255,0.1)}
+  .form-input::placeholder{color:var(--text-dim);opacity:0.5}
+  .form-actions{margin-top:24px;display:flex;gap:16px;align-items:center}
+  .submit-btn{
+    font-family:'Orbitron';font-weight:600;font-size:13px;letter-spacing:2px;
+    padding:14px 36px;border:none;cursor:pointer;position:relative;
+    background:linear-gradient(135deg,var(--neon-cyan),#0080ff);color:#0a0a12;
+    clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));
+    transition:all 0.3s;text-transform:uppercase;
+  }
+  .submit-btn:hover{box-shadow:0 0 40px rgba(0,240,255,0.3);transform:translateY(-1px)}
+  .submit-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;box-shadow:none}
+  .form-status{font-family:'Share Tech Mono';font-size:12px;color:var(--neon-green)}
+  .form-status.error{color:#ff4444}
+
+  /* NOT CONNECTED */
+  .connect-screen{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    min-height:60vh;text-align:center;padding:40px;
+  }
+  .connect-hex{
+    width:120px;height:120px;border:2px solid var(--border-glow);
+    display:flex;align-items:center;justify-content:center;margin-bottom:32px;
+    clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+    background:rgba(0,240,255,0.03);animation:float 4s ease-in-out infinite;
+  }
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+  .connect-hex-inner{font-family:'Orbitron';font-size:36px;font-weight:900;color:var(--neon-cyan);opacity:0.4}
+  .connect-title{font-family:'Orbitron';font-size:28px;font-weight:700;margin-bottom:12px;letter-spacing:2px}
+  .connect-desc{font-size:16px;color:var(--text-dim);max-width:420px;line-height:1.7;margin-bottom:36px}
+  .network-tag{
+    font-family:'Share Tech Mono';font-size:11px;color:var(--text-dim);
+    padding:6px 14px;border:1px solid var(--border-glow);letter-spacing:2px;margin-top:20px;
+  }
+
+  /* LOADING */
+  .loading{display:flex;align-items:center;gap:12px;padding:40px;justify-content:center}
+  .spinner{width:20px;height:20px;border:2px solid var(--border-glow);border-top-color:var(--neon-cyan);border-radius:50%;animation:spin 0.8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .loading-text{font-family:'Share Tech Mono';font-size:13px;color:var(--text-dim);letter-spacing:1px}
+
+  /* SCANLINE */
+  .scanline{
+    position:fixed;top:0;left:0;right:0;height:2px;
+    background:rgba(0,240,255,0.05);z-index:1000;pointer-events:none;
+    animation:scanline 8s linear infinite;
+  }
+  @keyframes scanline{0%{top:0}100%{top:100vh}}
+
+  @media(max-width:700px){
+    .header{padding:16px 20px;flex-wrap:wrap;gap:12px}
+    .stats-bar{gap:16px}
+    .passport-body{flex-direction:column;align-items:center;text-align:center}
+    .form-grid{grid-template-columns:1fr}
+    .profile-meta{justify-content:center}
+    .nickname{font-size:24px}
+    .main{padding:24px 16px}
+  }
+</style>
+</head>
+<body>
+<div class="scanline"></div>
+<div class="grid-overlay"></div>
+
+<header class="header">
+  <div class="logo">
+    <div class="logo-icon">UMI</div>
+    <div>
+      <div class="logo-text">METAVERSE ID</div>
+      <div class="logo-sub">Somnia Network</div>
+    </div>
+  </div>
+  <div class="stats-bar">
+    <div class="stat">
+      <div class="stat-label">Total Profiles</div>
+      <div class="stat-value" id="totalProfiles">—</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Network</div>
+      <div class="stat-value" id="networkName" style="font-size:13px">—</div>
+    </div>
+    <button class="connect-btn" id="connectBtn" onclick="connectWallet()">CONNECT</button>
+  </div>
+</header>
+
+<main class="main" id="app">
+  <div class="connect-screen" id="connectScreen">
+    <div class="connect-hex"><div class="connect-hex-inner">◈</div></div>
+    <div class="connect-title">Your Metaverse Passport</div>
+    <div class="connect-desc">
+      Connect your wallet to view or create your Universal Metaverse Identity — a single on-chain profile readable by any app in the Somnia ecosystem.
+    </div>
+    <button class="connect-btn" onclick="connectWallet()" style="font-size:14px;padding:16px 40px">
+      CONNECT WALLET
+    </button>
+    <div class="network-tag">SOMNIA MAINNET · CHAIN 5031</div>
+  </div>
+
+  <div id="profileSection" style="display:none">
+    <!-- PASSPORT CARD -->
+    <div class="passport" id="passportCard" style="display:none">
+      <div class="passport-header">
+        <div class="passport-title">◈ Digital Identity Passport</div>
+        <div class="passport-id" id="passportId"></div>
+      </div>
+      <div class="passport-body">
+        <div class="avatar-section">
+          <div class="avatar-frame" id="avatarFrame">
+            <div class="avatar-placeholder">◈</div>
+          </div>
+          <div class="rank-badge rank-genesis" id="rankBadge">GENESIS</div>
+        </div>
+        <div class="profile-info">
+          <div class="nickname" id="dispNickname"></div>
+          <div class="address-display" id="dispAddress"></div>
+          <div class="bio-text" id="dispBio"></div>
+          <a class="social-link" id="dispSocial" href="#" target="_blank">
+            <span>✦</span> <span id="dispSocialText"></span>
+          </a>
+          <div class="profile-meta">
+            <div class="meta-item">
+              <div class="meta-label">Created</div>
+              <div class="meta-value" id="dispCreated">—</div>
+            </div>
+            <div class="meta-item">
+              <div class="meta-label">Updated</div>
+              <div class="meta-value" id="dispUpdated">—</div>
+            </div>
+            <div class="meta-item">
+              <div class="meta-label">Rank</div>
+              <div class="meta-value" id="dispRank">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EMPTY STATE -->
+    <div id="emptyState" style="display:none" class="passport">
+      <div class="empty-state">
+        <div class="empty-icon">◇</div>
+        <div class="empty-title">No Identity Found</div>
+        <div class="empty-text">You haven't created your metaverse passport yet. Fill out the form below to mint your on-chain identity.</div>
+      </div>
+    </div>
+
+    <!-- LOADING -->
+    <div id="loadingState" class="passport">
+      <div class="loading">
+        <div class="spinner"></div>
+        <div class="loading-text">Scanning blockchain for identity...</div>
+      </div>
+    </div>
+
+    <!-- EDIT FORM -->
+    <div class="form-section">
+      <div class="form-card">
+        <div class="form-title" id="formTitle">Create Identity</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Nickname *</label>
+            <input class="form-input" id="inNickname" placeholder="Your metaverse name" maxlength="64">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Social URL</label>
+            <input class="form-input" id="inSocial" placeholder="https://x.com/handle">
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Avatar URL</label>
+            <input class="form-input" id="inAvatar" placeholder="https://... or ipfs://...">
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Bio</label>
+            <input class="form-input" id="inBio" placeholder="Tell the metaverse about yourself" maxlength="280">
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="submit-btn" id="submitBtn" onclick="submitProfile()" disabled>SAVE IDENTITY</button>
+          <span class="form-status" id="formStatus"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+// ════════════════════════════════════════════
+//  CONTRACT CONFIG
+// ════════════════════════════════════════════
+// Replace with your mainnet contract address after deployment
+const CONTRACTS = {
+  5031:  '0x0000000000000000000000000000000000000000', // ← MAINNET: paste your address here
+  50312: '0x8BBA8fF6615F0dBAa738b41875Aa5Bc3aa869c88'  // TESTNET (already deployed)
+};
+
+const ABI = [
+  'function setProfile(string,string,string,string)',
+  'function getProfile(address) view returns (tuple(string nickname,string avatarUrl,string bio,string socialUrl,uint256 createdAt,uint256 updatedAt,bool exists))',
+  'function hasProfile(address) view returns (bool)',
+  'function getNickname(address) view returns (string)',
+  'function totalProfiles() view returns (uint256)',
+  'function deleteProfile()',
+  'event ProfileCreated(address indexed user,string nickname)',
+  'event ProfileUpdated(address indexed user,string nickname,uint256 timestamp)'
+];
+
+let provider, signer, contract, userAddress, currentChainId;
+
+// ════════════════════════════════════════════
+//  WALLET
+// ════════════════════════════════════════════
+async function connectWallet() {
+  if (!window.ethereum) {
+    alert('MetaMask not found. Please install it first.');
+    return;
+  }
+  try {
+    provider = new ethers.BrowserProvider(window.ethereum);
+    const accounts = await provider.send('eth_requestAccounts', []);
+    signer = await provider.getSigner();
+    userAddress = await signer.getAddress();
+
+    const network = await provider.getNetwork();
+    currentChainId = Number(network.chainId);
+
+    const contractAddr = CONTRACTS[currentChainId];
+    if (!contractAddr || contractAddr === '0x0000000000000000000000000000000000000000') {
+      document.getElementById('networkName').textContent = 'Chain ' + currentChainId;
+      alert('Contract not deployed on this network (Chain ' + currentChainId + '). Switch to Somnia Testnet (50312) or Mainnet (5031).');
+      return;
+    }
+
+    contract = new ethers.Contract(contractAddr, ABI, signer);
+
+    // Update UI
+    const btn = document.getElementById('connectBtn');
+    btn.textContent = userAddress.slice(0, 6) + '...' + userAddress.slice(-4);
+    btn.classList.add('connected');
+
+    document.getElementById('networkName').textContent = currentChainId === 5031 ? 'MAINNET' : 'TESTNET';
+    document.getElementById('connectScreen').style.display = 'none';
+    document.getElementById('profileSection').style.display = 'block';
+    document.getElementById('submitBtn').disabled = false;
+
+    loadTotalProfiles();
+    loadProfile();
+  } catch (err) {
+    console.error(err);
+    setStatus(err.message, true);
+  }
+}
+
+// ════════════════════════════════════════════
+//  LOAD PROFILE
+// ════════════════════════════════════════════
+async function loadProfile() {
+  document.getElementById('loadingState').style.display = 'block';
+  document.getElementById('passportCard').style.display = 'none';
+  document.getElementById('emptyState').style.display = 'none';
+
+  try {
+    const p = await contract.getProfile(userAddress);
+    if (p.exists) {
+      showProfile(p);
+    } else {
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('emptyState').style.display = 'block';
+      document.getElementById('formTitle').textContent = '◈ Create Identity';
+    }
+  } catch (err) {
+    console.error(err);
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('emptyState').style.display = 'block';
+  }
+}
+
+function showProfile(p) {
+  document.getElementById('loadingState').style.display = 'none';
+  document.getElementById('passportCard').style.display = 'block';
+  document.getElementById('formTitle').textContent = '◈ Update Identity';
+
+  document.getElementById('passportId').textContent = userAddress;
+  document.getElementById('dispNickname').textContent = p.nickname;
+  document.getElementById('dispAddress').textContent = userAddress;
+  document.getElementById('dispBio').textContent = p.bio || 'No bio set';
+
+  // Avatar
+  const frame = document.getElementById('avatarFrame');
+  if (p.avatarUrl) {
+    frame.innerHTML = '<img src="' + p.avatarUrl + '" onerror="this.parentElement.innerHTML=\'<div class=avatar-placeholder>◈</div>\'">';
+  } else {
+    frame.innerHTML = '<div class="avatar-placeholder">' + (p.nickname ? p.nickname[0].toUpperCase() : '◈') + '</div>';
+  }
+
+  // Social
+  const socialEl = document.getElementById('dispSocial');
+  const socialText = document.getElementById('dispSocialText');
+  if (p.socialUrl) {
+    socialEl.style.display = 'inline-flex';
+    socialEl.href = p.socialUrl;
+    socialText.textContent = p.socialUrl.replace('https://', '');
+  } else {
+    socialEl.style.display = 'none';
+  }
+
+  // Dates
+  const created = Number(p.createdAt);
+  const updated = Number(p.updatedAt);
+  document.getElementById('dispCreated').textContent = created ? new Date(created * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
+  document.getElementById('dispUpdated').textContent = updated ? new Date(updated * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
+
+  // Rank calculation based on profile age
+  const ageDays = created ? Math.floor((Date.now() / 1000 - created) / 86400) : 0;
+  let rank, rankClass;
+  if (ageDays >= 365) { rank = 'LEGEND'; rankClass = 'rank-legend'; }
+  else if (ageDays >= 90) { rank = 'PIONEER'; rankClass = 'rank-pioneer'; }
+  else if (ageDays >= 7) { rank = 'EXPLORER'; rankClass = 'rank-explorer'; }
+  else { rank = 'GENESIS'; rankClass = 'rank-genesis'; }
+
+  document.getElementById('dispRank').textContent = rank;
+  const badge = document.getElementById('rankBadge');
+  badge.textContent = rank;
+  badge.className = 'rank-badge ' + rankClass;
+
+  // Pre-fill form
+  document.getElementById('inNickname').value = p.nickname;
+  document.getElementById('inAvatar').value = p.avatarUrl;
+  document.getElementById('inBio').value = p.bio;
+  document.getElementById('inSocial').value = p.socialUrl;
+}
+
+async function loadTotalProfiles() {
+  try {
+    const total = await contract.totalProfiles();
+    document.getElementById('totalProfiles').textContent = total.toString();
+  } catch (e) {
+    document.getElementById('totalProfiles').textContent = '—';
+  }
+}
+
+// ════════════════════════════════════════════
+//  SUBMIT PROFILE
+// ════════════════════════════════════════════
+async function submitProfile() {
+  const nickname = document.getElementById('inNickname').value.trim();
+  const avatar = document.getElementById('inAvatar').value.trim();
+  const bio = document.getElementById('inBio').value.trim();
+  const social = document.getElementById('inSocial').value.trim();
+
+  if (!nickname) { setStatus('Nickname is required', true); return; }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'SIGNING...';
+  setStatus('Waiting for wallet confirmation...', false);
+
+  try {
+    const tx = await contract.setProfile(nickname, avatar, bio, social);
+    btn.textContent = 'CONFIRMING...';
+    setStatus('Transaction sent. Waiting for confirmation...', false);
+    await tx.wait();
+
+    setStatus('Identity saved on-chain ✓', false);
+    btn.textContent = 'SAVE IDENTITY';
+    btn.disabled = false;
+
+    loadProfile();
+    loadTotalProfiles();
+  } catch (err) {
+    console.error(err);
+    setStatus(err.reason || err.message || 'Transaction failed', true);
+    btn.textContent = 'SAVE IDENTITY';
+    btn.disabled = false;
+  }
+}
+
+function setStatus(msg, isError) {
+  const el = document.getElementById('formStatus');
+  el.textContent = msg;
+  el.className = 'form-status' + (isError ? ' error' : '');
+}
+
+// ════════════════════════════════════════════
+//  AUTO-CONNECT & LISTENERS
+// ════════════════════════════════════════════
+if (window.ethereum) {
+  window.ethereum.on('accountsChanged', () => location.reload());
+  window.ethereum.on('chainChanged', () => location.reload());
+}
+</script>
+</body>
+</html>

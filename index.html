@@ -7,693 +7,385 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.4/ethers.umd.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
-  *{margin:0;padding:0;box-sizing:border-box}
-  :root{
-    --neon-cyan:#00f0ff;--neon-magenta:#ff00e5;--neon-green:#39ff14;--neon-gold:#ffd700;
-    --bg-deep:#0a0a12;--bg-card:#11111d;--bg-glass:rgba(17,17,29,0.85);
-    --border-glow:rgba(0,240,255,0.15);--text-primary:#e8e8f0;--text-dim:#6a6a8a;
-  }
-  body{
-    font-family:'Rajdhani',sans-serif;background:var(--bg-deep);color:var(--text-primary);
-    min-height:100vh;overflow-x:hidden;
-  }
-  body::before{
-    content:'';position:fixed;inset:0;
-    background:
-      radial-gradient(ellipse 80% 60% at 20% 10%,rgba(0,240,255,0.06),transparent),
-      radial-gradient(ellipse 60% 50% at 80% 90%,rgba(255,0,229,0.05),transparent),
-      linear-gradient(180deg,#0a0a12 0%,#0d0d1a 100%);
-    z-index:-2;
-  }
-  .grid-overlay{
-    position:fixed;inset:0;z-index:-1;opacity:0.03;
-    background-image:
-      linear-gradient(rgba(0,240,255,0.5) 1px,transparent 1px),
-      linear-gradient(90deg,rgba(0,240,255,0.5) 1px,transparent 1px);
-    background-size:60px 60px;
-  }
-  .header{
-    padding:24px 40px;display:flex;align-items:center;justify-content:space-between;
-    border-bottom:1px solid var(--border-glow);backdrop-filter:blur(20px);
-    position:sticky;top:0;z-index:100;background:rgba(10,10,18,0.9);
-  }
-  .logo{display:flex;align-items:center;gap:14px}
-  .logo-icon{
-    width:42px;height:42px;border:2px solid var(--neon-cyan);border-radius:10px;
-    display:flex;align-items:center;justify-content:center;
-    font-family:'Orbitron';font-weight:900;font-size:14px;color:var(--neon-cyan);
-    box-shadow:0 0 20px rgba(0,240,255,0.2),inset 0 0 20px rgba(0,240,255,0.05);
-    animation:pulse-border 3s ease-in-out infinite;
-  }
-  @keyframes pulse-border{0%,100%{box-shadow:0 0 20px rgba(0,240,255,0.2)}50%{box-shadow:0 0 30px rgba(0,240,255,0.4)}}
-  .logo-text{font-family:'Orbitron';font-weight:700;font-size:20px;letter-spacing:3px}
-  .logo-sub{font-size:11px;color:var(--text-dim);letter-spacing:4px;text-transform:uppercase;margin-top:2px;font-family:'Share Tech Mono'}
-  .stats-bar{display:flex;gap:24px;align-items:center}
-  .stat{text-align:right}
-  .stat-label{font-family:'Share Tech Mono';font-size:10px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase}
-  .stat-value{font-family:'Orbitron';font-size:16px;color:var(--neon-cyan);font-weight:600}
-  .connect-btn{
-    font-family:'Orbitron';font-weight:600;font-size:12px;letter-spacing:2px;
-    padding:12px 28px;border:1px solid var(--neon-cyan);background:transparent;
-    color:var(--neon-cyan);cursor:pointer;position:relative;overflow:hidden;
-    clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));
-    transition:all 0.3s;text-transform:uppercase;
-  }
-  .connect-btn:hover{background:rgba(0,240,255,0.1);box-shadow:0 0 30px rgba(0,240,255,0.2)}
-  .connect-btn.connected{border-color:var(--neon-green);color:var(--neon-green)}
-  .main{max-width:1100px;margin:0 auto;padding:48px 24px}
-
-  /* PASSPORT */
-  .passport{
-    border:1px solid var(--border-glow);background:var(--bg-card);
-    position:relative;overflow:hidden;
-    clip-path:polygon(0 0,calc(100% - 24px) 0,100% 24px,100% 100%,24px 100%,0 calc(100% - 24px));
-  }
-  .passport::before{
-    content:'';position:absolute;top:0;left:0;right:0;height:3px;
-    background:linear-gradient(90deg,var(--neon-cyan),var(--neon-magenta),var(--neon-cyan));
-    background-size:200% 100%;animation:gradient-slide 4s linear infinite;
-  }
-  @keyframes gradient-slide{0%{background-position:0% 0}100%{background-position:200% 0}}
-  .passport-header{
-    padding:24px 32px 16px;display:flex;align-items:center;justify-content:space-between;
-    border-bottom:1px solid var(--border-glow);
-  }
-  .passport-title{font-family:'Orbitron';font-size:13px;letter-spacing:4px;color:var(--text-dim);text-transform:uppercase}
-  .passport-id{font-family:'Share Tech Mono';font-size:11px;color:var(--neon-cyan);opacity:0.6}
-  .passport-body{padding:40px 32px;display:flex;gap:40px;align-items:flex-start}
-  .avatar-section{flex-shrink:0;text-align:center}
-  .avatar-frame{
-    width:140px;height:140px;border:2px solid var(--border-glow);
-    position:relative;display:flex;align-items:center;justify-content:center;
-    background:rgba(0,240,255,0.03);overflow:hidden;
-    clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));
-  }
-  .avatar-frame img{width:100%;height:100%;object-fit:cover}
-  .avatar-placeholder{font-family:'Orbitron';font-size:48px;font-weight:900;color:rgba(0,240,255,0.15)}
-  .rank-badge{
-    margin-top:12px;padding:6px 16px;font-family:'Share Tech Mono';font-size:11px;
-    letter-spacing:2px;display:inline-block;border:1px solid;
-  }
-  .rank-genesis{border-color:var(--neon-cyan);color:var(--neon-cyan);background:rgba(0,240,255,0.05)}
-  .rank-explorer{border-color:var(--neon-green);color:var(--neon-green);background:rgba(57,255,20,0.05)}
-  .rank-pioneer{border-color:var(--neon-magenta);color:var(--neon-magenta);background:rgba(255,0,229,0.05)}
-  .rank-legend{border-color:#ffd700;color:#ffd700;background:rgba(255,215,0,0.05)}
-  .profile-info{flex:1;min-width:0}
-  .nickname{font-family:'Orbitron';font-size:32px;font-weight:700;letter-spacing:1px;margin-bottom:4px}
-  .address-display{font-family:'Share Tech Mono';font-size:12px;color:var(--text-dim);margin-bottom:20px;word-break:break-all}
-  .bio-text{font-size:16px;line-height:1.7;color:var(--text-primary);opacity:0.85;margin-bottom:20px;max-width:500px}
-  .social-link{
-    display:inline-flex;align-items:center;gap:8px;color:var(--neon-cyan);
-    font-family:'Share Tech Mono';font-size:13px;text-decoration:none;
-    padding:8px 16px;border:1px solid var(--border-glow);transition:all 0.3s;
-  }
-  .social-link:hover{background:rgba(0,240,255,0.08);border-color:var(--neon-cyan)}
-  .profile-meta{display:flex;gap:32px;margin-top:24px;padding-top:20px;border-top:1px solid var(--border-glow)}
-  .meta-item .meta-label{font-family:'Share Tech Mono';font-size:10px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase}
-  .meta-item .meta-value{font-family:'Orbitron';font-size:14px;color:var(--text-primary);margin-top:4px}
-
-  .empty-state{text-align:center;padding:80px 32px}
-  .empty-icon{font-size:64px;margin-bottom:24px;opacity:0.3}
-  .empty-title{font-family:'Orbitron';font-size:22px;font-weight:600;margin-bottom:12px;color:var(--text-dim)}
-  .empty-text{font-size:15px;color:var(--text-dim);margin-bottom:32px;max-width:400px;margin-left:auto;margin-right:auto;line-height:1.6}
-
-  /* FORM */
-  .form-section{margin-top:40px}
-  .form-card{
-    border:1px solid var(--border-glow);background:var(--bg-card);padding:32px;
-    clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));
-  }
-  .form-title{
-    font-family:'Orbitron';font-size:14px;letter-spacing:3px;color:var(--neon-cyan);
-    margin-bottom:28px;text-transform:uppercase;display:flex;align-items:center;gap:10px;
-  }
-  .form-title::before{content:'';width:24px;height:2px;background:var(--neon-cyan)}
-  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-  .form-group{display:flex;flex-direction:column;gap:6px}
-  .form-group.full{grid-column:1/-1}
-  .form-label{font-family:'Share Tech Mono';font-size:11px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase}
-  .form-input{
-    font-family:'Rajdhani';font-size:15px;font-weight:500;padding:12px 16px;
-    background:rgba(0,0,0,0.3);border:1px solid var(--border-glow);color:var(--text-primary);
-    outline:none;transition:all 0.3s;
-  }
-  .form-input:focus{border-color:var(--neon-cyan);box-shadow:0 0 20px rgba(0,240,255,0.1)}
-  .form-input::placeholder{color:var(--text-dim);opacity:0.5}
-  .form-actions{margin-top:24px;display:flex;gap:16px;align-items:center}
-  .submit-btn{
-    font-family:'Orbitron';font-weight:600;font-size:13px;letter-spacing:2px;
-    padding:14px 36px;border:none;cursor:pointer;
-    background:linear-gradient(135deg,var(--neon-cyan),#0080ff);color:#0a0a12;
-    clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));
-    transition:all 0.3s;text-transform:uppercase;
-  }
-  .submit-btn:hover{box-shadow:0 0 40px rgba(0,240,255,0.3);transform:translateY(-1px)}
-  .submit-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;box-shadow:none}
-  .form-status{font-family:'Share Tech Mono';font-size:12px;color:var(--neon-green)}
-  .form-status.error{color:#ff4444}
-
-  /* GM SECTION */
-  .gm-section{margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:24px}
-  .gm-action-card{
-    border:1px solid var(--border-glow);background:var(--bg-card);padding:32px;
-    clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));
-    display:flex;flex-direction:column;align-items:center;text-align:center;
-  }
-  .gm-emoji{font-size:48px;margin-bottom:16px;animation:wave 2s ease-in-out infinite}
-  @keyframes wave{0%,100%{transform:rotate(0deg)}25%{transform:rotate(20deg)}75%{transform:rotate(-10deg)}}
-  .gm-btn{
-    font-family:'Orbitron';font-weight:800;font-size:28px;letter-spacing:4px;
-    padding:20px 60px;border:2px solid var(--neon-green);background:transparent;
-    color:var(--neon-green);cursor:pointer;position:relative;
-    clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));
-    transition:all 0.3s;margin-bottom:16px;
-  }
-  .gm-btn:hover{background:rgba(57,255,20,0.1);box-shadow:0 0 50px rgba(57,255,20,0.2);transform:scale(1.02)}
-  .gm-btn:disabled{opacity:0.3;cursor:not-allowed;transform:none;box-shadow:none;border-color:var(--text-dim);color:var(--text-dim)}
-  .gm-btn.cooldown{border-color:var(--text-dim);color:var(--text-dim)}
-  .gm-message-input{
-    width:100%;font-family:'Rajdhani';font-size:14px;font-weight:500;padding:10px 14px;
-    background:rgba(0,0,0,0.3);border:1px solid var(--border-glow);color:var(--text-primary);
-    outline:none;transition:all 0.3s;margin-bottom:12px;text-align:center;
-  }
-  .gm-message-input:focus{border-color:var(--neon-green);box-shadow:0 0 15px rgba(57,255,20,0.1)}
-  .gm-message-input::placeholder{color:var(--text-dim);opacity:0.5}
-  .gm-stats{display:flex;gap:24px;margin-top:8px}
-  .gm-stat{text-align:center}
-  .gm-stat-val{font-family:'Orbitron';font-size:20px;font-weight:700;color:var(--neon-green)}
-  .gm-stat-lbl{font-family:'Share Tech Mono';font-size:10px;color:var(--text-dim);letter-spacing:1px;margin-top:2px}
-  .gm-cooldown-text{font-family:'Share Tech Mono';font-size:12px;color:var(--text-dim);margin-top:8px}
-  .gm-status{font-family:'Share Tech Mono';font-size:12px;color:var(--neon-green);margin-top:8px;min-height:18px}
-  .gm-status.error{color:#ff4444}
-
-  /* GM FEED */
-  .gm-feed-card{
-    border:1px solid var(--border-glow);background:var(--bg-card);
-    clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));
-    display:flex;flex-direction:column;max-height:420px;
-  }
-  .gm-feed-header{
-    padding:20px 24px 14px;border-bottom:1px solid var(--border-glow);
-    font-family:'Orbitron';font-size:13px;letter-spacing:3px;color:var(--neon-magenta);
-    text-transform:uppercase;display:flex;align-items:center;gap:10px;
-  }
-  .gm-feed-header::before{content:'';width:20px;height:2px;background:var(--neon-magenta)}
-  .gm-feed-list{flex:1;overflow-y:auto;padding:12px 0}
-  .gm-feed-list::-webkit-scrollbar{width:4px}
-  .gm-feed-list::-webkit-scrollbar-track{background:transparent}
-  .gm-feed-list::-webkit-scrollbar-thumb{background:var(--border-glow);border-radius:2px}
-  .gm-entry{
-    padding:12px 24px;border-bottom:1px solid rgba(255,255,255,0.03);
-    transition:background 0.2s;display:flex;align-items:flex-start;gap:12px;
-  }
-  .gm-entry:hover{background:rgba(0,240,255,0.02)}
-  .gm-entry-dot{
-    width:8px;height:8px;border-radius:50%;background:var(--neon-green);flex-shrink:0;
-    margin-top:6px;box-shadow:0 0 8px rgba(57,255,20,0.4);
-  }
-  .gm-entry-content{flex:1;min-width:0}
-  .gm-entry-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-  .gm-entry-name{font-family:'Orbitron';font-size:12px;font-weight:600;color:var(--text-primary)}
-  .gm-entry-addr{font-family:'Share Tech Mono';font-size:10px;color:var(--text-dim)}
-  .gm-entry-time{font-family:'Share Tech Mono';font-size:10px;color:var(--text-dim);margin-left:auto}
-  .gm-entry-msg{font-size:13px;color:var(--text-primary);opacity:0.7;margin-top:4px}
-  .gm-feed-empty{
-    padding:40px 24px;text-align:center;font-family:'Share Tech Mono';
-    font-size:13px;color:var(--text-dim);
-  }
-
-  /* CONNECT SCREEN */
-  .connect-screen{
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-    min-height:60vh;text-align:center;padding:40px;
-  }
-  .connect-hex{
-    width:120px;height:120px;border:2px solid var(--border-glow);
-    display:flex;align-items:center;justify-content:center;margin-bottom:32px;
-    clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
-    background:rgba(0,240,255,0.03);animation:float 4s ease-in-out infinite;
-  }
-  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-  .connect-hex-inner{font-family:'Orbitron';font-size:36px;font-weight:900;color:var(--neon-cyan);opacity:0.4}
-  .connect-title{font-family:'Orbitron';font-size:28px;font-weight:700;margin-bottom:12px;letter-spacing:2px}
-  .connect-desc{font-size:16px;color:var(--text-dim);max-width:420px;line-height:1.7;margin-bottom:36px}
-  .network-tag{
-    font-family:'Share Tech Mono';font-size:11px;color:var(--text-dim);
-    padding:6px 14px;border:1px solid var(--border-glow);letter-spacing:2px;margin-top:20px;
-  }
-  .loading{display:flex;align-items:center;gap:12px;padding:40px;justify-content:center}
-  .spinner{width:20px;height:20px;border:2px solid var(--border-glow);border-top-color:var(--neon-cyan);border-radius:50%;animation:spin 0.8s linear infinite}
-  @keyframes spin{to{transform:rotate(360deg)}}
-  .loading-text{font-family:'Share Tech Mono';font-size:13px;color:var(--text-dim);letter-spacing:1px}
-  .scanline{
-    position:fixed;top:0;left:0;right:0;height:2px;
-    background:rgba(0,240,255,0.05);z-index:1000;pointer-events:none;
-    animation:scanline 8s linear infinite;
-  }
-  @keyframes scanline{0%{top:0}100%{top:100vh}}
-
-  @media(max-width:768px){
-    .header{padding:16px 20px;flex-wrap:wrap;gap:12px}
-    .stats-bar{gap:12px}
-    .passport-body{flex-direction:column;align-items:center;text-align:center}
-    .form-grid{grid-template-columns:1fr}
-    .profile-meta{justify-content:center;flex-wrap:wrap}
-    .nickname{font-size:24px}
-    .main{padding:24px 16px}
-    .gm-section{grid-template-columns:1fr}
-    .gm-feed-card{max-height:350px}
-  }
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--cyan:#00f0ff;--magenta:#ff00e5;--green:#39ff14;--gold:#ffd700;--red:#ff3344;--bg:#0a0a12;--card:#11111d;--border:rgba(0,240,255,0.15);--text:#e8e8f0;--dim:#6a6a8a}
+body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 20% 10%,rgba(0,240,255,0.06),transparent),radial-gradient(ellipse 60% 50% at 80% 90%,rgba(255,0,229,0.05),transparent);z-index:-2}
+.gbg{position:fixed;inset:0;z-index:-1;opacity:.03;background-image:linear-gradient(rgba(0,240,255,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(0,240,255,.5) 1px,transparent 1px);background-size:60px 60px}
+.hdr{padding:14px 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);backdrop-filter:blur(20px);position:sticky;top:0;z-index:100;background:rgba(10,10,18,.92);flex-wrap:wrap;gap:8px}
+.logo{display:flex;align-items:center;gap:10px}
+.lbox{width:36px;height:36px;border:2px solid var(--cyan);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Orbitron';font-weight:900;font-size:11px;color:var(--cyan);box-shadow:0 0 15px rgba(0,240,255,.2)}
+.lt{font-family:'Orbitron';font-weight:700;font-size:17px;letter-spacing:3px}
+.ls{font-size:9px;color:var(--dim);letter-spacing:4px;font-family:'Share Tech Mono';margin-top:1px}
+.hs{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.si{text-align:right}
+.sl{font-family:'Share Tech Mono';font-size:8px;color:var(--dim);letter-spacing:2px;text-transform:uppercase}
+.sv{font-family:'Orbitron';font-size:14px;color:var(--cyan);font-weight:600}
+.cb{font-family:'Orbitron';font-weight:600;font-size:10px;letter-spacing:2px;padding:9px 20px;border:1px solid var(--cyan);background:0;color:var(--cyan);cursor:pointer;clip-path:polygon(0 0,calc(100% - 9px) 0,100% 9px,100% 100%,9px 100%,0 calc(100% - 9px));transition:.3s;text-transform:uppercase}
+.cb:hover{background:rgba(0,240,255,.1)}.cb.on{border-color:var(--green);color:var(--green)}
+.main{max-width:1100px;margin:0 auto;padding:32px 16px}
+.tabs{display:flex;gap:2px;margin-bottom:24px;border-bottom:1px solid var(--border)}
+.tab{font-family:'Orbitron';font-size:11px;letter-spacing:2px;padding:10px 20px;cursor:pointer;color:var(--dim);border-bottom:2px solid transparent;transition:.3s;text-transform:uppercase}
+.tab:hover{color:var(--text)}.tab.a{color:var(--cyan);border-bottom-color:var(--cyan)}
+.pnl{display:none}.pnl.a{display:block}
+.cd{border:1px solid var(--border);background:var(--card);position:relative;overflow:hidden;clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px))}
+.cd::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--cyan),var(--magenta),var(--cyan));background-size:200% 100%;animation:gs 4s linear infinite}
+@keyframes gs{0%{background-position:0% 0}100%{background-position:200% 0}}
+.ch{padding:16px 22px 10px;border-bottom:1px solid var(--border);font-family:'Orbitron';font-size:11px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.ch::before{content:'';width:16px;height:2px;background:var(--cyan)}
+.bf{padding:28px 20px;text-align:center}
+.bf-t{font-family:'Share Tech Mono';font-size:12px;color:var(--dim);letter-spacing:1px}
+.bf-c{font-family:'Orbitron';font-size:32px;font-weight:800;color:var(--cyan);margin:4px 0 20px;letter-spacing:2px}
+.bfv{display:flex;gap:14px;justify-content:center;margin-bottom:20px}
+.bs{flex:1;max-width:240px;padding:20px 14px;border:2px solid var(--border);cursor:pointer;transition:.3s;display:flex;flex-direction:column;align-items:center;gap:6px}
+.bs.st{clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,0 100%)}
+.bs.pr{clip-path:polygon(0 0,100% 0,100% 100%,12px 100%,0 calc(100% - 12px))}
+.bs.st:hover,.bs.st.pk{border-color:var(--red);background:rgba(255,51,68,.08);box-shadow:0 0 25px rgba(255,51,68,.12)}
+.bs.pr:hover,.bs.pr.pk{border-color:var(--cyan);background:rgba(0,240,255,.08);box-shadow:0 0 25px rgba(0,240,255,.12)}
+.bs.off{opacity:.35;cursor:not-allowed;transform:none!important;box-shadow:none!important}
+.bi{font-size:36px}.bn{font-family:'Orbitron';font-size:16px;font-weight:700;letter-spacing:2px}
+.bn.sr{color:var(--red)}.bn.pr2{color:var(--cyan)}
+.bc{font-family:'Orbitron';font-size:24px;font-weight:800}.bc.sr{color:var(--red)}.bc.pr2{color:var(--cyan)}
+.bl{font-family:'Share Tech Mono';font-size:9px;color:var(--dim);letter-spacing:2px}
+.bbar{width:100%;height:5px;background:rgba(255,255,255,.05);display:flex;overflow:hidden;margin-bottom:12px}
+.bbs{background:var(--red);transition:width .5s}.bbp{background:var(--cyan);transition:width .5s}
+.bst{font-family:'Share Tech Mono';font-size:11px;min-height:18px}.bst.er{color:var(--red)}
+.bpt{font-family:'Share Tech Mono';font-size:9px;letter-spacing:2px;padding:3px 8px;border:1px solid;margin-top:4px}
+.yd{margin-top:12px;padding:14px 20px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+.yl{font-family:'Share Tech Mono';font-size:10px;color:var(--dim)}.yr{font-family:'Orbitron';font-size:13px;font-weight:700}
+.yw{color:var(--green)}.ylo{color:var(--red)}
+.srow{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-top:20px}
+.sc{border:1px solid var(--border);background:var(--card);padding:16px 12px;text-align:center;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px))}
+.sc .v{font-family:'Orbitron';font-size:22px;font-weight:800;color:var(--cyan)}
+.sc .l{font-family:'Share Tech Mono';font-size:9px;color:var(--dim);letter-spacing:1px;margin-top:2px}
+.v.g{color:var(--green)}.v.go{color:var(--gold)}.v.m{color:var(--magenta)}
+.lb{padding:12px 0}.lbr{display:flex;align-items:center;padding:8px 20px;border-bottom:1px solid rgba(255,255,255,.03);gap:10px}
+.lbr:hover{background:rgba(0,240,255,.02)}
+.lrk{font-family:'Orbitron';font-size:13px;font-weight:700;width:28px;text-align:center}
+.lrk.g{color:var(--gold)}.lrk.s{color:#c0c0c0}.lrk.b{color:#cd7f32}
+.lnm{font-family:'Orbitron';font-size:11px;font-weight:600;flex:1}
+.lad{font-family:'Share Tech Mono';font-size:9px;color:var(--dim)}
+.lpt{font-family:'Orbitron';font-size:14px;font-weight:700;color:var(--cyan)}
+.lbe{padding:32px;text-align:center;font-family:'Share Tech Mono';font-size:12px;color:var(--dim)}
+.gmr{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+.gma{padding:24px;text-align:center;display:flex;flex-direction:column;align-items:center}
+.gmb{font-family:'Orbitron';font-weight:800;font-size:22px;letter-spacing:4px;padding:14px 44px;border:2px solid var(--green);background:0;color:var(--green);cursor:pointer;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));transition:.3s;margin:10px 0}
+.gmb:hover{background:rgba(57,255,20,.1)}.gmb:disabled{opacity:.3;cursor:not-allowed;border-color:var(--dim);color:var(--dim)}
+.gmi{width:100%;font-family:'Rajdhani';font-size:13px;padding:8px;background:rgba(0,0,0,.3);border:1px solid var(--border);color:var(--text);outline:none;text-align:center}
+.gmi:focus{border-color:var(--green)}
+.gmf{max-height:280px;overflow-y:auto;padding:6px 0}
+.gmf::-webkit-scrollbar{width:3px}.gmf::-webkit-scrollbar-thumb{background:var(--border)}
+.ge{padding:8px 20px;border-bottom:1px solid rgba(255,255,255,.03);display:flex;gap:8px;align-items:flex-start}
+.gd{width:5px;height:5px;border-radius:50%;background:var(--green);margin-top:6px;flex-shrink:0}
+.gc{flex:1}.gt{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+.gn{font-family:'Orbitron';font-size:10px;font-weight:600}
+.ga{font-family:'Share Tech Mono';font-size:8px;color:var(--dim)}
+.gtm{font-family:'Share Tech Mono';font-size:8px;color:var(--dim);margin-left:auto}
+.gms{font-size:11px;opacity:.7;margin-top:1px}
+.gss{font-family:'Share Tech Mono';font-size:10px;margin-top:6px;min-height:14px}.gss.er{color:var(--red)}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:20px}
+.ff{display:flex;flex-direction:column;gap:3px}.ff.fu{grid-column:1/-1}
+.fl{font-family:'Share Tech Mono';font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase}
+.fi{font-family:'Rajdhani';font-size:13px;font-weight:500;padding:9px 12px;background:rgba(0,0,0,.3);border:1px solid var(--border);color:var(--text);outline:none;transition:.3s}
+.fi:focus{border-color:var(--cyan)}.fi::placeholder{color:var(--dim);opacity:.5}
+.fa{padding:0 20px 20px;display:flex;gap:12px;align-items:center}
+.fb{font-family:'Orbitron';font-weight:600;font-size:11px;letter-spacing:2px;padding:10px 26px;border:none;cursor:pointer;background:linear-gradient(135deg,var(--cyan),#0080ff);color:#0a0a12;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));transition:.3s;text-transform:uppercase}
+.fb:hover{box-shadow:0 0 25px rgba(0,240,255,.3)}.fb:disabled{opacity:.4;cursor:not-allowed}
+.fs{font-family:'Share Tech Mono';font-size:10px;color:var(--green)}.fs.er{color:var(--red)}
+.ppb{padding:28px 20px;display:flex;gap:28px;align-items:flex-start}
+.avf{width:110px;height:110px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;background:rgba(0,240,255,.03);overflow:hidden;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));flex-shrink:0}
+.avf img{width:100%;height:100%;object-fit:cover}
+.avp{font-family:'Orbitron';font-size:36px;font-weight:900;color:rgba(0,240,255,.15)}
+.pi{flex:1;min-width:0}
+.pn{font-family:'Orbitron';font-size:24px;font-weight:700;letter-spacing:1px;margin-bottom:2px}
+.pa{font-family:'Share Tech Mono';font-size:10px;color:var(--dim);margin-bottom:12px;word-break:break-all}
+.pb{font-size:14px;line-height:1.5;opacity:.85;margin-bottom:12px}
+.ps{display:inline-flex;align-items:center;gap:5px;color:var(--cyan);font-family:'Share Tech Mono';font-size:11px;text-decoration:none;padding:5px 12px;border:1px solid var(--border);transition:.3s}
+.ps:hover{background:rgba(0,240,255,.08)}
+.pm{display:flex;gap:20px;margin-top:14px;padding-top:12px;border-top:1px solid var(--border);flex-wrap:wrap}
+.pml{font-family:'Share Tech Mono';font-size:8px;color:var(--dim);letter-spacing:2px;text-transform:uppercase}
+.pmv{font-family:'Orbitron';font-size:12px;margin-top:2px}
+.rk{margin-top:8px;padding:4px 12px;font-family:'Share Tech Mono';font-size:9px;letter-spacing:2px;display:inline-block;border:1px solid;text-align:center}
+.rg{border-color:var(--cyan);color:var(--cyan);background:rgba(0,240,255,.05)}
+.re{border-color:var(--green);color:var(--green);background:rgba(57,255,20,.05)}
+.rp{border-color:var(--magenta);color:var(--magenta);background:rgba(255,0,229,.05)}
+.rl{border-color:var(--gold);color:var(--gold);background:rgba(255,215,0,.05)}
+.cn{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:50vh;text-align:center;padding:36px}
+.cn h2{font-family:'Orbitron';font-size:22px;font-weight:700;margin:20px 0 8px;letter-spacing:2px}
+.cn p{font-size:14px;color:var(--dim);max-width:380px;line-height:1.5;margin-bottom:26px}
+.cnt{font-family:'Share Tech Mono';font-size:9px;color:var(--dim);padding:4px 10px;border:1px solid var(--border);letter-spacing:2px;margin-top:14px}
+.ld{display:flex;align-items:center;gap:8px;padding:28px;justify-content:center}
+.spn{width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--cyan);border-radius:50%;animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.ld span{font-family:'Share Tech Mono';font-size:11px;color:var(--dim)}
+@media(max-width:700px){.hdr{padding:10px 14px}.bfv{flex-direction:column;align-items:center}.bs{max-width:100%;width:100%}.gmr{grid-template-columns:1fr}.ppb{flex-direction:column;align-items:center;text-align:center}.fg{grid-template-columns:1fr}.srow{grid-template-columns:1fr 1fr}.tabs{overflow-x:auto}}
 </style>
 </head>
 <body>
-<div class="scanline"></div>
-<div class="grid-overlay"></div>
-
-<header class="header">
-  <div class="logo">
-    <div class="logo-icon">UMI</div>
-    <div>
-      <div class="logo-text">METAVERSE ID</div>
-      <div class="logo-sub">Somnia Network</div>
-    </div>
-  </div>
-  <div class="stats-bar">
-    <div class="stat">
-      <div class="stat-label">Profiles</div>
-      <div class="stat-value" id="totalProfiles">—</div>
-    </div>
-    <div class="stat">
-      <div class="stat-label">Total GMs</div>
-      <div class="stat-value" id="totalGMs" style="color:var(--neon-green)">—</div>
-    </div>
-    <div class="stat">
-      <div class="stat-label">Network</div>
-      <div class="stat-value" id="networkName" style="font-size:13px">—</div>
-    </div>
-    <button class="connect-btn" id="connectBtn" onclick="connectWallet()">CONNECT</button>
+<div class="gbg"></div>
+<header class="hdr">
+  <div class="logo"><div class="lbox">UMI</div><div><div class="lt">METAVERSE ID</div><div class="ls">Somnia Network</div></div></div>
+  <div class="hs">
+    <div class="si"><div class="sl">Profiles</div><div class="sv" id="hP">—</div></div>
+    <div class="si"><div class="sl">Battles</div><div class="sv" id="hB" style="color:var(--magenta)">—</div></div>
+    <div class="si"><div class="sl">Network</div><div class="sv" id="hN" style="font-size:11px">—</div></div>
+    <button class="cb" id="cB" onclick="W()">CONNECT</button>
   </div>
 </header>
-
-<main class="main" id="app">
-  <!-- CONNECT SCREEN -->
-  <div class="connect-screen" id="connectScreen">
-    <div class="connect-hex"><div class="connect-hex-inner">◈</div></div>
-    <div class="connect-title">Your Metaverse Passport</div>
-    <div class="connect-desc">
-      Connect your wallet to view or create your Universal Metaverse Identity — a single on-chain profile readable by any app in the Somnia ecosystem.
+<main class="main">
+<div class="cn" id="CS">
+  <div style="width:90px;height:90px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0 75%,0 25%);background:rgba(0,240,255,.03);animation:fl 4s ease-in-out infinite;font-family:'Orbitron';font-size:28px;font-weight:900;color:rgba(0,240,255,.4)">◈</div>
+  @keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+  <h2>Your Metaverse Passport</h2>
+  <p>Connect your wallet to play Steal or Protect, say GM, and manage your on-chain identity.</p>
+  <button class="cb" onclick="W()" style="font-size:12px;padding:12px 32px">CONNECT WALLET</button>
+  <div class="cnt">SOMNIA MAINNET · CHAIN 5031</div>
+</div>
+<div id="AP" style="display:none">
+<div class="tabs">
+  <div class="tab a" data-t="game">⚔ Battle</div>
+  <div class="tab" data-t="gm">☀ GM</div>
+  <div class="tab" data-t="profile">◈ Passport</div>
+</div>
+<div class="pnl a" id="t-game">
+  <div class="cd" id="GC">
+    <div class="ch" style="color:var(--magenta)">⚔ Steal or Protect</div>
+    <div class="bf">
+      <div class="bf-t">ROUND ENDS IN</div>
+      <div class="bf-c" id="gT">--:--:--</div>
+      <div class="bfv">
+        <div class="bs st" id="bS" onclick="PL(true)">
+          <div class="bi">🔥</div><div class="bn sr">STEAL</div>
+          <div class="bc sr" id="gS">0</div><div class="bl">PLAYERS</div>
+        </div>
+        <div class="bs pr" id="bP" onclick="PL(false)">
+          <div class="bi">🛡️</div><div class="bn pr2">PROTECT</div>
+          <div class="bc pr2" id="gP">0</div><div class="bl">PLAYERS</div>
+        </div>
+      </div>
+      <div class="bbar"><div class="bbs" id="gBS" style="width:50%"></div><div class="bbp" id="gBP" style="width:50%"></div></div>
+      <div class="bst" id="gSt"></div>
     </div>
-    <button class="connect-btn" onclick="connectWallet()" style="font-size:14px;padding:16px 40px">CONNECT WALLET</button>
-    <div class="network-tag">SOMNIA NETWORK · MAINNET & TESTNET</div>
+    <div class="yd" id="YD" style="display:none">
+      <span class="yl">YESTERDAY:</span><span class="yr" id="YR"></span><span class="yl" id="YU"></span>
+    </div>
   </div>
-
-  <div id="profileSection" style="display:none">
-    <!-- PASSPORT CARD -->
-    <div class="passport" id="passportCard" style="display:none">
-      <div class="passport-header">
-        <div class="passport-title">◈ Digital Identity Passport</div>
-        <div class="passport-id" id="passportId"></div>
-      </div>
-      <div class="passport-body">
-        <div class="avatar-section">
-          <div class="avatar-frame" id="avatarFrame"><div class="avatar-placeholder">◈</div></div>
-          <div class="rank-badge rank-genesis" id="rankBadge">GENESIS</div>
-        </div>
-        <div class="profile-info">
-          <div class="nickname" id="dispNickname"></div>
-          <div class="address-display" id="dispAddress"></div>
-          <div class="bio-text" id="dispBio"></div>
-          <a class="social-link" id="dispSocial" href="#" target="_blank">
-            <span>✦</span> <span id="dispSocialText"></span>
-          </a>
-          <div class="profile-meta">
-            <div class="meta-item"><div class="meta-label">Created</div><div class="meta-value" id="dispCreated">—</div></div>
-            <div class="meta-item"><div class="meta-label">Updated</div><div class="meta-value" id="dispUpdated">—</div></div>
-            <div class="meta-item"><div class="meta-label">Rank</div><div class="meta-value" id="dispRank">—</div></div>
-          </div>
+  <div class="srow">
+    <div class="sc"><div class="v g" id="xS">0</div><div class="l">STREAK 🔥</div></div>
+    <div class="sc"><div class="v go" id="xB">0</div><div class="l">BEST STREAK</div></div>
+    <div class="sc"><div class="v" id="xW">0</div><div class="l">WINS</div></div>
+    <div class="sc"><div class="v" id="xG">0</div><div class="l">GAMES</div></div>
+    <div class="sc"><div class="v m" id="xP">0</div><div class="l">WEEK PTS</div></div>
+    <div class="sc"><div class="v" id="xC">0</div><div class="l">PLAYERS</div></div>
+  </div>
+  <div class="cd" style="margin-top:20px">
+    <div class="ch" style="color:var(--gold)">🏆 Weekly Leaderboard</div>
+    <div class="lb" id="LB"><div class="lbe">Play to appear here!</div></div>
+  </div>
+</div>
+<div class="pnl" id="t-gm">
+  <div class="gmr">
+    <div class="cd"><div class="ch" style="color:var(--green)">☀ Say GM</div>
+      <div class="gma">
+        <input class="gmi" id="gMsg" placeholder="Optional message" maxlength="140">
+        <button class="gmb" id="gBtn" onclick="GM()">GM</button>
+        <div class="gss" id="gSs"></div>
+        <div style="display:flex;gap:16px;margin-top:6px">
+          <div class="si"><div class="sv" style="color:var(--green)" id="gMy">0</div><div class="sl">YOUR GMs</div></div>
+          <div class="si"><div class="sv" style="color:var(--green)" id="gAl">0</div><div class="sl">TOTAL</div></div>
         </div>
       </div>
     </div>
-
-    <!-- EMPTY STATE -->
-    <div id="emptyState" style="display:none" class="passport">
-      <div class="empty-state">
-        <div class="empty-icon">◇</div>
-        <div class="empty-title">No Identity Found</div>
-        <div class="empty-text">You haven't created your metaverse passport yet. Fill out the form below to mint your on-chain identity.</div>
-      </div>
+    <div class="cd"><div class="ch" style="color:var(--magenta)">◈ GM Feed</div>
+      <div class="gmf" id="gFd"><div class="lbe">No GMs yet</div></div>
     </div>
-
-    <!-- LOADING -->
-    <div id="loadingState" class="passport">
-      <div class="loading"><div class="spinner"></div><div class="loading-text">Scanning blockchain for identity...</div></div>
-    </div>
-
-    <!-- GM SECTION -->
-    <div class="gm-section" id="gmSection" style="display:none">
-      <div class="gm-action-card">
-        <div class="gm-emoji">☀️</div>
-        <input class="gm-message-input" id="gmMessage" placeholder="Add a message (optional)" maxlength="140">
-        <button class="gm-btn" id="gmBtn" onclick="sayGM()">GM</button>
-        <div class="gm-status" id="gmStatus"></div>
-        <div class="gm-cooldown-text" id="gmCooldown"></div>
-        <div class="gm-stats">
-          <div class="gm-stat">
-            <div class="gm-stat-val" id="myGMs">0</div>
-            <div class="gm-stat-lbl">YOUR GMs</div>
-          </div>
-          <div class="gm-stat">
-            <div class="gm-stat-val" id="globalGMs">0</div>
-            <div class="gm-stat-lbl">GLOBAL GMs</div>
-          </div>
-        </div>
-      </div>
-      <div class="gm-feed-card">
-        <div class="gm-feed-header">◈ Live GM Feed</div>
-        <div class="gm-feed-list" id="gmFeed">
-          <div class="gm-feed-empty">No GMs yet. Be the first!</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- EDIT FORM -->
-    <div class="form-section">
-      <div class="form-card">
-        <div class="form-title" id="formTitle">Create Identity</div>
-        <div class="form-grid">
-          <div class="form-group">
-            <label class="form-label">Nickname *</label>
-            <input class="form-input" id="inNickname" placeholder="Your metaverse name" maxlength="64">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Social URL</label>
-            <input class="form-input" id="inSocial" placeholder="https://x.com/handle">
-          </div>
-          <div class="form-group full">
-            <label class="form-label">Avatar URL</label>
-            <input class="form-input" id="inAvatar" placeholder="https://... or ipfs://...">
-          </div>
-          <div class="form-group full">
-            <label class="form-label">Bio</label>
-            <input class="form-input" id="inBio" placeholder="Tell the metaverse about yourself" maxlength="280">
-          </div>
-        </div>
-        <div class="form-actions">
-          <button class="submit-btn" id="submitBtn" onclick="submitProfile()" disabled>SAVE IDENTITY</button>
-          <span class="form-status" id="formStatus"></span>
+  </div>
+</div>
+<div class="pnl" id="t-profile">
+  <div class="cd" id="PC" style="display:none"><div class="ch">◈ Digital Identity Passport</div>
+    <div class="ppb">
+      <div style="text-align:center"><div class="avf" id="AV"><div class="avp">◈</div></div><div class="rk rg" id="RK">GENESIS</div></div>
+      <div class="pi">
+        <div class="pn" id="PN"></div><div class="pa" id="PA"></div><div class="pb" id="PB"></div>
+        <a class="ps" id="PL2" href="#" target="_blank" style="display:none"><span>✦</span><span id="PLT"></span></a>
+        <div class="pm">
+          <div><div class="pml">Created</div><div class="pmv" id="PCr">—</div></div>
+          <div><div class="pml">Updated</div><div class="pmv" id="PUp">—</div></div>
+          <div><div class="pml">Rank</div><div class="pmv" id="PR2">—</div></div>
         </div>
       </div>
     </div>
   </div>
+  <div class="cd" id="PE" style="display:none"><div style="text-align:center;padding:50px 20px"><div style="font-size:42px;opacity:.3;margin-bottom:12px">◇</div><div style="font-family:'Orbitron';font-size:16px;color:var(--dim);margin-bottom:6px">No Identity Found</div><div style="font-size:13px;color:var(--dim);max-width:340px;margin:0 auto;line-height:1.4">Create your passport below.</div></div></div>
+  <div id="PLd" class="cd"><div class="ld"><div class="spn"></div><span>Loading...</span></div></div>
+  <div class="cd" style="margin-top:20px">
+    <div class="ch" id="FT">◈ Create Identity</div>
+    <div class="fg">
+      <div class="ff"><label class="fl">Nickname *</label><input class="fi" id="fN" placeholder="Your name" maxlength="64"></div>
+      <div class="ff"><label class="fl">Social URL</label><input class="fi" id="fS" placeholder="https://x.com/..."></div>
+      <div class="ff fu"><label class="fl">Avatar URL</label><input class="fi" id="fA" placeholder="https://..."></div>
+      <div class="ff fu"><label class="fl">Bio</label><input class="fi" id="fB" placeholder="About you" maxlength="280"></div>
+    </div>
+    <div class="fa"><button class="fb" id="fBtn" onclick="SP()" disabled>SAVE IDENTITY</button><span class="fs" id="fSt"></span></div>
+  </div>
+</div>
+</div>
 </main>
-
 <script>
-// ════════════════════════════════════════════
-//  CONTRACT CONFIG
-// ════════════════════════════════════════════
-const UMI_CONTRACTS = {
-  5031:  '0xfa9c15D8B508968fCDbdB9F495C8A493C19d7351',
-  50312: '0x8BBA8fF6615F0dBAa738b41875Aa5Bc3aa869c88'
-};
-const GM_CONTRACTS = {
-  5031:  '0x108E8c835e3EC1F176C79E5C77e3dd1D415A9371',
-  50312: '0x0000000000000000000000000000000000000000'
-};
+const C={5031:{u:'0xfa9c15D8B508968fCDbdB9F495C8A493C19d7351',g:'0x108E8c835e3EC1F176C79E5C77e3dd1D415A9371',x:'0x15c1EF50950ABd5FB367C1F8Be8C448c507a6b71'},50312:{u:'0x8BBA8fF6615F0dBAa738b41875Aa5Bc3aa869c88',g:null,x:null}};
+const AU=['function setProfile(string,string,string,string)','function getProfile(address) view returns (tuple(string nickname,string avatarUrl,string bio,string socialUrl,uint256 createdAt,uint256 updatedAt,bool exists))','function hasProfile(address) view returns (bool)','function getNickname(address) view returns (string)','function totalProfiles() view returns (uint256)'];
+const AG=['function sayGM(string)','function totalGMs() view returns (uint256)','function userGMCount(address) view returns (uint256)','function getUserStats(address) view returns (uint256,uint256,bool,uint256)','function getRecentGMs() view returns (tuple(address sender,uint256 timestamp,string message)[],uint256)'];
+const AX=['function play(bool)','function currentDay() view returns (uint256)','function currentWeek() view returns (uint256)','function roundTimeLeft() view returns (uint256)','function totalPlays() view returns (uint256)','function todayPlayerCount() view returns (uint256)','function getRoundInfo(uint256) view returns (tuple(uint128 stealCount,uint128 protectCount,bool resolved,bool stealWon),uint256)','function getPlayerState(address) view returns (tuple(uint256 streak,uint256 bestStreak,uint256 wins,uint256 games,uint256 weekPts,bool playedToday,bool todaySide))','function getWeeklyLeaderboard(uint256) view returns (address[],uint256[])','function hasPlayed(uint256,address) view returns (bool)','function playerSide(uint256,address) view returns (bool)'];
+let pv,sg,um,gm,gx,ad,ch,ti;
 
-const UMI_ABI = [
-  'function setProfile(string,string,string,string)',
-  'function getProfile(address) view returns (tuple(string nickname,string avatarUrl,string bio,string socialUrl,uint256 createdAt,uint256 updatedAt,bool exists))',
-  'function hasProfile(address) view returns (bool)',
-  'function getNickname(address) view returns (string)',
-  'function totalProfiles() view returns (uint256)',
-];
+document.querySelectorAll('.tab').forEach(t=>t.onclick=function(){
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('a'));
+  document.querySelectorAll('.pnl').forEach(x=>x.classList.remove('a'));
+  this.classList.add('a');document.getElementById('t-'+this.dataset.t).classList.add('a');
+});
 
-const GM_ABI = [
-  'function sayGM(string)',
-  'function totalGMs() view returns (uint256)',
-  'function userGMCount(address) view returns (uint256)',
-  'function lastGMTime(address) view returns (uint256)',
-  'function getUserStats(address) view returns (uint256 gmCount, uint256 lastTime, bool canGM, uint256 cooldownLeft)',
-  'function getRecentGMs() view returns (tuple(address sender,uint256 timestamp,string message)[] entries, uint256 count)',
-  'function GM_COOLDOWN() view returns (uint256)',
-];
+async function W(){
+  if(!window.ethereum){alert('Install MetaMask');return;}
+  try{
+    pv=new ethers.BrowserProvider(window.ethereum);await pv.send('eth_requestAccounts',[]);
+    sg=await pv.getSigner();ad=await sg.getAddress();ch=Number((await pv.getNetwork()).chainId);
+    const c=C[ch];if(!c){alert('Switch to Somnia (5031 or 50312)');return;}
+    um=new ethers.Contract(c.u,AU,sg);
+    if(c.g)gm=new ethers.Contract(c.g,AG,sg);
+    if(c.x)gx=new ethers.Contract(c.x,AX,sg);
+    document.getElementById('cB').textContent=ad.slice(0,6)+'...'+ad.slice(-4);
+    document.getElementById('cB').classList.add('on');
+    document.getElementById('hN').textContent=ch===5031?'MAINNET':'TESTNET';
+    document.getElementById('CS').style.display='none';
+    document.getElementById('AP').style.display='block';
+    document.getElementById('fBtn').disabled=false;
+    LA();
+  }catch(e){console.error(e);alert(e.message);}
+}
 
-let provider, signer, umiContract, gmContract, userAddress, currentChainId;
-let cooldownTimer = null;
+async function LA(){
+  LP();try{document.getElementById('hP').textContent=(await um.totalProfiles()).toString();}catch(e){}
+  if(gx){LG();ST();}if(gm)LGM();
+}
 
-// ════════════════════════════════════════════
-//  WALLET
-// ════════════════════════════════════════════
-async function connectWallet() {
-  if (!window.ethereum) { alert('MetaMask not found. Please install it first.'); return; }
-  try {
-    provider = new ethers.BrowserProvider(window.ethereum);
-    await provider.send('eth_requestAccounts', []);
-    signer = await provider.getSigner();
-    userAddress = await signer.getAddress();
-    const network = await provider.getNetwork();
-    currentChainId = Number(network.chainId);
+// PROFILE
+async function LP(){
+  try{const p=await um.getProfile(ad);if(p.exists)SH(p);else{document.getElementById('PLd').style.display='none';document.getElementById('PE').style.display='block';}}
+  catch(e){document.getElementById('PLd').style.display='none';document.getElementById('PE').style.display='block';}
+}
+function SH(p){
+  document.getElementById('PLd').style.display='none';document.getElementById('PC').style.display='block';document.getElementById('PE').style.display='none';
+  document.getElementById('FT').innerHTML='◈ Update Identity';
+  document.getElementById('PN').textContent=p.nickname;document.getElementById('PA').textContent=ad;
+  document.getElementById('PB').textContent=p.bio||'No bio';
+  const f=document.getElementById('AV');
+  if(p.avatarUrl)f.innerHTML='<img src="'+p.avatarUrl+'" onerror="this.parentElement.innerHTML=\'<div class=avp>◈</div>\'">';
+  else f.innerHTML='<div class="avp">'+(p.nickname?p.nickname[0].toUpperCase():'◈')+'</div>';
+  const s=document.getElementById('PL2');
+  if(p.socialUrl){s.style.display='inline-flex';s.href=p.socialUrl;document.getElementById('PLT').textContent=p.socialUrl.replace('https://','');}else s.style.display='none';
+  const cr=Number(p.createdAt),up=Number(p.updatedAt);
+  document.getElementById('PCr').textContent=cr?new Date(cr*1000).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'—';
+  document.getElementById('PUp').textContent=up?new Date(up*1000).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'—';
+  const age=cr?Math.floor((Date.now()/1000-cr)/86400):0;let rk,rc;
+  if(age>=365){rk='LEGEND';rc='rl';}else if(age>=90){rk='PIONEER';rc='rp';}else if(age>=7){rk='EXPLORER';rc='re';}else{rk='GENESIS';rc='rg';}
+  document.getElementById('RK').textContent=rk;document.getElementById('RK').className='rk '+rc;document.getElementById('PR2').textContent=rk;
+  document.getElementById('fN').value=p.nickname;document.getElementById('fA').value=p.avatarUrl;
+  document.getElementById('fB').value=p.bio;document.getElementById('fS').value=p.socialUrl;
+}
+async function SP(){
+  const n=document.getElementById('fN').value.trim(),a=document.getElementById('fA').value.trim(),b=document.getElementById('fB').value.trim(),s=document.getElementById('fS').value.trim();
+  if(!n){FM('Nickname required',1);return;}
+  const bt=document.getElementById('fBtn');bt.disabled=true;bt.textContent='SIGNING...';FM('Waiting...',0);
+  try{const tx=await um.setProfile(n,a,b,s);bt.textContent='CONFIRMING...';await tx.wait();FM('Saved ✓',0);bt.textContent='SAVE IDENTITY';bt.disabled=false;LP();LA();}
+  catch(e){FM(e.reason||'Failed',1);bt.textContent='SAVE IDENTITY';bt.disabled=false;}
+}
+function FM(m,e){const el=document.getElementById('fSt');el.textContent=m;el.className='fs'+(e?' er':'');}
 
-    const umiAddr = UMI_CONTRACTS[currentChainId];
-    const gmAddr = GM_CONTRACTS[currentChainId];
-    if (!umiAddr || umiAddr === '0x0000000000000000000000000000000000000000') {
-      alert('UMI contract not deployed on Chain ' + currentChainId + '. Switch to Somnia Mainnet (5031) or Testnet (50312).');
-      return;
+// GAME
+async function LG(){
+  try{
+    const day=Number(await gx.currentDay()),week=Number(await gx.currentWeek());
+    const[ri,ps,tp,pc]=await Promise.all([gx.getRoundInfo(day),gx.getPlayerState(ad),gx.totalPlays(),gx.todayPlayerCount()]);
+    const info=ri[0],sc=Number(info.stealCount),p2=Number(info.protectCount),tot=sc+p2;
+    document.getElementById('gS').textContent=sc;document.getElementById('gP').textContent=p2;
+    document.getElementById('gBS').style.width=tot?((sc/tot*100)+'%'):'50%';
+    document.getElementById('gBP').style.width=tot?((p2/tot*100)+'%'):'50%';
+    document.getElementById('hB').textContent=tp.toString();document.getElementById('xC').textContent=pc.toString();
+    document.getElementById('xS').textContent=ps.streak.toString();document.getElementById('xB').textContent=ps.bestStreak.toString();
+    document.getElementById('xW').textContent=ps.wins.toString();document.getElementById('xG').textContent=ps.games.toString();
+    document.getElementById('xP').textContent=ps.weekPts.toString();
+    const ss=document.getElementById('bS'),sp=document.getElementById('bP');
+    ss.classList.remove('off','pk');sp.classList.remove('off','pk');
+    ss.querySelectorAll('.bpt').forEach(x=>x.remove());sp.querySelectorAll('.bpt').forEach(x=>x.remove());
+    if(ps.playedToday){
+      ss.classList.add('off');sp.classList.add('off');
+      if(ps.todaySide){ss.classList.add('pk');ss.insertAdjacentHTML('beforeend','<div class="bpt" style="border-color:var(--red);color:var(--red)">YOUR PICK</div>');}
+      else{sp.classList.add('pk');sp.insertAdjacentHTML('beforeend','<div class="bpt" style="border-color:var(--cyan);color:var(--cyan)">YOUR PICK</div>');}
+      document.getElementById('gSt').textContent='Played today. Come back tomorrow!';
     }
-
-    umiContract = new ethers.Contract(umiAddr, UMI_ABI, signer);
-    if (gmAddr && gmAddr !== '0x0000000000000000000000000000000000000000') {
-      gmContract = new ethers.Contract(gmAddr, GM_ABI, signer);
-    }
-
-    const btn = document.getElementById('connectBtn');
-    btn.textContent = userAddress.slice(0,6) + '...' + userAddress.slice(-4);
-    btn.classList.add('connected');
-    document.getElementById('networkName').textContent = currentChainId === 5031 ? 'MAINNET' : 'TESTNET';
-    document.getElementById('connectScreen').style.display = 'none';
-    document.getElementById('profileSection').style.display = 'block';
-    document.getElementById('submitBtn').disabled = false;
-
-    loadTotalProfiles();
-    loadProfile();
-    if (gmContract) { loadGMData(); document.getElementById('gmSection').style.display = 'grid'; }
-  } catch (err) { console.error(err); alert(err.message); }
-}
-
-// ════════════════════════════════════════════
-//  UMI PROFILE
-// ════════════════════════════════════════════
-async function loadProfile() {
-  document.getElementById('loadingState').style.display = 'block';
-  document.getElementById('passportCard').style.display = 'none';
-  document.getElementById('emptyState').style.display = 'none';
-  try {
-    const p = await umiContract.getProfile(userAddress);
-    if (p.exists) { showProfile(p); } else {
-      document.getElementById('loadingState').style.display = 'none';
-      document.getElementById('emptyState').style.display = 'block';
-      document.getElementById('formTitle').textContent = '◈ Create Identity';
-    }
-  } catch (err) {
-    console.error(err);
-    document.getElementById('loadingState').style.display = 'none';
-    document.getElementById('emptyState').style.display = 'block';
-  }
-}
-
-function showProfile(p) {
-  document.getElementById('loadingState').style.display = 'none';
-  document.getElementById('passportCard').style.display = 'block';
-  document.getElementById('formTitle').textContent = '◈ Update Identity';
-  document.getElementById('passportId').textContent = userAddress;
-  document.getElementById('dispNickname').textContent = p.nickname;
-  document.getElementById('dispAddress').textContent = userAddress;
-  document.getElementById('dispBio').textContent = p.bio || 'No bio set';
-  const frame = document.getElementById('avatarFrame');
-  if (p.avatarUrl) {
-    frame.innerHTML = '<img src="'+p.avatarUrl+'" onerror="this.parentElement.innerHTML=\'<div class=avatar-placeholder>◈</div>\'">';
-  } else {
-    frame.innerHTML = '<div class="avatar-placeholder">'+(p.nickname?p.nickname[0].toUpperCase():'◈')+'</div>';
-  }
-  const socialEl = document.getElementById('dispSocial');
-  if (p.socialUrl) { socialEl.style.display='inline-flex'; socialEl.href=p.socialUrl; document.getElementById('dispSocialText').textContent=p.socialUrl.replace('https://',''); }
-  else { socialEl.style.display='none'; }
-  const created=Number(p.createdAt), updated=Number(p.updatedAt);
-  document.getElementById('dispCreated').textContent = created ? new Date(created*1000).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—';
-  document.getElementById('dispUpdated').textContent = updated ? new Date(updated*1000).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—';
-  const ageDays = created ? Math.floor((Date.now()/1000-created)/86400) : 0;
-  let rank,rc;
-  if(ageDays>=365){rank='LEGEND';rc='rank-legend';}
-  else if(ageDays>=90){rank='PIONEER';rc='rank-pioneer';}
-  else if(ageDays>=7){rank='EXPLORER';rc='rank-explorer';}
-  else{rank='GENESIS';rc='rank-genesis';}
-  document.getElementById('dispRank').textContent=rank;
-  const badge=document.getElementById('rankBadge');badge.textContent=rank;badge.className='rank-badge '+rc;
-  document.getElementById('inNickname').value=p.nickname;
-  document.getElementById('inAvatar').value=p.avatarUrl;
-  document.getElementById('inBio').value=p.bio;
-  document.getElementById('inSocial').value=p.socialUrl;
-}
-
-async function loadTotalProfiles() {
-  try { document.getElementById('totalProfiles').textContent = (await umiContract.totalProfiles()).toString(); } catch(e) {}
-}
-
-async function submitProfile() {
-  const n=document.getElementById('inNickname').value.trim();
-  const a=document.getElementById('inAvatar').value.trim();
-  const b=document.getElementById('inBio').value.trim();
-  const s=document.getElementById('inSocial').value.trim();
-  if(!n){setStatus('Nickname is required',true);return;}
-  const btn=document.getElementById('submitBtn');
-  btn.disabled=true;btn.textContent='SIGNING...';setStatus('Waiting for wallet...',false);
-  try {
-    const tx=await umiContract.setProfile(n,a,b,s);
-    btn.textContent='CONFIRMING...';setStatus('Transaction sent...',false);
-    await tx.wait();
-    setStatus('Identity saved on-chain ✓',false);btn.textContent='SAVE IDENTITY';btn.disabled=false;
-    loadProfile();loadTotalProfiles();
-  } catch(err) {
-    setStatus(err.reason||err.message||'Failed',true);btn.textContent='SAVE IDENTITY';btn.disabled=false;
-  }
-}
-
-function setStatus(msg,isErr) {
-  const el=document.getElementById('formStatus');el.textContent=msg;el.className='form-status'+(isErr?' error':'');
-}
-
-// ════════════════════════════════════════════
-//  GM BOARD
-// ════════════════════════════════════════════
-async function loadGMData() {
-  try {
-    const [stats, total, recent] = await Promise.all([
-      gmContract.getUserStats(userAddress),
-      gmContract.totalGMs(),
-      gmContract.getRecentGMs()
-    ]);
-    document.getElementById('myGMs').textContent = stats.gmCount.toString();
-    document.getElementById('globalGMs').textContent = total.toString();
-    document.getElementById('totalGMs').textContent = total.toString();
-
-    if (!stats.canGM) { startCooldown(Number(stats.cooldownLeft)); }
-    else { document.getElementById('gmBtn').disabled=false;document.getElementById('gmCooldown').textContent=''; }
-
-    renderFeed(recent.entries, Number(recent.count));
-  } catch(err) { console.error('GM load error:', err); }
-}
-
-function renderFeed(entries, count) {
-  const feed = document.getElementById('gmFeed');
-  if (count === 0) { feed.innerHTML = '<div class="gm-feed-empty">No GMs yet. Be the first! ☀️</div>'; return; }
-
-  // Reverse to show newest first
-  const sorted = [];
-  for (let i = 0; i < count; i++) sorted.push(entries[i]);
-  sorted.sort((a, b) => Number(b.timestamp) - Number(a.timestamp));
-
-  feed.innerHTML = sorted.map(e => {
-    const addr = e.sender;
-    const short = addr.slice(0,6)+'...'+addr.slice(-4);
-    const time = timeAgo(Number(e.timestamp));
-    const msg = e.message || 'GM ☀️';
-    return `<div class="gm-entry">
-      <div class="gm-entry-dot"></div>
-      <div class="gm-entry-content">
-        <div class="gm-entry-top">
-          <span class="gm-entry-addr">${short}</span>
-          <span class="gm-entry-time">${time}</span>
-        </div>
-        <div class="gm-entry-msg">${escapeHtml(msg)}</div>
-      </div>
-    </div>`;
-  }).join('');
-
-  // Resolve nicknames async
-  sorted.forEach(async (e, i) => {
-    try {
-      const nick = await umiContract.getNickname(e.sender);
-      if (nick) {
-        const nameEls = feed.querySelectorAll('.gm-entry-content .gm-entry-top');
-        if (nameEls[i]) {
-          const nameSpan = document.createElement('span');
-          nameSpan.className = 'gm-entry-name';
-          nameSpan.textContent = nick;
-          nameEls[i].prepend(nameSpan);
-        }
+    if(day>0){try{
+      const yi=(await gx.getRoundInfo(day-1))[0];
+      if(Number(yi.stealCount)>0||Number(yi.protectCount)>0){
+        document.getElementById('YD').style.display='flex';
+        const sw=yi.resolved?yi.stealWon:Number(yi.stealCount)>Number(yi.protectCount);
+        document.getElementById('YR').textContent=(sw?'🔥 STEAL':'🛡️ PROTECT')+' WON ('+yi.stealCount+' vs '+yi.protectCount+')';
+        document.getElementById('YR').className='yr '+(sw?'ylo':'yw');
+        const yp=await gx.hasPlayed(day-1,ad);
+        if(yp){const ys=await gx.playerSide(day-1,ad);const yw=ys===sw;
+          document.getElementById('YU').textContent=yw?'✓ YOU WON':'✗ YOU LOST';document.getElementById('YU').style.color=yw?'var(--green)':'var(--red)';}
       }
-    } catch(err) {}
-  });
+    }catch(e){}}
+    try{const[addrs,pts]=await gx.getWeeklyLeaderboard(week);
+      if(addrs.length>0){const lb=addrs.map((a,i)=>({a,p:Number(pts[i])})).sort((a,b)=>b.p-a.p).slice(0,20);
+        const el=document.getElementById('LB');
+        el.innerHTML=lb.map((e,i)=>{const r=i<3?['g','s','b'][i]:'';const sh=e.a.slice(0,6)+'...'+e.a.slice(-4);const me=e.a.toLowerCase()===ad.toLowerCase()?' (YOU)':'';
+          return '<div class="lbr"><div class="lrk '+r+'">#'+(i+1)+'</div><div class="lnm"><span class="lad">'+sh+me+'</span></div><div class="lpt">'+e.p+'</div></div>';}).join('');
+        lb.forEach(async(e,i)=>{try{const n=await um.getNickname(e.a);if(n){const rows=el.querySelectorAll('.lnm');if(rows[i])rows[i].innerHTML=n+'<br><span class="lad">'+e.a.slice(0,6)+'...'+e.a.slice(-4)+(e.a.toLowerCase()===ad.toLowerCase()?' (YOU)':'')+'</span>';}}catch(er){}});
+      }
+    }catch(e){}
+  }catch(e){console.error('G:',e);}
 }
 
-async function sayGM() {
-  const btn = document.getElementById('gmBtn');
-  const msg = document.getElementById('gmMessage').value.trim();
-  btn.disabled = true; btn.textContent = '...';
-  setGMStatus('Waiting for wallet...', false);
-  try {
-    const tx = await gmContract.sayGM(msg);
-    setGMStatus('Transaction sent...', false);
-    await tx.wait();
-    setGMStatus('GM sent! ☀️', false);
-    document.getElementById('gmMessage').value = '';
-    loadGMData();
-  } catch(err) {
-    console.error(err);
-    setGMStatus(err.reason || 'Failed to send GM', true);
-    btn.disabled = false; btn.textContent = 'GM';
-  }
+async function PL(steal){
+  const ss=document.getElementById('bS'),sp=document.getElementById('bP');
+  if(ss.classList.contains('off'))return;
+  ss.classList.add('off');sp.classList.add('off');
+  document.getElementById('gSt').textContent='Waiting for wallet...';document.getElementById('gSt').className='bst';
+  try{const tx=await gx.play(steal);document.getElementById('gSt').textContent='Confirming...';await tx.wait();
+    document.getElementById('gSt').textContent='Choice recorded! ⚔';LG();LA();
+  }catch(e){document.getElementById('gSt').textContent=e.reason||'Failed';document.getElementById('gSt').className='bst er';ss.classList.remove('off');sp.classList.remove('off');}
 }
 
-function startCooldown(secondsLeft) {
-  const btn = document.getElementById('gmBtn');
-  btn.disabled = true; btn.classList.add('cooldown');
-  if (cooldownTimer) clearInterval(cooldownTimer);
-  let remaining = secondsLeft;
-  const update = () => {
-    if (remaining <= 0) {
-      clearInterval(cooldownTimer);
-      btn.disabled = false; btn.classList.remove('cooldown'); btn.textContent = 'GM';
-      document.getElementById('gmCooldown').textContent = '';
-      return;
-    }
-    const h = Math.floor(remaining/3600);
-    const m = Math.floor((remaining%3600)/60);
-    const s = remaining%60;
-    btn.textContent = `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-    document.getElementById('gmCooldown').textContent = 'Cooldown active — next GM available soon';
-    remaining--;
-  };
-  update();
-  cooldownTimer = setInterval(update, 1000);
+function ST(){if(ti)clearInterval(ti);
+  gx.roundTimeLeft().then(l=>{let s=Number(l);const u=()=>{if(s<0)s=0;const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sc=s%60;
+    document.getElementById('gT').textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(sc).padStart(2,'0');s--;};u();ti=setInterval(u,1000);});
 }
 
-function setGMStatus(msg, isErr) {
-  const el = document.getElementById('gmStatus');
-  el.textContent = msg; el.className = 'gm-status' + (isErr ? ' error' : '');
+// GM
+async function LGM(){
+  try{const[st,tot,rec]=await Promise.all([gm.getUserStats(ad),gm.totalGMs(),gm.getRecentGMs()]);
+    document.getElementById('gMy').textContent=st[0].toString();document.getElementById('gAl').textContent=tot.toString();
+    if(!st[2])document.getElementById('gBtn').disabled=true;
+    const ent=rec[0],cnt=Number(rec[1]);
+    if(!cnt){document.getElementById('gFd').innerHTML='<div class="lbe">No GMs yet ☀️</div>';return;}
+    const sorted=[];for(let i=0;i<cnt;i++)sorted.push(ent[i]);sorted.sort((a,b)=>Number(b.timestamp)-Number(a.timestamp));
+    const fd=document.getElementById('gFd');
+    fd.innerHTML=sorted.map(e=>'<div class="ge"><div class="gd"></div><div class="gc"><div class="gt"><span class="ga">'+e.sender.slice(0,6)+'...'+e.sender.slice(-4)+'</span><span class="gtm">'+TA(Number(e.timestamp))+'</span></div><div class="gms">'+ES(e.message||'GM ☀️')+'</div></div></div>').join('');
+    sorted.forEach(async(e,i)=>{try{const n=await um.getNickname(e.sender);if(n){const t=fd.querySelectorAll('.gt');if(t[i]){const s=document.createElement('span');s.className='gn';s.textContent=n;t[i].prepend(s);}}}catch(er){}});
+  }catch(e){console.error('GM:',e);}
 }
 
-function timeAgo(ts) {
-  const diff = Math.floor(Date.now()/1000) - ts;
-  if (diff < 60) return 'just now';
-  if (diff < 3600) return Math.floor(diff/60) + 'm ago';
-  if (diff < 86400) return Math.floor(diff/3600) + 'h ago';
-  return Math.floor(diff/86400) + 'd ago';
+async function GM(){
+  const b=document.getElementById('gBtn'),m=document.getElementById('gMsg').value.trim();
+  b.disabled=true;GS('Waiting...',0);
+  try{const tx=await gm.sayGM(m);GS('Confirming...',0);await tx.wait();GS('GM sent! ☀️',0);document.getElementById('gMsg').value='';LGM();}
+  catch(e){GS(e.reason||'Failed',1);b.disabled=false;}
 }
+function GS(m,e){const el=document.getElementById('gSs');el.textContent=m;el.className='gss'+(e?' er':'');}
+function TA(ts){const d=Math.floor(Date.now()/1000)-ts;if(d<60)return'now';if(d<3600)return Math.floor(d/60)+'m';if(d<86400)return Math.floor(d/3600)+'h';return Math.floor(d/86400)+'d';}
+function ES(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
 
-function escapeHtml(str) {
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
-}
-
-// ════════════════════════════════════════════
-//  LISTENERS
-// ════════════════════════════════════════════
-if (window.ethereum) {
-  window.ethereum.on('accountsChanged', () => location.reload());
-  window.ethereum.on('chainChanged', () => location.reload());
-}
+if(window.ethereum){window.ethereum.on('accountsChanged',()=>location.reload());window.ethereum.on('chainChanged',()=>location.reload());}
 </script>
 </body>
 </html>

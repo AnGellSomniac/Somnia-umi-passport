@@ -26,12 +26,20 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .tabs{display:flex;gap:2px;margin-bottom:18px;border-bottom:1px solid var(--bd);overflow-x:auto}
 .tab{font-family:'Orbitron';font-size:11px;letter-spacing:2px;padding:10px 20px;cursor:pointer;color:var(--dm);border-bottom:2px solid transparent;transition:.3s;text-transform:uppercase;white-space:nowrap}
 .tab:hover{color:var(--tx)}.tab.a{color:var(--cy);border-bottom-color:var(--cy)}.pnl{display:none}.pnl.a{display:block}
-.pools{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:18px}
-.pc2{border:1px solid var(--bd);background:var(--cd);padding:16px;text-align:center;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));position:relative;overflow:hidden}
-.pc2::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cy),var(--mg))}
-.pc2 .pl{font-family:'Share Tech Mono';font-size:9px;letter-spacing:2px;color:var(--dm);text-transform:uppercase;margin-bottom:4px}
-.pc2 .pv{font-family:'Orbitron';font-size:20px;font-weight:800;color:var(--cy)}
-.pc2 .ps{font-family:'Share Tech Mono';font-size:8px;color:var(--dm);margin-top:2px}
+.pools{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:20px}
+.pc2{border:1px solid;padding:20px;text-align:center;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));position:relative;overflow:hidden}
+.pc2.pool-daily{border-color:rgba(0,240,255,.25);background:linear-gradient(135deg,rgba(0,240,255,.06),var(--cd))}
+.pc2.pool-daily::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--cy),transparent)}
+.pc2.pool-weekly{border-color:rgba(255,0,229,.25);background:linear-gradient(135deg,rgba(255,0,229,.06),var(--cd))}
+.pc2.pool-weekly::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--mg),transparent)}
+.pc2.pool-pending{border-color:rgba(255,215,0,.25);background:linear-gradient(135deg,rgba(255,215,0,.06),var(--cd))}
+.pc2.pool-pending::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gd),transparent)}
+.pc2 .pl{font-family:'Orbitron';font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:6px}
+.pc2.pool-daily .pl{color:var(--cy)}.pc2.pool-weekly .pl{color:var(--mg)}.pc2.pool-pending .pl{color:var(--gd)}
+.pc2 .pv{font-family:'Orbitron';font-size:26px;font-weight:900;text-shadow:0 0 25px currentColor}
+.pc2.pool-daily .pv{color:var(--cy)}.pc2.pool-weekly .pv{color:var(--mg)}.pc2.pool-pending .pv{color:var(--gd)}
+.pc2 .ps{font-family:'Share Tech Mono';font-size:9px;color:var(--dm);margin-top:4px}
+.pc2 .pool-icon{font-size:20px;margin-bottom:6px}
 .crd{border:1px solid var(--bd);background:var(--cd);position:relative;overflow:hidden;clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));margin-bottom:16px}
 .crd::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--cy),var(--mg),var(--cy));background-size:200% 100%;animation:gs 4s linear infinite}
 @keyframes gs{0%{background-position:0% 0}100%{background-position:200% 0}}
@@ -128,7 +136,29 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .ld{display:flex;align-items:center;gap:8px;padding:24px;justify-content:center}
 .spn{width:14px;height:14px;border:2px solid var(--bd);border-top-color:var(--cy);border-radius:50%;animation:sp .8s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}.ld span{font-family:'Share Tech Mono';font-size:10px;color:var(--dm)}
-@media(max-width:900px){.arena{grid-template-columns:1fr;gap:12px}.w-img{max-width:200px;aspect-ratio:auto;height:220px}.gmr,.lbs-wrap{grid-template-columns:1fr}.ppb{flex-direction:column;align-items:center;text-align:center}.fg{grid-template-columns:1fr}.srow{grid-template-columns:repeat(3,1fr)}.pools{grid-template-columns:1fr}}
+/* NFT TROPHY */
+.nft-block{border:2px solid rgba(255,215,0,.2);background:linear-gradient(135deg,rgba(255,215,0,.04),rgba(255,0,229,.03),var(--cd));position:relative;overflow:hidden;margin-top:16px;padding:32px 24px;text-align:center}
+.nft-block::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gd),var(--mg),var(--gd));background-size:200% 100%;animation:gs 3s linear infinite}
+.nft-block::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 40% at 50% 20%,rgba(255,215,0,.06),transparent);pointer-events:none}
+.nft-trophy{font-size:56px;margin-bottom:12px;filter:drop-shadow(0 0 20px rgba(255,215,0,.3));animation:tFloat 3s ease-in-out infinite}
+@keyframes tFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-8px) scale(1.05)}}
+.nft-title{font-family:'Orbitron';font-size:22px;font-weight:900;letter-spacing:4px;background:linear-gradient(135deg,var(--gd),#fff5cc,var(--gd));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px;text-transform:uppercase}
+.nft-sub{font-family:'Share Tech Mono';font-size:11px;color:var(--mg);letter-spacing:2px;margin-bottom:16px}
+.nft-countdown{display:flex;gap:16px;justify-content:center;margin-bottom:20px}
+.nft-cd-item{text-align:center}
+.nft-cd-num{font-family:'Orbitron';font-size:28px;font-weight:800;color:var(--gd);text-shadow:0 0 15px rgba(255,215,0,.2);display:block;min-width:48px;padding:4px 8px;border:1px solid rgba(255,215,0,.15);background:rgba(0,0,0,.3)}
+.nft-cd-lbl{font-family:'Share Tech Mono';font-size:8px;color:var(--dm);letter-spacing:1px;margin-top:4px}
+.nft-desc{font-size:14px;color:var(--tx);opacity:.85;max-width:520px;margin:0 auto 20px;line-height:1.6}
+.nft-criteria{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
+.nft-crit{border:1px solid var(--bd);padding:10px 16px;text-align:center;background:rgba(0,0,0,.2);min-width:120px}
+.nft-crit-val{font-family:'Orbitron';font-size:12px;font-weight:700;color:var(--cy)}
+.nft-crit-lbl{font-family:'Share Tech Mono';font-size:8px;color:var(--dm);margin-top:2px;letter-spacing:1px}
+.nft-tip{font-family:'Share Tech Mono';font-size:10px;color:var(--gn);border:1px solid rgba(57,255,20,.2);padding:8px 16px;display:inline-block;margin-bottom:20px;background:rgba(57,255,20,.03)}
+.nft-claim{font-family:'Orbitron';font-weight:800;font-size:14px;letter-spacing:3px;padding:14px 40px;border:2px solid var(--gd);background:linear-gradient(135deg,rgba(255,215,0,.1),transparent);color:var(--gd);cursor:pointer;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));transition:.3s;text-transform:uppercase}
+.nft-claim:hover{background:linear-gradient(135deg,rgba(255,215,0,.15),rgba(255,0,229,.05));box-shadow:0 0 30px rgba(255,215,0,.15),0 0 60px rgba(255,0,229,.05)}
+.nft-claim:disabled{opacity:.3;cursor:not-allowed;box-shadow:none}
+
+@media(max-width:900px){.arena{grid-template-columns:1fr;gap:12px}.w-img{max-width:200px;aspect-ratio:auto;height:220px}.gmr,.lbs-wrap{grid-template-columns:1fr}.ppb{flex-direction:column;align-items:center;text-align:center}.fg{grid-template-columns:1fr}.srow{grid-template-columns:repeat(3,1fr)}.pools{grid-template-columns:1fr}.nft-countdown{gap:10px}.nft-cd-num{font-size:22px}}
 </style>
 </head>
 <body>
@@ -188,9 +218,9 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   <div class="tab" data-t="profile">◈ Passport</div>
 </div>
 <div class="pools">
-  <div class="pc2"><div class="pl">Daily Prize Pool</div><div class="pv" id="pDay">0 STT</div><div class="ps">25% of today's GM</div></div>
-  <div class="pc2"><div class="pl">Weekly Pool</div><div class="pv" style="color:var(--mg)" id="pWeek">0 STT</div><div class="ps">60% accumulated · merges on final day</div></div>
-  <div class="pc2"><div class="pl">Your Pending Reward</div><div class="pv" style="color:var(--gd)" id="pYou">—</div><div class="ps">claim within 24h</div></div>
+  <div class="pc2 pool-daily"><div class="pool-icon">💎</div><div class="pl">Daily Prize Pool</div><div class="pv" id="pDay">0 STT</div><div class="ps">25% of today's GM fees</div></div>
+  <div class="pc2 pool-weekly"><div class="pool-icon">🔮</div><div class="pl">Weekly Pool</div><div class="pv" id="pWeek">0 STT</div><div class="ps">60% accumulated · merges on final day</div></div>
+  <div class="pc2 pool-pending"><div class="pool-icon">⚡</div><div class="pl">Your Pending Reward</div><div class="pv" id="pYou">—</div><div class="ps">claim within 24h or it expires</div></div>
 </div>
 
 <div class="pnl a" id="t-game">
@@ -251,6 +281,31 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   <div class="lbs-wrap">
     <div class="crd"><div class="ch" style="color:var(--mg)">⭐ XP Leaderboard (Weekly)</div><div class="lb" id="LBx"><div class="lbe">Say GM to earn XP!</div></div></div>
     <div class="crd"><div class="ch" style="color:var(--gd)">🏆 Battle Leaderboard (Weekly)</div><div class="lb" id="LBb"><div class="lbe">Play battles!</div></div></div>
+  </div>
+
+  <!-- NFT TROPHY -->
+  <div class="nft-block">
+    <div class="nft-trophy">🏆</div>
+    <div class="nft-title">Glory Champion NFT</div>
+    <div class="nft-sub">MONTHLY GRAND PRIZE · EXCLUSIVE ON-CHAIN TROPHY</div>
+    <div class="nft-countdown">
+      <div class="nft-cd-item"><span class="nft-cd-num" id="nftD">--</span><div class="nft-cd-lbl">DAYS</div></div>
+      <div class="nft-cd-item"><span class="nft-cd-num" id="nftH">--</span><div class="nft-cd-lbl">HOURS</div></div>
+      <div class="nft-cd-item"><span class="nft-cd-num" id="nftM">--</span><div class="nft-cd-lbl">MINS</div></div>
+      <div class="nft-cd-item"><span class="nft-cd-num" id="nftS">--</span><div class="nft-cd-lbl">SECS</div></div>
+    </div>
+    <div class="nft-desc">
+      At the end of each month, the warrior with the highest <strong style="color:var(--gd)">Glory Points</strong> earns the right to mint an exclusive NFT trophy — recorded forever on the Somnia blockchain.
+    </div>
+    <div class="nft-criteria">
+      <div class="nft-crit"><div class="nft-crit-val">40%</div><div class="nft-crit-lbl">FROM XP</div></div>
+      <div class="nft-crit"><div class="nft-crit-val">60%</div><div class="nft-crit-lbl">FROM BATTLES</div></div>
+      <div class="nft-crit"><div class="nft-crit-val">GM DAILY</div><div class="nft-crit-lbl">MAX XP GAIN</div></div>
+      <div class="nft-crit"><div class="nft-crit-val">WIN STREAKS</div><div class="nft-crit-lbl">BONUS GLORY</div></div>
+    </div>
+    <div class="nft-tip">💡 LIFEHACK: Say GM every day for streak bonus + win battles consistently. Glory = XP×0.4 + BattlePts×0.6</div>
+    <br><br>
+    <button class="nft-claim" disabled id="nftBtn">MINT NFT — COMING SOON</button>
   </div>
 </div>
 
@@ -381,6 +436,21 @@ function TA(ts){const d=Math.floor(Date.now()/1000)-ts;if(d<60)return'now';if(d<
 function ES(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
 function $(id){return document.getElementById(id);}
 if(window.ethereum){window.ethereum.on('accountsChanged',()=>location.reload());window.ethereum.on('chainChanged',()=>location.reload());}
+
+// Monthly NFT countdown
+function startNftCountdown(){
+  const now=new Date();const y=now.getUTCFullYear(),m=now.getUTCMonth();
+  const endOfMonth=new Date(Date.UTC(y,m+1,1,0,0,0));
+  const upd=()=>{
+    const diff=Math.max(0,Math.floor((endOfMonth-Date.now())/1000));
+    const d=Math.floor(diff/86400),h=Math.floor((diff%86400)/3600),mi=Math.floor((diff%3600)/60),s=diff%60;
+    if($('nftD'))$('nftD').textContent=String(d).padStart(2,'0');
+    if($('nftH'))$('nftH').textContent=String(h).padStart(2,'0');
+    if($('nftM'))$('nftM').textContent=String(mi).padStart(2,'0');
+    if($('nftS'))$('nftS').textContent=String(s).padStart(2,'0');
+  };upd();setInterval(upd,1000);
+}
+startNftCountdown();
 </script>
 </body>
 </html>

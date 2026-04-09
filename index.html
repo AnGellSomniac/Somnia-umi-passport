@@ -136,6 +136,27 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .ld{display:flex;align-items:center;gap:8px;padding:24px;justify-content:center}
 .spn{width:14px;height:14px;border:2px solid var(--bd);border-top-color:var(--cy);border-radius:50%;animation:sp .8s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}.ld span{font-family:'Share Tech Mono';font-size:10px;color:var(--dm)}
+/* TRUST FOOTER */
+.trust-footer{margin-top:40px;padding:32px 0;border-top:1px solid var(--bd)}
+.trust-header{text-align:center;margin-bottom:24px}
+.trust-title{font-family:'Orbitron';font-size:12px;letter-spacing:4px;color:var(--dm);text-transform:uppercase;margin-bottom:6px}
+.trust-badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+.trust-badge{font-family:'Share Tech Mono';font-size:9px;letter-spacing:1px;padding:4px 12px;border:1px solid;display:flex;align-items:center;gap:5px}
+.trust-badge.verified{border-color:rgba(57,255,20,.3);color:var(--gn)}.trust-badge.onchain{border-color:rgba(0,240,255,.3);color:var(--cy)}.trust-badge.open{border-color:rgba(255,0,229,.3);color:var(--mg)}
+.contracts-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.contract-card{border:1px solid var(--bd);background:rgba(0,0,0,.2);padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.cc-label{font-family:'Orbitron';font-size:9px;letter-spacing:2px;color:var(--dm);text-transform:uppercase;display:flex;align-items:center;gap:6px}
+.cc-label .cc-dot{width:6px;height:6px;border-radius:50%}
+.cc-dot.live{background:var(--gn);box-shadow:0 0 6px rgba(57,255,20,.5)}
+.cc-addr{font-family:'Share Tech Mono';font-size:10px;color:var(--cy);word-break:break-all}
+.cc-link{font-family:'Share Tech Mono';font-size:9px;color:var(--mg);text-decoration:none;display:inline-flex;align-items:center;gap:4px;transition:.3s}
+.cc-link:hover{color:var(--cy);text-shadow:0 0 8px rgba(0,240,255,.3)}
+.trust-links{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+.trust-link{font-family:'Orbitron';font-size:10px;font-weight:600;letter-spacing:2px;color:var(--tx);text-decoration:none;padding:10px 20px;border:1px solid var(--bd);transition:.3s;display:flex;align-items:center;gap:6px;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px))}
+.trust-link:hover{border-color:var(--cy);color:var(--cy);background:rgba(0,240,255,.05)}
+.trust-link .tl-icon{font-size:14px}
+.trust-copy{font-family:'Share Tech Mono';font-size:8px;color:var(--dm);text-align:center;margin-top:20px;letter-spacing:1px}
+
 /* NFT TROPHY */
 .nft-block{border:2px solid rgba(255,215,0,.2);background:linear-gradient(135deg,rgba(255,215,0,.04),rgba(255,0,229,.03),var(--cd));position:relative;overflow:hidden;margin-top:16px;padding:32px 24px;text-align:center}
 .nft-block::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gd),var(--mg),var(--gd));background-size:200% 100%;animation:gs 3s linear infinite}
@@ -158,7 +179,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .nft-claim:hover{background:linear-gradient(135deg,rgba(255,215,0,.15),rgba(255,0,229,.05));box-shadow:0 0 30px rgba(255,215,0,.15),0 0 60px rgba(255,0,229,.05)}
 .nft-claim:disabled{opacity:.3;cursor:not-allowed;box-shadow:none}
 
-@media(max-width:900px){.arena{grid-template-columns:1fr;gap:12px}.w-img{max-width:200px;aspect-ratio:auto;height:220px}.gmr,.lbs-wrap{grid-template-columns:1fr}.ppb{flex-direction:column;align-items:center;text-align:center}.fg{grid-template-columns:1fr}.srow{grid-template-columns:repeat(3,1fr)}.pools{grid-template-columns:1fr}.nft-countdown{gap:10px}.nft-cd-num{font-size:22px}}
+@media(max-width:900px){.arena{grid-template-columns:1fr;gap:12px}.w-img{max-width:200px;aspect-ratio:auto;height:220px}.gmr,.lbs-wrap,.contracts-grid{grid-template-columns:1fr}.ppb{flex-direction:column;align-items:center;text-align:center}.fg{grid-template-columns:1fr}.srow{grid-template-columns:repeat(3,1fr)}.pools{grid-template-columns:1fr}.nft-countdown{gap:10px}.nft-cd-num{font-size:22px}.trust-links{flex-direction:column;align-items:center}}
 </style>
 </head>
 <body>
@@ -352,6 +373,52 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 </div>
 </div><!-- /gameWrap -->
 </div><!-- /AP -->
+
+<!-- TRUST & TRANSPARENCY -->
+<div class="trust-footer">
+  <div class="trust-header">
+    <div class="trust-title">Transparency & Trust</div>
+    <div class="trust-badges">
+      <div class="trust-badge verified">✓ VERIFIED CONTRACTS</div>
+      <div class="trust-badge onchain">◈ 100% ON-CHAIN</div>
+      <div class="trust-badge open">⟐ OPEN SOURCE</div>
+    </div>
+  </div>
+
+  <div class="contracts-grid">
+    <div class="contract-card">
+      <div class="cc-label"><span class="cc-dot live"></span>UMI PASSPORT (Testnet)</div>
+      <div class="cc-addr">0x91Ee1c6C191dc6440B8058d99d2Fa94B8691adff</div>
+      <a class="cc-link" href="https://shannon-explorer.somnia.network/address/0x91Ee1c6C191dc6440B8058d99d2Fa94B8691adff" target="_blank">View on Explorer →</a>
+    </div>
+    <div class="contract-card">
+      <div class="cc-label"><span class="cc-dot live"></span>GAMEHUB v2 (Testnet)</div>
+      <div class="cc-addr">0xc51b66c9F98bCC0E2020a936BddAf7255EAbAea0</div>
+      <a class="cc-link" href="https://shannon-explorer.somnia.network/address/0xc51b66c9F98bCC0E2020a936BddAf7255EAbAea0" target="_blank">View on Explorer →</a>
+    </div>
+    <div class="contract-card">
+      <div class="cc-label"><span class="cc-dot live"></span>UMI PASSPORT (Mainnet)</div>
+      <div class="cc-addr">0xfa9c15D8B508968fCDbdB9F495C8A493C19d7351</div>
+      <a class="cc-link" href="https://explorer.somnia.network/address/0xfa9c15D8B508968fCDbdB9F495C8A493C19d7351" target="_blank">View on Explorer →</a>
+    </div>
+    <div class="contract-card">
+      <div class="cc-label" style="opacity:.5"><span class="cc-dot" style="background:var(--dm)"></span>GAMEHUB v2 (Mainnet)</div>
+      <div class="cc-addr" style="opacity:.4">Coming soon</div>
+    </div>
+  </div>
+
+  <div class="trust-links">
+    <a class="trust-link" href="https://github.com/angellsomniac/Somnia-umi-passport" target="_blank"><span class="tl-icon">⟐</span> GitHub Source</a>
+    <a class="trust-link" href="https://shannon-explorer.somnia.network/address/0xc51b66c9F98bCC0E2020a936BddAf7255EAbAea0?tab=contract" target="_blank"><span class="tl-icon">◈</span> Read Contract</a>
+    <a class="trust-link" href="https://somnia.network" target="_blank"><span class="tl-icon">⬡</span> Somnia Network</a>
+  </div>
+
+  <div class="trust-copy">
+    ALL GAME LOGIC RUNS ON-CHAIN · NO SERVER · NO ADMIN BACKDOORS · YOUR KEYS = YOUR REWARDS<br>
+    Built on Somnia Network · Steal or Protect © 2026
+  </div>
+</div>
+
 </main>
 <script>
 // ═══════ CONFIG — UPDATE AFTER DEPLOY ═══════

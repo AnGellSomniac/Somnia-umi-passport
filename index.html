@@ -5,182 +5,161 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>UMI — Steal or Protect</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.4/ethers.umd.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--cy:#00f0ff;--mg:#ff00e5;--gn:#39ff14;--gd:#ffd700;--rd:#ff3344;--bg:#06060e;--cd:#0c0c18;--cd2:#10101e;--bd:rgba(0,240,255,.12);--tx:#e8e8f0;--dm:#555577}
+:root{--cy:#00f0ff;--mg:#ff00e5;--gn:#39ff14;--gd:#ffd700;--rd:#ff3344;--bg:#0a0a12;--cd:#11111d;--bd:rgba(0,240,255,.15);--tx:#e8e8f0;--dm:#6a6a8a}
 body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 60% 40% at 15% 5%,rgba(255,51,68,.04),transparent),radial-gradient(ellipse 60% 40% at 85% 95%,rgba(0,240,255,.04),transparent),radial-gradient(ellipse 40% 30% at 50% 50%,rgba(255,0,229,.03),transparent);z-index:-2;pointer-events:none}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 20% 10%,rgba(0,240,255,.06),transparent),radial-gradient(ellipse 60% 50% at 80% 90%,rgba(255,0,229,.05),transparent);z-index:-2}
+.gbg{position:fixed;inset:0;z-index:-1;opacity:.03;background-image:linear-gradient(rgba(0,240,255,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(0,240,255,.5) 1px,transparent 1px);background-size:60px 60px}
 
-/* HEADER */
-.hdr{padding:10px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--bd);backdrop-filter:blur(30px);position:sticky;top:0;z-index:100;background:rgba(6,6,14,.95);flex-wrap:wrap;gap:6px}
-.logo{display:flex;align-items:center;gap:8px}
-.lbox{width:32px;height:32px;border:1.5px solid var(--gd);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Cinzel';font-weight:900;font-size:9px;color:var(--gd);box-shadow:0 0 12px rgba(255,215,0,.15),inset 0 0 8px rgba(255,215,0,.05)}
-.lt{font-family:'Cinzel';font-weight:800;font-size:15px;letter-spacing:2px;background:linear-gradient(135deg,var(--gd),#fff5cc,var(--gd));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.ls{font-size:8px;color:var(--dm);letter-spacing:3px;font-family:'Share Tech Mono'}
-.hs{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-.si{text-align:right}
-.sl{font-family:'Share Tech Mono';font-size:7px;color:var(--dm);letter-spacing:1px;text-transform:uppercase}
-.sv{font-family:'Orbitron';font-size:12px;font-weight:600}
-.cb{font-family:'Cinzel';font-weight:700;font-size:9px;letter-spacing:2px;padding:7px 16px;border:1px solid var(--gd);background:0;color:var(--gd);cursor:pointer;transition:.3s;text-transform:uppercase}
-.cb:hover{background:rgba(255,215,0,.08);box-shadow:0 0 15px rgba(255,215,0,.1)}.cb.on{border-color:var(--gn);color:var(--gn)}
-.main{max-width:1300px;margin:0 auto;padding:20px 14px}
-
-/* TABS */
-.tabs{display:flex;gap:2px;margin-bottom:16px;border-bottom:1px solid var(--bd);overflow-x:auto}
-.tab{font-family:'Cinzel';font-size:10px;font-weight:700;letter-spacing:2px;padding:10px 18px;cursor:pointer;color:var(--dm);border-bottom:2px solid transparent;transition:.3s;text-transform:uppercase;white-space:nowrap}
-.tab:hover{color:var(--tx)}.tab.a{color:var(--gd);border-bottom-color:var(--gd)}
+.hdr{padding:12px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--bd);backdrop-filter:blur(20px);position:sticky;top:0;z-index:100;background:rgba(10,10,18,.92);flex-wrap:wrap;gap:8px}
+.logo{display:flex;align-items:center;gap:10px}
+.lbox{width:36px;height:36px;border:2px solid var(--cy);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Orbitron';font-weight:900;font-size:11px;color:var(--cy);box-shadow:0 0 15px rgba(0,240,255,.2),inset 0 0 8px rgba(0,240,255,.05);animation:pb 3s ease-in-out infinite}
+@keyframes pb{0%,100%{box-shadow:0 0 15px rgba(0,240,255,.2)}50%{box-shadow:0 0 25px rgba(0,240,255,.35)}}
+.lt{font-family:'Orbitron';font-weight:700;font-size:17px;letter-spacing:3px}
+.ls{font-size:9px;color:var(--dm);letter-spacing:3px;font-family:'Share Tech Mono'}
+.hs{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.si{text-align:right}.sl{font-family:'Share Tech Mono';font-size:8px;color:var(--dm);letter-spacing:1px;text-transform:uppercase}
+.sv{font-family:'Orbitron';font-size:13px;font-weight:600}
+.cb{font-family:'Orbitron';font-weight:600;font-size:10px;letter-spacing:2px;padding:9px 20px;border:1px solid var(--cy);background:0;color:var(--cy);cursor:pointer;clip-path:polygon(0 0,calc(100% - 9px) 0,100% 9px,100% 100%,9px 100%,0 calc(100% - 9px));transition:.3s;text-transform:uppercase}
+.cb:hover{background:rgba(0,240,255,.1)}.cb.on{border-color:var(--gn);color:var(--gn)}
+.main{max-width:1300px;margin:0 auto;padding:24px 16px}
+.tabs{display:flex;gap:2px;margin-bottom:18px;border-bottom:1px solid var(--bd);overflow-x:auto}
+.tab{font-family:'Orbitron';font-size:11px;letter-spacing:2px;padding:10px 20px;cursor:pointer;color:var(--dm);border-bottom:2px solid transparent;transition:.3s;text-transform:uppercase;white-space:nowrap}
+.tab:hover{color:var(--tx)}.tab.a{color:var(--cy);border-bottom-color:var(--cy)}
 .pnl{display:none}.pnl.a{display:block}
 
-/* POOLS BAR */
-.pools{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px}
-.pool-card{border:1px solid rgba(255,215,0,.15);background:linear-gradient(135deg,rgba(255,215,0,.03),rgba(12,12,24,.9));padding:14px;text-align:center;position:relative;overflow:hidden}
-.pool-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gd),transparent)}
-.pool-label{font-family:'Share Tech Mono';font-size:8px;letter-spacing:2px;color:var(--dm);text-transform:uppercase;margin-bottom:4px}
-.pool-val{font-family:'Cinzel';font-size:18px;font-weight:800;color:var(--gd);text-shadow:0 0 20px rgba(255,215,0,.2)}
+/* POOLS */
+.pools{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:18px}
+.pool-card{border:1px solid var(--bd);background:var(--cd);padding:16px;text-align:center;position:relative;overflow:hidden;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px))}
+.pool-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cy),var(--mg))}
+.pool-lbl{font-family:'Share Tech Mono';font-size:9px;letter-spacing:2px;color:var(--dm);text-transform:uppercase;margin-bottom:4px}
+.pool-val{font-family:'Orbitron';font-size:20px;font-weight:800;color:var(--cy)}
 .pool-sub{font-family:'Share Tech Mono';font-size:8px;color:var(--dm);margin-top:2px}
 
 /* CARDS */
-.crd{border:1px solid var(--bd);background:var(--cd);position:relative;overflow:hidden;margin-bottom:14px}
-.crd::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--rd),var(--mg),var(--cy));background-size:200% 100%;animation:gs 6s linear infinite}
+.crd{border:1px solid var(--bd);background:var(--cd);position:relative;overflow:hidden;clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));margin-bottom:16px}
+.crd::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--cy),var(--mg),var(--cy));background-size:200% 100%;animation:gs 4s linear infinite}
 @keyframes gs{0%{background-position:0% 0}100%{background-position:200% 0}}
-.crd-corner::after{content:'';position:absolute;top:0;right:0;width:20px;height:20px;border-left:1px solid var(--bd);border-bottom:1px solid var(--bd);background:var(--bg)}
-.ch{padding:12px 18px 8px;border-bottom:1px solid var(--bd);font-family:'Cinzel';font-size:10px;font-weight:700;letter-spacing:3px;color:var(--dm);text-transform:uppercase;display:flex;align-items:center;gap:8px}
-.ch::before{content:'◆';font-size:6px;color:var(--gd)}
+.ch{padding:14px 20px 10px;border-bottom:1px solid var(--bd);font-family:'Orbitron';font-size:11px;letter-spacing:3px;color:var(--dm);text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.ch::before{content:'';width:16px;height:2px;background:var(--cy)}
 
-/* ARENA */
-.arena{display:grid;grid-template-columns:1fr 200px 1fr;gap:0;padding:16px;align-items:start}
-.warrior{text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px}
-.w-img-wrap{position:relative;width:100%;max-width:300px;aspect-ratio:3/4;display:flex;align-items:flex-end;justify-content:center;overflow:hidden;background:radial-gradient(ellipse at 50% 80%,rgba(255,51,68,.06),transparent);border-bottom:2px solid rgba(255,51,68,.2)}
-.w-img-wrap.def-bg{background:radial-gradient(ellipse at 50% 80%,rgba(0,240,255,.06),transparent);border-bottom-color:rgba(0,240,255,.2)}
-.w-img-wrap img{max-height:100%;max-width:100%;object-fit:contain;position:relative;z-index:1;filter:drop-shadow(0 4px 30px rgba(0,0,0,.6))}
-.w-label{font-family:'Cinzel';font-size:16px;font-weight:900;letter-spacing:5px;text-transform:uppercase}
-.w-label.atk{color:var(--rd);text-shadow:0 0 20px rgba(255,51,68,.3)}.w-label.def{color:var(--cy);text-shadow:0 0 20px rgba(0,240,255,.3)}
-.w-level{font-family:'Orbitron';font-size:11px;font-weight:700;letter-spacing:1px;padding:3px 12px;border:1px solid;margin:4px 0}
-.w-level.atk{color:var(--rd);border-color:rgba(255,51,68,.3)}.w-level.def{color:var(--cy);border-color:rgba(0,240,255,.3)}
-.w-boost{width:100%;max-width:200px;margin-top:6px}
-.w-boost-lbl{font-family:'Share Tech Mono';font-size:8px;color:var(--dm);letter-spacing:1px;margin-bottom:3px}
-.w-slider{width:100%;-webkit-appearance:none;height:3px;background:var(--bd);outline:none;border-radius:2px}
-.w-slider.atk-s::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--rd);cursor:pointer;box-shadow:0 0 8px rgba(255,51,68,.5)}
-.w-slider.def-s::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--cy);cursor:pointer;box-shadow:0 0 8px rgba(0,240,255,.5)}
-.w-boost-info{display:flex;justify-content:space-between;margin-top:3px}
-.w-boost-val{font-family:'Orbitron';font-size:11px;font-weight:700}
-.w-boost-cost{font-family:'Share Tech Mono';font-size:8px;color:var(--dm)}
+/* ARENA — warriors side by side with center panel */
+.arena{display:grid;grid-template-columns:1fr 220px 1fr;align-items:start;padding:20px 16px;gap:8px}
+.warrior{text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px}
 
-/* CENTER */
-.bc{text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;padding:10px 0;justify-content:center}
-.bc-tl{font-family:'Share Tech Mono';font-size:9px;color:var(--dm);letter-spacing:1px}
-.bc-tm{font-family:'Orbitron';font-size:24px;font-weight:800;color:var(--gd);letter-spacing:2px;text-shadow:0 0 15px rgba(255,215,0,.15)}
-.bc-counts{display:flex;gap:16px;align-items:center}
-.bc-cnt{text-align:center}.bc-num{font-family:'Orbitron';font-size:18px;font-weight:800}
+/* FIX: solid dark background for PNG images — no more checkered pattern */
+.w-img{width:100%;max-width:280px;aspect-ratio:3/4;background:#0d0d1a;border:1px solid var(--bd);display:flex;align-items:flex-end;justify-content:center;overflow:hidden;position:relative}
+.w-img.atk-bg{border-bottom:2px solid rgba(255,51,68,.3);box-shadow:inset 0 -40px 60px rgba(255,51,68,.06)}
+.w-img.def-bg{border-bottom:2px solid rgba(0,240,255,.3);box-shadow:inset 0 -40px 60px rgba(0,240,255,.06)}
+.w-img img{max-height:100%;max-width:100%;object-fit:contain;filter:drop-shadow(0 4px 20px rgba(0,0,0,.5))}
+
+.w-label{font-family:'Orbitron';font-size:16px;font-weight:800;letter-spacing:4px}
+.w-label.atk{color:var(--rd);text-shadow:0 0 15px rgba(255,51,68,.3)}.w-label.def{color:var(--cy);text-shadow:0 0 15px rgba(0,240,255,.3)}
+.w-level{font-family:'Orbitron';font-size:11px;font-weight:700;padding:3px 14px;border:1px solid}
+.w-level.atk{color:var(--rd);border-color:rgba(255,51,68,.3);background:rgba(255,51,68,.05)}
+.w-level.def{color:var(--cy);border-color:rgba(0,240,255,.3);background:rgba(0,240,255,.05)}
+.w-boost{width:100%;max-width:220px;margin-top:8px}
+.w-boost-lbl{font-family:'Share Tech Mono';font-size:8px;color:var(--dm);letter-spacing:1px;margin-bottom:4px}
+.w-slider{width:100%;-webkit-appearance:none;height:4px;background:rgba(255,255,255,.08);outline:none;border-radius:2px}
+.w-slider.atk-s::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--rd);cursor:pointer;box-shadow:0 0 10px rgba(255,51,68,.5)}
+.w-slider.def-s::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--cy);cursor:pointer;box-shadow:0 0 10px rgba(0,240,255,.5)}
+.w-boost-row{display:flex;justify-content:space-between;margin-top:4px}
+.w-bv{font-family:'Orbitron';font-size:12px;font-weight:700}.w-bc{font-family:'Share Tech Mono';font-size:9px;color:var(--dm)}
+
+/* CENTER BATTLE PANEL */
+.bc{text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;padding:16px 0;justify-content:center}
+.bc-tl{font-family:'Share Tech Mono';font-size:10px;color:var(--dm);letter-spacing:1px}
+.bc-tm{font-family:'Orbitron';font-size:28px;font-weight:800;color:var(--cy);letter-spacing:2px;text-shadow:0 0 20px rgba(0,240,255,.15)}
+.bc-counts{display:flex;gap:18px;align-items:center}
+.bc-cnt{text-align:center}.bc-num{font-family:'Orbitron';font-size:20px;font-weight:800}
 .bc-num.sr{color:var(--rd)}.bc-num.pr{color:var(--cy)}
-.bc-lbl{font-family:'Share Tech Mono';font-size:7px;color:var(--dm);letter-spacing:1px}
-.bc-vs{font-family:'Cinzel';font-size:10px;color:var(--dm);font-weight:700}
-.bc-bar{width:100%;height:4px;background:rgba(255,255,255,.03);display:flex;overflow:hidden}
-.bb-s{background:linear-gradient(90deg,var(--rd),rgba(255,51,68,.5));transition:width .5s}
-.bb-p{background:linear-gradient(90deg,rgba(0,240,255,.5),var(--cy));transition:width .5s}
+.bc-lbl{font-family:'Share Tech Mono';font-size:8px;color:var(--dm);letter-spacing:1px}
+.bc-vs{font-family:'Orbitron';font-size:11px;color:var(--dm)}
+.bc-bar{width:100%;height:5px;background:rgba(255,255,255,.04);display:flex;overflow:hidden}
+.bb-s{background:var(--rd);transition:width .5s}.bb-p{background:var(--cy);transition:width .5s}
 .bc-btns{display:flex;gap:8px;width:100%}
-.b-btn{flex:1;font-family:'Cinzel';font-weight:800;font-size:11px;letter-spacing:2px;padding:10px 6px;border:2px solid;background:0;cursor:pointer;transition:.3s;text-transform:uppercase}
+.b-btn{flex:1;font-family:'Orbitron';font-weight:700;font-size:12px;letter-spacing:2px;padding:12px 8px;border:2px solid;background:0;cursor:pointer;transition:.3s;text-transform:uppercase;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px))}
 .b-btn.steal{color:var(--rd);border-color:rgba(255,51,68,.4)}
 .b-btn.protect{color:var(--cy);border-color:rgba(0,240,255,.4)}
-.b-btn.steal:hover{background:rgba(255,51,68,.08);border-color:var(--rd);box-shadow:0 0 20px rgba(255,51,68,.12)}
-.b-btn.protect:hover{background:rgba(0,240,255,.08);border-color:var(--cy);box-shadow:0 0 20px rgba(0,240,255,.12)}
+.b-btn.steal:hover{background:rgba(255,51,68,.1);border-color:var(--rd);box-shadow:0 0 25px rgba(255,51,68,.15)}
+.b-btn.protect:hover{background:rgba(0,240,255,.1);border-color:var(--cy);box-shadow:0 0 25px rgba(0,240,255,.15)}
 .b-btn:disabled,.b-btn.off{opacity:.25;cursor:not-allowed;box-shadow:none!important}
-.bc-status{font-family:'Share Tech Mono';font-size:9px;min-height:14px;color:var(--gn)}.bc-status.er{color:var(--rd)}
+.bc-st{font-family:'Share Tech Mono';font-size:10px;min-height:16px;color:var(--gn)}.bc-st.er{color:var(--rd)}
 
-/* CLAIM */
-.claim-bar{padding:12px 18px;border-top:1px solid rgba(255,215,0,.1);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;background:linear-gradient(90deg,rgba(255,215,0,.02),transparent)}
-.claim-info{font-family:'Share Tech Mono';font-size:10px;color:var(--dm)}
-.claim-amt{font-family:'Cinzel';font-size:15px;font-weight:800;color:var(--gd);text-shadow:0 0 10px rgba(255,215,0,.2)}
-.claim-btn{font-family:'Cinzel';font-weight:800;font-size:10px;letter-spacing:2px;padding:8px 20px;border:1.5px solid var(--gd);background:0;color:var(--gd);cursor:pointer;transition:.3s}
-.claim-btn:hover{background:rgba(255,215,0,.08);box-shadow:0 0 20px rgba(255,215,0,.12)}
-.claim-btn:disabled{opacity:.25;cursor:not-allowed}
-.yday{padding:10px 18px;border-top:1px solid var(--bd);display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
-.yl{font-family:'Share Tech Mono';font-size:8px;color:var(--dm)}.yr{font-family:'Orbitron';font-size:11px;font-weight:700}
-.yw{color:var(--gn)}.ylo{color:var(--rd)}
+.claim-bar{padding:14px 20px;border-top:1px solid rgba(255,215,0,.15);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;background:linear-gradient(90deg,rgba(255,215,0,.03),transparent)}
+.claim-info{font-family:'Share Tech Mono';font-size:10px;color:var(--dm)}.claim-amt{font-family:'Orbitron';font-size:15px;font-weight:700;color:var(--gd)}
+.claim-btn{font-family:'Orbitron';font-weight:700;font-size:10px;letter-spacing:2px;padding:9px 22px;border:1.5px solid var(--gd);background:0;color:var(--gd);cursor:pointer;transition:.3s;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px))}
+.claim-btn:hover{background:rgba(255,215,0,.1);box-shadow:0 0 20px rgba(255,215,0,.12)}.claim-btn:disabled{opacity:.25;cursor:not-allowed}
+.yday{padding:10px 20px;border-top:1px solid var(--bd);display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
+.yl{font-family:'Share Tech Mono';font-size:9px;color:var(--dm)}.yr{font-family:'Orbitron';font-size:12px;font-weight:700}.yw{color:var(--gn)}.ylo{color:var(--rd)}
 
-/* STATS */
-.srow{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:8px;margin-bottom:14px}
-.sc{border:1px solid var(--bd);background:var(--cd);padding:12px 8px;text-align:center}
-.sc .v{font-family:'Orbitron';font-size:16px;font-weight:800}.sc .l{font-family:'Share Tech Mono';font-size:7px;color:var(--dm);letter-spacing:1px;margin-top:2px}
+.srow{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-bottom:16px}
+.sc{border:1px solid var(--bd);background:var(--cd);padding:14px 10px;text-align:center;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px))}
+.sc .v{font-family:'Orbitron';font-size:20px;font-weight:800}.sc .l{font-family:'Share Tech Mono';font-size:8px;color:var(--dm);letter-spacing:1px;margin-top:2px}
+.lbs-wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.lb{padding:8px 0;max-height:280px;overflow-y:auto}.lb::-webkit-scrollbar{width:3px}.lb::-webkit-scrollbar-thumb{background:var(--bd)}
+.lbr{display:flex;align-items:center;padding:7px 16px;border-bottom:1px solid rgba(255,255,255,.03);gap:8px}.lbr:hover{background:rgba(0,240,255,.02)}
+.lrk{font-family:'Orbitron';font-size:12px;font-weight:700;width:26px;text-align:center}.lrk.g{color:var(--gd)}.lrk.s{color:#c0c0c0}.lrk.b{color:#cd7f32}
+.lnm{font-family:'Orbitron';font-size:10px;font-weight:600;flex:1}.lad{font-family:'Share Tech Mono';font-size:8px;color:var(--dm)}
+.lpt{font-family:'Orbitron';font-size:13px;font-weight:700;color:var(--cy)}
+.lbe{padding:24px;text-align:center;font-family:'Share Tech Mono';font-size:11px;color:var(--dm)}
 
-/* LEADERBOARD */
-.lbs-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.lb{padding:6px 0;max-height:260px;overflow-y:auto}
-.lb::-webkit-scrollbar{width:2px}.lb::-webkit-scrollbar-thumb{background:var(--bd)}
-.lbr{display:flex;align-items:center;padding:6px 14px;border-bottom:1px solid rgba(255,255,255,.02);gap:8px}
-.lbr:hover{background:rgba(255,215,0,.02)}
-.lrk{font-family:'Cinzel';font-size:12px;font-weight:800;width:24px;text-align:center}
-.lrk.g{color:var(--gd)}.lrk.s{color:#c0c0c0}.lrk.b{color:#cd7f32}
-.lnm{font-family:'Orbitron';font-size:9px;font-weight:600;flex:1}
-.lad{font-family:'Share Tech Mono';font-size:7px;color:var(--dm)}
-.lpt{font-family:'Orbitron';font-size:12px;font-weight:700;color:var(--gd)}
-.lbe{padding:20px;text-align:center;font-family:'Share Tech Mono';font-size:10px;color:var(--dm)}
-
-/* GM */
-.gmr{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.gma{padding:18px;text-align:center;display:flex;flex-direction:column;align-items:center}
-.gmb{font-family:'Cinzel';font-weight:900;font-size:18px;letter-spacing:4px;padding:12px 36px;border:2px solid var(--gn);background:0;color:var(--gn);cursor:pointer;transition:.3s;margin:8px 0}
-.gmb:hover{background:rgba(57,255,20,.08);box-shadow:0 0 25px rgba(57,255,20,.1)}.gmb:disabled{opacity:.25;cursor:not-allowed;border-color:var(--dm);color:var(--dm)}
-.gmi{width:100%;font-family:'Rajdhani';font-size:12px;padding:7px;background:rgba(0,0,0,.3);border:1px solid var(--bd);color:var(--tx);outline:none;text-align:center}
-.gmi:focus{border-color:var(--gn)}
-.gmf{max-height:240px;overflow-y:auto;padding:4px 0}
-.ge{padding:6px 14px;border-bottom:1px solid rgba(255,255,255,.02);display:flex;gap:6px;align-items:flex-start}
-.gd2{width:4px;height:4px;border-radius:50%;background:var(--gn);margin-top:5px;flex-shrink:0}
+.gmr{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.gma{padding:20px;text-align:center;display:flex;flex-direction:column;align-items:center}
+.gmb{font-family:'Orbitron';font-weight:800;font-size:22px;letter-spacing:4px;padding:14px 44px;border:2px solid var(--gn);background:0;color:var(--gn);cursor:pointer;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));transition:.3s;margin:8px 0}
+.gmb:hover{background:rgba(57,255,20,.08);box-shadow:0 0 30px rgba(57,255,20,.12)}.gmb:disabled{opacity:.25;cursor:not-allowed;border-color:var(--dm);color:var(--dm)}
+.gmi{width:100%;font-family:'Rajdhani';font-size:13px;padding:8px;background:rgba(0,0,0,.3);border:1px solid var(--bd);color:var(--tx);outline:none;text-align:center}.gmi:focus{border-color:var(--gn)}
+.gmf{max-height:260px;overflow-y:auto;padding:4px 0}
+.ge{padding:7px 16px;border-bottom:1px solid rgba(255,255,255,.03);display:flex;gap:7px;align-items:flex-start}
+.gd2{width:5px;height:5px;border-radius:50%;background:var(--gn);margin-top:5px;flex-shrink:0;box-shadow:0 0 6px rgba(57,255,20,.4)}
 .gc{flex:1}.gt{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
-.gn2{font-family:'Orbitron';font-size:8px;font-weight:600}
-.ga{font-family:'Share Tech Mono';font-size:7px;color:var(--dm)}
-.gtm{font-family:'Share Tech Mono';font-size:7px;color:var(--dm);margin-left:auto}
-.gms2{font-size:9px;opacity:.7;margin-top:1px}
-.gss{font-family:'Share Tech Mono';font-size:9px;margin-top:4px;min-height:12px}.gss.er{color:var(--rd)}
-.gm-cost{font-family:'Share Tech Mono';font-size:8px;color:var(--dm);margin-top:3px}
+.gn2{font-family:'Orbitron';font-size:9px;font-weight:600}.ga{font-family:'Share Tech Mono';font-size:8px;color:var(--dm)}
+.gtm{font-family:'Share Tech Mono';font-size:8px;color:var(--dm);margin-left:auto}.gms2{font-size:10px;opacity:.7;margin-top:1px}
+.gss{font-family:'Share Tech Mono';font-size:10px;margin-top:5px;min-height:14px}.gss.er{color:var(--rd)}
+.gm-cost{font-family:'Share Tech Mono';font-size:9px;color:var(--dm);margin-top:3px}
 
-/* PROFILE */
-.fg{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px}
-.ff{display:flex;flex-direction:column;gap:2px}.ff.fu{grid-column:1/-1}
-.fl{font-family:'Share Tech Mono';font-size:7px;letter-spacing:2px;color:var(--dm);text-transform:uppercase}
-.fi{font-family:'Rajdhani';font-size:12px;font-weight:500;padding:7px 10px;background:rgba(0,0,0,.3);border:1px solid var(--bd);color:var(--tx);outline:none;transition:.3s}
-.fi:focus{border-color:var(--gd)}
-.fa{padding:0 16px 16px;display:flex;gap:8px;align-items:center}
-.fb2{font-family:'Cinzel';font-weight:700;font-size:9px;letter-spacing:2px;padding:9px 20px;border:none;cursor:pointer;background:linear-gradient(135deg,var(--gd),#b8860b);color:#0a0a12;transition:.3s;text-transform:uppercase}
-.fb2:disabled{opacity:.3;cursor:not-allowed}
-.fs{font-family:'Share Tech Mono';font-size:9px;color:var(--gn)}.fs.er{color:var(--rd)}
-.ppb{padding:20px 16px;display:flex;gap:20px;align-items:flex-start}
-.avf{width:90px;height:90px;border:2px solid rgba(255,215,0,.2);display:flex;align-items:center;justify-content:center;background:rgba(255,215,0,.02);overflow:hidden;flex-shrink:0}
-.avf img{width:100%;height:100%;object-fit:cover}
-.avp{font-family:'Cinzel';font-size:28px;font-weight:900;color:rgba(255,215,0,.12)}
-.pn{font-family:'Cinzel';font-size:20px;font-weight:800;letter-spacing:1px;margin-bottom:2px;background:linear-gradient(135deg,var(--tx),var(--gd));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.pa{font-family:'Share Tech Mono';font-size:8px;color:var(--dm);margin-bottom:8px;word-break:break-all}
-.pb3{font-size:12px;line-height:1.4;opacity:.8;margin-bottom:8px}
-.ps3{display:inline-flex;align-items:center;gap:4px;color:var(--gd);font-family:'Share Tech Mono';font-size:9px;text-decoration:none;padding:3px 8px;border:1px solid rgba(255,215,0,.2)}
-.pm{display:flex;gap:14px;margin-top:10px;padding-top:8px;border-top:1px solid var(--bd);flex-wrap:wrap}
-.pml{font-family:'Share Tech Mono';font-size:7px;color:var(--dm);letter-spacing:1px;text-transform:uppercase}
-.pmv{font-family:'Orbitron';font-size:10px;margin-top:2px}
-.rk{margin-top:6px;padding:2px 8px;font-family:'Share Tech Mono';font-size:7px;letter-spacing:2px;display:inline-block;border:1px solid}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:20px}.ff{display:flex;flex-direction:column;gap:3px}.ff.fu{grid-column:1/-1}
+.fl{font-family:'Share Tech Mono';font-size:8px;letter-spacing:2px;color:var(--dm);text-transform:uppercase}
+.fi{font-family:'Rajdhani';font-size:13px;font-weight:500;padding:9px 12px;background:rgba(0,0,0,.3);border:1px solid var(--bd);color:var(--tx);outline:none;transition:.3s}.fi:focus{border-color:var(--cy)}
+.fa{padding:0 20px 20px;display:flex;gap:10px;align-items:center}
+.fb{font-family:'Orbitron';font-weight:600;font-size:11px;letter-spacing:2px;padding:10px 26px;border:none;cursor:pointer;background:linear-gradient(135deg,var(--cy),#0080ff);color:#0a0a12;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));transition:.3s;text-transform:uppercase}
+.fb:hover{box-shadow:0 0 25px rgba(0,240,255,.3)}.fb:disabled{opacity:.3;cursor:not-allowed}
+.fs{font-family:'Share Tech Mono';font-size:10px;color:var(--gn)}.fs.er{color:var(--rd)}
+.ppb{padding:24px 20px;display:flex;gap:24px;align-items:flex-start}
+.avf{width:100px;height:100px;border:2px solid var(--bd);display:flex;align-items:center;justify-content:center;background:rgba(0,240,255,.03);overflow:hidden;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));flex-shrink:0}
+.avf img{width:100%;height:100%;object-fit:cover}.avp{font-family:'Orbitron';font-size:36px;font-weight:900;color:rgba(0,240,255,.15)}
+.pn{font-family:'Orbitron';font-size:24px;font-weight:700;letter-spacing:1px;margin-bottom:2px}
+.pa{font-family:'Share Tech Mono';font-size:9px;color:var(--dm);margin-bottom:10px;word-break:break-all}
+.pb3{font-size:13px;line-height:1.4;opacity:.85;margin-bottom:10px}
+.ps3{display:inline-flex;align-items:center;gap:5px;color:var(--cy);font-family:'Share Tech Mono';font-size:10px;text-decoration:none;padding:4px 10px;border:1px solid var(--bd)}
+.pm{display:flex;gap:18px;margin-top:12px;padding-top:10px;border-top:1px solid var(--bd);flex-wrap:wrap}
+.pml{font-family:'Share Tech Mono';font-size:8px;color:var(--dm);letter-spacing:1px;text-transform:uppercase}.pmv{font-family:'Orbitron';font-size:11px;margin-top:2px}
+.rk{margin-top:8px;padding:3px 10px;font-family:'Share Tech Mono';font-size:8px;letter-spacing:2px;display:inline-block;border:1px solid}
 .rg{border-color:var(--cy);color:var(--cy)}.re{border-color:var(--gn);color:var(--gn)}.rp{border-color:var(--mg);color:var(--mg)}.rl{border-color:var(--gd);color:var(--gd)}
 
-/* CONNECT */
-.cn{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:50vh;text-align:center;padding:28px}
-.cn-icon{width:70px;height:70px;border:2px solid rgba(255,215,0,.2);display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0 75%,0 25%);background:rgba(255,215,0,.02);animation:fl 4s ease-in-out infinite;font-family:'Cinzel';font-size:22px;font-weight:900;color:rgba(255,215,0,.3)}
+.cn{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:50vh;text-align:center;padding:32px}
+.cn-icon{width:80px;height:80px;border:2px solid var(--bd);display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0 75%,0 25%);background:rgba(0,240,255,.03);animation:fl 4s ease-in-out infinite;font-family:'Orbitron';font-size:28px;font-weight:900;color:rgba(0,240,255,.3)}
 @keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-.cn h2{font-family:'Cinzel';font-size:22px;font-weight:800;margin:16px 0 6px;letter-spacing:3px;background:linear-gradient(135deg,var(--gd),#fff5cc);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.cn p{font-size:13px;color:var(--dm);max-width:340px;line-height:1.4;margin-bottom:20px}
-.cnt{font-family:'Share Tech Mono';font-size:8px;color:var(--dm);padding:3px 8px;border:1px solid var(--bd);letter-spacing:2px;margin-top:10px}
-.ld{display:flex;align-items:center;gap:6px;padding:20px;justify-content:center}
-.spn{width:12px;height:12px;border:2px solid var(--bd);border-top-color:var(--gd);border-radius:50%;animation:sp .8s linear infinite}
-@keyframes sp{to{transform:rotate(360deg)}}
-.ld span{font-family:'Share Tech Mono';font-size:9px;color:var(--dm)}
+.cn h2{font-family:'Orbitron';font-size:22px;font-weight:700;margin:16px 0 8px;letter-spacing:2px}
+.cn p{font-size:14px;color:var(--dm);max-width:380px;line-height:1.5;margin-bottom:24px}
+.cnt{font-family:'Share Tech Mono';font-size:9px;color:var(--dm);padding:4px 10px;border:1px solid var(--bd);letter-spacing:2px;margin-top:12px}
+.ld{display:flex;align-items:center;gap:8px;padding:24px;justify-content:center}
+.spn{width:14px;height:14px;border:2px solid var(--bd);border-top-color:var(--cy);border-radius:50%;animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}.ld span{font-family:'Share Tech Mono';font-size:10px;color:var(--dm)}
 
-@media(max-width:900px){.arena{grid-template-columns:1fr;gap:10px}.warrior{flex-direction:column}.w-img-wrap{max-width:200px;aspect-ratio:auto;height:200px}.battle-center{min-width:auto}.gmr,.lbs-wrap{grid-template-columns:1fr}.ppb{flex-direction:column;align-items:center;text-align:center}.fg{grid-template-columns:1fr}.srow{grid-template-columns:repeat(3,1fr)}.pools{grid-template-columns:1fr}}
+@media(max-width:900px){.arena{grid-template-columns:1fr;gap:12px}.w-img{max-width:200px;aspect-ratio:auto;height:220px}.gmr,.lbs-wrap{grid-template-columns:1fr}.ppb{flex-direction:column;align-items:center;text-align:center}.fg{grid-template-columns:1fr}.srow{grid-template-columns:repeat(3,1fr)}.pools{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
+<div class="gbg"></div>
 <header class="hdr">
-  <div class="logo"><div class="lbox">⚔</div><div><div class="lt">STEAL OR PROTECT</div><div class="ls">Somnia Network · UMI</div></div></div>
+  <div class="logo"><div class="lbox">UMI</div><div><div class="lt">STEAL OR PROTECT</div><div class="ls">Somnia Network</div></div></div>
   <div class="hs">
-    <div class="si"><div class="sl">Your Level</div><div class="sv" style="color:var(--gd)" id="hLv">—</div></div>
-    <div class="si"><div class="sl">Total XP</div><div class="sv" style="color:var(--mg)" id="hXP">—</div></div>
-    <div class="si"><div class="sl">Network</div><div class="sv" style="font-size:9px;color:var(--cy)" id="hN">—</div></div>
+    <div class="si"><div class="sl">Level</div><div class="sv" style="color:var(--gd)" id="hLv">—</div></div>
+    <div class="si"><div class="sl">XP</div><div class="sv" style="color:var(--mg)" id="hXP">—</div></div>
+    <div class="si"><div class="sl">Net</div><div class="sv" style="font-size:10px;color:var(--cy)" id="hN">—</div></div>
     <button class="cb" id="cB" onclick="W()">CONNECT</button>
   </div>
 </header>
@@ -188,9 +167,9 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 <div class="cn" id="CS">
   <div class="cn-icon">⚔</div>
   <h2>Steal or Protect</h2>
-  <p>Choose your side in the daily battle. Earn XP, level up warriors, and claim rewards from the treasury.</p>
-  <button class="cb" onclick="W()" style="font-size:10px;padding:10px 28px">CONNECT WALLET</button>
-  <div class="cnt">SOMNIA TESTNET · CHAIN 50312</div>
+  <p>Choose your side in daily battles. Earn XP, level up, and claim treasury rewards.</p>
+  <button class="cb" onclick="W()" style="font-size:11px;padding:11px 30px">CONNECT WALLET</button>
+  <div class="cnt">SOMNIA NETWORK</div>
 </div>
 <div id="AP" style="display:none">
 <div class="tabs">
@@ -198,27 +177,25 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   <div class="tab" data-t="gm">☀ GM</div>
   <div class="tab" data-t="profile">◈ Passport</div>
 </div>
-
-<!-- POOLS -->
-<div class="pools" id="poolsBar">
-  <div class="pool-card"><div class="pool-label">Daily Treasury</div><div class="pool-val" id="pDay">0 STT</div><div class="pool-sub">today's prize pool</div></div>
-  <div class="pool-card"><div class="pool-label">Weekly Pool</div><div class="pool-val" id="pWeek">0 STT</div><div class="pool-sub">accumulated this week</div></div>
-  <div class="pool-card"><div class="pool-label">Your Pending</div><div class="pool-val" id="pYou">—</div><div class="pool-sub">claimable reward</div></div>
+<div class="pools">
+  <div class="pool-card"><div class="pool-lbl">Daily Treasury</div><div class="pool-val" id="pDay">0 STT</div><div class="pool-sub">today's prize pool</div></div>
+  <div class="pool-card"><div class="pool-lbl">Weekly Pool</div><div class="pool-val" style="color:var(--mg)" id="pWeek">0 STT</div><div class="pool-sub">this week total</div></div>
+  <div class="pool-card"><div class="pool-lbl">Your Pending</div><div class="pool-val" style="color:var(--gd)" id="pYou">—</div><div class="pool-sub">claimable reward</div></div>
 </div>
 
 <!-- BATTLE -->
 <div class="pnl a" id="t-game">
   <div class="crd">
-    <div class="ch" style="color:var(--gd)">⚔ Daily Battlefield</div>
+    <div class="ch" style="color:var(--mg)">⚔ Daily Battlefield</div>
     <div class="arena">
       <div class="warrior">
         <div class="w-label atk">ATTACK</div>
-        <div class="w-img-wrap"><img src="attack.png" alt="Attack" onerror="this.style.display='none'"></div>
+        <div class="w-img atk-bg"><img src="attack.png" alt="Attack"></div>
         <div class="w-level atk" id="atkLv">Warrior Lv 1</div>
         <div class="w-boost">
           <div class="w-boost-lbl">BOOST ATTACK</div>
-          <input type="range" class="w-slider atk-s" id="slAtk" min="0" max="2" value="0" oninput="updB('atk')">
-          <div class="w-boost-info"><span class="w-boost-val" style="color:var(--rd)" id="bvAtk">+0</span><span class="w-boost-cost" id="bcAtk">FREE</span></div>
+          <input type="range" class="w-slider atk-s" id="slA" min="0" max="2" value="0" oninput="uB('A')">
+          <div class="w-boost-row"><span class="w-bv" style="color:var(--rd)" id="bvA">+0</span><span class="w-bc" id="bcA">FREE</span></div>
         </div>
       </div>
       <div class="bc">
@@ -229,41 +206,41 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
           <div class="bc-vs">VS</div>
           <div class="bc-cnt"><div class="bc-num pr" id="gP">0</div><div class="bc-lbl">PROTECT</div></div>
         </div>
-        <div class="bc-bar" style="width:100%"><div class="bb-s" id="gBS" style="width:50%"></div><div class="bb-p" id="gBP" style="width:50%"></div></div>
+        <div class="bc-bar"><div class="bb-s" id="gBS" style="width:50%"></div><div class="bb-p" id="gBP" style="width:50%"></div></div>
         <div class="bc-btns">
           <button class="b-btn steal" id="btnS" onclick="PL(true)">🔥 STEAL</button>
           <button class="b-btn protect" id="btnP" onclick="PL(false)">🛡 PROTECT</button>
         </div>
-        <div class="bc-status" id="gSt"></div>
+        <div class="bc-st" id="gSt"></div>
       </div>
       <div class="warrior">
         <div class="w-label def">DEFENSE</div>
-        <div class="w-img-wrap def-bg"><img src="defense.png" alt="Defense" onerror="this.style.display='none'"></div>
+        <div class="w-img def-bg"><img src="defense.png" alt="Defense"></div>
         <div class="w-level def" id="defLv">Warrior Lv 1</div>
         <div class="w-boost">
           <div class="w-boost-lbl">BOOST DEFENSE</div>
-          <input type="range" class="w-slider def-s" id="slDef" min="0" max="2" value="0" oninput="updB('def')">
-          <div class="w-boost-info"><span class="w-boost-val" style="color:var(--cy)" id="bvDef">+0</span><span class="w-boost-cost" id="bcDef">FREE</span></div>
+          <input type="range" class="w-slider def-s" id="slD" min="0" max="2" value="0" oninput="uB('D')">
+          <div class="w-boost-row"><span class="w-bv" style="color:var(--cy)" id="bvD">+0</span><span class="w-bc" id="bcD">FREE</span></div>
         </div>
       </div>
     </div>
-    <div class="claim-bar" id="claimBar" style="display:none">
-      <div><span class="claim-info">Yesterday's reward: </span><span class="claim-amt" id="claimAmt">0 STT</span></div>
-      <button class="claim-btn" id="claimBtn" onclick="CR()">CLAIM REWARD</button>
+    <div class="claim-bar" id="clB" style="display:none">
+      <div><span class="claim-info">Yesterday's reward: </span><span class="claim-amt" id="clA">0 STT</span></div>
+      <button class="claim-btn" id="clBtn" onclick="CR()">CLAIM REWARD</button>
     </div>
     <div class="yday" id="YD" style="display:none"><span class="yl">YESTERDAY:</span><span class="yr" id="YR"></span><span class="yl" id="YU"></span></div>
   </div>
   <div class="srow">
     <div class="sc"><div class="v" style="color:var(--gd)" id="xLv">1</div><div class="l">LEVEL</div></div>
-    <div class="sc"><div class="v" style="color:var(--mg)" id="xXP">0</div><div class="l">TOTAL XP</div></div>
+    <div class="sc"><div class="v" style="color:var(--mg)" id="xXP">0</div><div class="l">XP</div></div>
     <div class="sc"><div class="v" style="color:var(--gn)" id="xGS">0</div><div class="l">GM STREAK</div></div>
     <div class="sc"><div class="v" style="color:var(--rd)" id="xBS">0</div><div class="l">BATTLE STREAK</div></div>
     <div class="sc"><div class="v" style="color:var(--cy)" id="xW">0</div><div class="l">WINS</div></div>
-    <div class="sc"><div class="v" style="color:var(--tx)" id="xG">0</div><div class="l">GAMES</div></div>
+    <div class="sc"><div class="v" id="xG">0</div><div class="l">GAMES</div></div>
   </div>
   <div class="lbs-wrap">
-    <div class="crd"><div class="ch" style="color:var(--mg)">⭐ XP Leaderboard</div><div class="lb" id="LBxp"><div class="lbe">Say GM to earn XP!</div></div></div>
-    <div class="crd"><div class="ch" style="color:var(--gd)">🏆 Battle Leaderboard</div><div class="lb" id="LBbt"><div class="lbe">Play to appear!</div></div></div>
+    <div class="crd"><div class="ch" style="color:var(--mg)">⭐ XP Leaderboard</div><div class="lb" id="LBx"><div class="lbe">Say GM to earn XP!</div></div></div>
+    <div class="crd"><div class="ch" style="color:var(--gd)">🏆 Battle Leaderboard</div><div class="lb" id="LBb"><div class="lbe">Play to appear!</div></div></div>
   </div>
 </div>
 
@@ -274,9 +251,9 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <div class="gma">
         <input class="gmi" id="gMsg" placeholder="Optional message" maxlength="140">
         <button class="gmb" id="gBtn" onclick="GM()">GM ☀</button>
-        <div class="gm-cost">0.01 STT → daily treasury + XP reward</div>
+        <div class="gm-cost">0.01 STT → treasury + XP</div>
         <div class="gss" id="gSs"></div>
-        <div style="display:flex;gap:12px;margin-top:6px">
+        <div style="display:flex;gap:14px;margin-top:6px">
           <div class="si"><div class="sv" style="color:var(--gn)" id="gMy">0</div><div class="sl">YOUR GMs</div></div>
           <div class="si"><div class="sv" style="color:var(--gn)" id="gAl">0</div><div class="sl">TOTAL</div></div>
           <div class="si"><div class="sv" style="color:var(--mg)" id="gXP">0</div><div class="sl">XP</div></div>
@@ -289,7 +266,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
 <!-- PROFILE -->
 <div class="pnl" id="t-profile">
-  <div class="crd" id="PC" style="display:none"><div class="ch" style="color:var(--gd)">◈ Identity Passport</div>
+  <div class="crd" id="PC" style="display:none"><div class="ch">◈ Digital Passport</div>
     <div class="ppb">
       <div style="text-align:center"><div class="avf" id="AV"><div class="avp">◈</div></div><div class="rk rg" id="RK">GENESIS</div></div>
       <div style="flex:1;min-width:0"><div class="pn" id="PN"></div><div class="pa" id="PA"></div><div class="pb3" id="PB"></div>
@@ -298,7 +275,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       </div>
     </div>
   </div>
-  <div class="crd" id="PE" style="display:none"><div style="text-align:center;padding:40px 16px"><div style="font-size:32px;opacity:.2;margin-bottom:8px">◇</div><div style="font-family:'Cinzel';font-size:14px;color:var(--dm)">No Identity Found</div></div></div>
+  <div class="crd" id="PE" style="display:none"><div style="text-align:center;padding:44px"><div style="font-size:36px;opacity:.2;margin-bottom:10px">◇</div><div style="font-family:'Orbitron';font-size:14px;color:var(--dm)">No Identity Found</div></div></div>
   <div id="PLd" class="crd"><div class="ld"><div class="spn"></div><span>Loading...</span></div></div>
   <div class="crd"><div class="ch" id="FT">◈ Create Identity</div>
     <div class="fg">
@@ -307,7 +284,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <div class="ff fu"><label class="fl">Avatar URL</label><input class="fi" id="fA" placeholder="https://..."></div>
       <div class="ff fu"><label class="fl">Bio</label><input class="fi" id="fB" placeholder="About you" maxlength="280"></div>
     </div>
-    <div class="fa"><button class="fb2" id="fBtn" onclick="SP()" disabled>SAVE IDENTITY</button><span class="fs" id="fSt"></span></div>
+    <div class="fa"><button class="fb" id="fBtn" onclick="SP()" disabled>SAVE IDENTITY</button><span class="fs" id="fSt"></span></div>
   </div>
 </div>
 </div>
@@ -318,177 +295,23 @@ const CFG={50312:{umi:'0x91Ee1c6C191dc6440B8058d99d2Fa94B8691adff',hub:'0xeEE9B8
 const AU=['function setProfile(string,string,string,string)','function getProfile(address) view returns (tuple(string nickname,string avatarUrl,string bio,string socialUrl,uint256 createdAt,uint256 updatedAt,bool exists))','function hasProfile(address) view returns (bool)','function getNickname(address) view returns (string)','function totalProfiles() view returns (uint256)'];
 const AH=['function sayGM(string) payable','function play(bool,uint256) payable','function claimReward(uint256)','function claimOwnerFee(uint256)','function resolveRound(uint256)','function currentDay() view returns (uint256)','function currentWeek() view returns (uint256)','function roundTimeLeft() view returns (uint256)','function totalGMs() view returns (uint256)','function totalBattles() view returns (uint256)','function getRoundInfo(uint256) view returns (uint256,uint256,uint256,uint256,uint256,bool,bool)','function getPlayerView(address) view returns (tuple(uint256 xp,uint256 gmStreak,uint256 bestGmStreak,uint256 totalGMCount,uint256 battleWins,uint256 battleGames,uint256 battleStreak,uint256 bestBattleStreak,bool playedToday,bool todaySide,uint128 todayWeight,bool gmToday,bool claimedYesterday,uint256 weekXPVal,uint256 weekBattlePtsVal))','function getPendingReward(address,uint256) view returns (uint256,bool)','function getXPLeaderboard(uint256) view returns (address[],uint256[])','function getBattleLeaderboard(uint256) view returns (address[],uint256[])','function getRecentGMs() view returns (tuple(address sender,uint256 timestamp,string message)[],uint256)'];
 let pv,sg,um,hb,ad,ch,ti;
-
-document.querySelectorAll('.tab').forEach(t=>t.onclick=function(){document.querySelectorAll('.tab').forEach(x=>x.classList.remove('a'));document.querySelectorAll('.pnl').forEach(x=>x.classList.remove('a'));this.classList.add('a');document.getElementById('t-'+this.dataset.t).classList.add('a');});
-
-function updB(side){
-  const v=document.getElementById(side==='atk'?'slAtk':'slDef').value;
-  document.getElementById(side==='atk'?'bvAtk':'bvDef').textContent='+'+v;
-  document.getElementById(side==='atk'?'bcAtk':'bcDef').textContent=v==='0'?'FREE':(v*0.02).toFixed(2)+' STT';
-}
-
-function getLv(xp){return Math.min(100,Math.floor(Number(xp)/100)+1);}
-
-async function W(){
-  if(!window.ethereum){alert('Install MetaMask');return;}
-  try{
-    pv=new ethers.BrowserProvider(window.ethereum);await pv.send('eth_requestAccounts',[]);
-    sg=await pv.getSigner();ad=await sg.getAddress();ch=Number((await pv.getNetwork()).chainId);
-    const c=CFG[ch];if(!c){alert('Switch to Somnia (50312 or 5031)');return;}
-    um=new ethers.Contract(c.umi,AU,sg);
-    if(c.hub&&c.hub!=='0x0000000000000000000000000000000000000000')hb=new ethers.Contract(c.hub,AH,sg);
-    $('cB').textContent=ad.slice(0,6)+'...'+ad.slice(-4);$('cB').classList.add('on');
-    $('hN').textContent=ch===5031?'MAINNET':'TESTNET';
-    $('CS').style.display='none';$('AP').style.display='block';$('fBtn').disabled=false;
-    LA();
-  }catch(e){console.error(e);alert(e.message);}
-}
-
-async function LA(){LP();try{$('hP')&&($('hP').textContent=(await um.totalProfiles()).toString());}catch(e){}if(hb){LG();LGM();ST();}}
-
-// PROFILE
-async function LP(){
-  try{const p=await um.getProfile(ad);if(p.exists)SH(p);else{$('PLd').style.display='none';$('PE').style.display='block';}}
-  catch(e){$('PLd').style.display='none';$('PE').style.display='block';}
-}
-function SH(p){
-  $('PLd').style.display='none';$('PC').style.display='block';$('PE').style.display='none';
-  $('FT').innerHTML='◈ Update Identity';$('PN').textContent=p.nickname;$('PA').textContent=ad;
-  $('PB').textContent=p.bio||'No bio';
-  const f=$('AV');if(p.avatarUrl)f.innerHTML='<img src="'+p.avatarUrl+'" onerror="this.parentElement.innerHTML=\'<div class=avp>◈</div>\'">';
-  else f.innerHTML='<div class="avp">'+(p.nickname?p.nickname[0].toUpperCase():'◈')+'</div>';
-  const s=$('PL2');if(p.socialUrl){s.style.display='inline-flex';s.href=p.socialUrl;$('PLT').textContent=p.socialUrl.replace('https://','');}else s.style.display='none';
-  const cr=Number(p.createdAt),up=Number(p.updatedAt);
-  $('PCr').textContent=cr?new Date(cr*1000).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'—';
-  $('PUp').textContent=up?new Date(up*1000).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'—';
-  const age=cr?Math.floor((Date.now()/1000-cr)/86400):0;let rk,rc;
-  if(age>=365){rk='LEGEND';rc='rl';}else if(age>=90){rk='PIONEER';rc='rp';}else if(age>=7){rk='EXPLORER';rc='re';}else{rk='GENESIS';rc='rg';}
-  $('RK').textContent=rk;$('RK').className='rk '+rc;$('PR2').textContent=rk;
-  $('fN').value=p.nickname;$('fA').value=p.avatarUrl;$('fB').value=p.bio;$('fS').value=p.socialUrl;
-}
-async function SP(){
-  const n=$('fN').value.trim(),a=$('fA').value.trim(),b=$('fB').value.trim(),s=$('fS').value.trim();
-  if(!n){FM('Nickname required',1);return;}
-  const bt=$('fBtn');bt.disabled=true;bt.textContent='SIGNING...';FM('Waiting...',0);
-  try{const tx=await um.setProfile(n,a,b,s);bt.textContent='CONFIRMING...';await tx.wait();FM('Saved ✓',0);bt.textContent='SAVE IDENTITY';bt.disabled=false;LP();}
-  catch(e){FM(e.reason||'Failed',1);bt.textContent='SAVE IDENTITY';bt.disabled=false;}
-}
+document.querySelectorAll('.tab').forEach(t=>t.onclick=function(){document.querySelectorAll('.tab').forEach(x=>x.classList.remove('a'));document.querySelectorAll('.pnl').forEach(x=>x.classList.remove('a'));this.classList.add('a');$('t-'+this.dataset.t).classList.add('a');});
+function uB(s){const v=$(s==='A'?'slA':'slD').value;$('bv'+s).textContent='+'+v;$('bc'+s).textContent=v==='0'?'FREE':(v*0.02).toFixed(2)+' STT';}
+function getLv(x){return Math.min(100,Math.floor(Number(x)/100)+1);}
+async function W(){if(!window.ethereum){alert('Install MetaMask');return;}try{pv=new ethers.BrowserProvider(window.ethereum);await pv.send('eth_requestAccounts',[]);sg=await pv.getSigner();ad=await sg.getAddress();ch=Number((await pv.getNetwork()).chainId);const c=CFG[ch];if(!c){alert('Switch to Somnia (50312 or 5031)');return;}um=new ethers.Contract(c.umi,AU,sg);if(c.hub&&c.hub!=='0x0000000000000000000000000000000000000000')hb=new ethers.Contract(c.hub,AH,sg);$('cB').textContent=ad.slice(0,6)+'...'+ad.slice(-4);$('cB').classList.add('on');$('hN').textContent=ch===5031?'MAINNET':'TESTNET';$('CS').style.display='none';$('AP').style.display='block';$('fBtn').disabled=false;LA();}catch(e){console.error(e);alert(e.message);}}
+async function LA(){LP();if(hb){LG();LGM();ST();}}
+async function LP(){try{const p=await um.getProfile(ad);if(p.exists)SH(p);else{$('PLd').style.display='none';$('PE').style.display='block';}}catch(e){$('PLd').style.display='none';$('PE').style.display='block';}}
+function SH(p){$('PLd').style.display='none';$('PC').style.display='block';$('PE').style.display='none';$('FT').innerHTML='◈ Update Identity';$('PN').textContent=p.nickname;$('PA').textContent=ad;$('PB').textContent=p.bio||'No bio';const f=$('AV');if(p.avatarUrl)f.innerHTML='<img src="'+p.avatarUrl+'" onerror="this.parentElement.innerHTML=\'<div class=avp>◈</div>\'">';else f.innerHTML='<div class="avp">'+(p.nickname?p.nickname[0].toUpperCase():'◈')+'</div>';const s=$('PL2');if(p.socialUrl){s.style.display='inline-flex';s.href=p.socialUrl;$('PLT').textContent=p.socialUrl.replace('https://','');}else s.style.display='none';const cr=Number(p.createdAt),up=Number(p.updatedAt);$('PCr').textContent=cr?new Date(cr*1000).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'—';$('PUp').textContent=up?new Date(up*1000).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'—';const age=cr?Math.floor((Date.now()/1000-cr)/86400):0;let rk,rc;if(age>=365){rk='LEGEND';rc='rl';}else if(age>=90){rk='PIONEER';rc='rp';}else if(age>=7){rk='EXPLORER';rc='re';}else{rk='GENESIS';rc='rg';}$('RK').textContent=rk;$('RK').className='rk '+rc;$('PR2').textContent=rk;$('fN').value=p.nickname;$('fA').value=p.avatarUrl;$('fB').value=p.bio;$('fS').value=p.socialUrl;}
+async function SP(){const n=$('fN').value.trim(),a=$('fA').value.trim(),b=$('fB').value.trim(),s=$('fS').value.trim();if(!n){FM('Nickname required',1);return;}const bt=$('fBtn');bt.disabled=true;bt.textContent='SIGNING...';FM('Waiting...',0);try{const tx=await um.setProfile(n,a,b,s);bt.textContent='CONFIRMING...';await tx.wait();FM('Saved ✓',0);bt.textContent='SAVE IDENTITY';bt.disabled=false;LP();}catch(e){FM(e.reason||'Failed',1);bt.textContent='SAVE IDENTITY';bt.disabled=false;}}
 function FM(m,e){$('fSt').textContent=m;$('fSt').className='fs'+(e?' er':'');}
-
-// GAME
-async function LG(){
-  try{
-    const day=Number(await hb.currentDay()),week=Number(await hb.currentWeek());
-    const ri=await hb.getRoundInfo(day);
-    const sc=Number(ri[0]),pc=Number(ri[1]),sw=Number(ri[2]),pw=Number(ri[3]),tres=ri[4];
-    const tot=sw+pw;
-    $('gS').textContent=sc;$('gP').textContent=pc;
-    $('gBS').style.width=tot?((sw/tot*100)+'%'):'50%';$('gBP').style.width=tot?((pw/tot*100)+'%'):'50%';
-    $('pDay').textContent=ethers.formatEther(tres)+' STT';
-
-    const pv2=await hb.getPlayerView(ad);
-    const lv=getLv(pv2.xp);
-    $('xXP').textContent=pv2.xp.toString();$('xLv').textContent=lv;
-    $('xGS').textContent=pv2.gmStreak.toString();$('xBS').textContent=pv2.battleStreak.toString();
-    $('xW').textContent=pv2.battleWins.toString();$('xG').textContent=pv2.battleGames.toString();
-    $('hXP').textContent=pv2.xp.toString();$('hLv').textContent='Lv '+lv;
-    $('gXP').textContent=pv2.xp.toString();
-    $('atkLv').textContent='Warrior Lv '+lv;$('defLv').textContent='Warrior Lv '+lv;
-
-    const bs=$('btnS'),bp=$('btnP');bs.classList.remove('off','pk');bp.classList.remove('off','pk');bs.disabled=false;bp.disabled=false;
-    $('slAtk').disabled=false;$('slDef').disabled=false;
-    if(pv2.playedToday){
-      bs.disabled=true;bp.disabled=true;bs.classList.add('off');bp.classList.add('off');
-      $('slAtk').disabled=true;$('slDef').disabled=true;
-      if(pv2.todaySide){bs.classList.add('pk');bs.textContent='🔥 YOUR PICK';}
-      else{bp.classList.add('pk');bp.textContent='🛡 YOUR PICK';}
-      $('gSt').textContent='Played today! Come back tomorrow.';
-    }
-    if(pv2.gmToday){$('gBtn').disabled=true;$('gSs').textContent='GM done today ✓';}
-
-    // Claim
-    if(day>0){
-      try{
-        const[rew,can]=await hb.getPendingReward(ad,day-1);
-        if(can&&Number(rew)>0){
-          $('claimBar').style.display='flex';$('claimAmt').textContent=ethers.formatEther(rew)+' STT';
-          $('pYou').textContent=ethers.formatEther(rew)+' STT';
-        }else if(pv2.claimedYesterday){
-          $('claimBar').style.display='flex';$('claimAmt').textContent='Claimed ✓';
-          $('claimBtn').disabled=true;$('claimBtn').textContent='CLAIMED';$('pYou').textContent='Claimed ✓';
-        }else{$('pYou').textContent='—';}
-      }catch(e){}
-      try{
-        const yi=await hb.getRoundInfo(day-1);
-        if(Number(yi[0])>0||Number(yi[1])>0){
-          $('YD').style.display='flex';
-          const yw=yi[5]?yi[6]:(Number(yi[2])>Number(yi[3]));
-          $('YR').textContent=(yw?'🔥 STEAL':'🛡️ PROTECT')+' WON';
-          $('YR').className='yr '+(yw?'ylo':'yw');
-        }
-      }catch(e){}
-    }
-    loadLB(week);
-  }catch(e){console.error('G:',e);}
-}
-
-async function loadLB(w){
-  try{const[xa,xp]=await hb.getXPLeaderboard(w);rLB('LBxp',xa,xp,'XP');}catch(e){}
-  try{const[ba,bp]=await hb.getBattleLeaderboard(w);rLB('LBbt',ba,bp,'PTS');}catch(e){}
-}
-function rLB(id,addrs,pts,suf){
-  if(!addrs.length){$(id).innerHTML='<div class="lbe">No data yet</div>';return;}
-  const lb=addrs.map((a,i)=>({a,p:Number(pts[i])})).sort((a,b)=>b.p-a.p).slice(0,15);
-  const el=$(id);
-  el.innerHTML=lb.map((e,i)=>{const r=i<3?['g','s','b'][i]:'';const sh=e.a.slice(0,6)+'...'+e.a.slice(-4);const me=e.a.toLowerCase()===ad.toLowerCase()?' (YOU)':'';
-    return '<div class="lbr"><div class="lrk '+r+'">#'+(i+1)+'</div><div class="lnm"><span class="lad">'+sh+me+'</span></div><div class="lpt">'+e.p+' '+suf+'</div></div>';}).join('');
-  lb.forEach(async(e,i)=>{try{const n=await um.getNickname(e.a);if(n){const rows=el.querySelectorAll('.lnm');if(rows[i])rows[i].innerHTML=n+'<br><span class="lad">'+e.a.slice(0,6)+'...'+e.a.slice(-4)+(e.a.toLowerCase()===ad.toLowerCase()?' (YOU)':'')+'</span>';}}catch(er){}});
-}
-
-async function PL(steal){
-  const bs=$('btnS'),bp=$('btnP');if(bs.disabled)return;
-  bs.disabled=true;bp.disabled=true;$('slAtk').disabled=true;$('slDef').disabled=true;
-  $('gSt').textContent='Waiting for wallet...';$('gSt').className='bc-status';
-  const boost=parseInt(steal?$('slAtk').value:$('slDef').value);
-  const cost=ethers.parseEther((boost*0.02).toFixed(2));
-  try{
-    const tx=await hb.play(steal,boost,{value:cost});
-    $('gSt').textContent='Confirming...';await tx.wait();
-    $('gSt').textContent='Choice recorded! ⚔';LG();
-  }catch(e){
-    $('gSt').textContent=e.reason||'Failed';$('gSt').className='bc-status er';
-    bs.disabled=false;bp.disabled=false;$('slAtk').disabled=false;$('slDef').disabled=false;
-  }
-}
-
-async function CR(){
-  const btn=$('claimBtn');btn.disabled=true;btn.textContent='CLAIMING...';
-  try{const day=Number(await hb.currentDay())-1;const tx=await hb.claimReward(day);await tx.wait();btn.textContent='CLAIMED ✓';$('claimAmt').textContent='Claimed ✓';$('pYou').textContent='Claimed ✓';}
-  catch(e){btn.textContent='CLAIM';btn.disabled=false;alert(e.reason||'Failed');}
-}
-
+async function LG(){try{const day=Number(await hb.currentDay()),week=Number(await hb.currentWeek());const ri=await hb.getRoundInfo(day);const sc=Number(ri[0]),pc=Number(ri[1]),sw=Number(ri[2]),pw=Number(ri[3]),tres=ri[4];const tot=sw+pw;$('gS').textContent=sc;$('gP').textContent=pc;$('gBS').style.width=tot?((sw/tot*100)+'%'):'50%';$('gBP').style.width=tot?((pw/tot*100)+'%'):'50%';$('pDay').textContent=ethers.formatEther(tres)+' STT';const pv2=await hb.getPlayerView(ad);const lv=getLv(pv2.xp);$('xXP').textContent=pv2.xp.toString();$('xLv').textContent=lv;$('xGS').textContent=pv2.gmStreak.toString();$('xBS').textContent=pv2.battleStreak.toString();$('xW').textContent=pv2.battleWins.toString();$('xG').textContent=pv2.battleGames.toString();$('hXP').textContent=pv2.xp.toString();$('hLv').textContent='Lv '+lv;$('gXP').textContent=pv2.xp.toString();$('atkLv').textContent='Warrior Lv '+lv;$('defLv').textContent='Warrior Lv '+lv;const bs=$('btnS'),bp=$('btnP');bs.classList.remove('off','pk');bp.classList.remove('off','pk');bs.disabled=false;bp.disabled=false;$('slA').disabled=false;$('slD').disabled=false;if(pv2.playedToday){bs.disabled=true;bp.disabled=true;bs.classList.add('off');bp.classList.add('off');$('slA').disabled=true;$('slD').disabled=true;if(pv2.todaySide){bs.classList.add('pk');bs.textContent='🔥 YOUR PICK';}else{bp.classList.add('pk');bp.textContent='🛡 YOUR PICK';}$('gSt').textContent='Played today! Come back tomorrow.';}if(pv2.gmToday){$('gBtn').disabled=true;$('gSs').textContent='GM done today ✓';}if(day>0){try{const[rew,can]=await hb.getPendingReward(ad,day-1);if(can&&Number(rew)>0){$('clB').style.display='flex';$('clA').textContent=ethers.formatEther(rew)+' STT';$('pYou').textContent=ethers.formatEther(rew)+' STT';}else if(pv2.claimedYesterday){$('clB').style.display='flex';$('clA').textContent='Claimed ✓';$('clBtn').disabled=true;$('clBtn').textContent='CLAIMED';$('pYou').textContent='Claimed ✓';}else{$('pYou').textContent='—';}}catch(e){}try{const yi=await hb.getRoundInfo(day-1);if(Number(yi[0])>0||Number(yi[1])>0){$('YD').style.display='flex';const yw=yi[5]?yi[6]:(Number(yi[2])>Number(yi[3]));$('YR').textContent=(yw?'🔥 STEAL':'🛡️ PROTECT')+' WON';$('YR').className='yr '+(yw?'ylo':'yw');}}catch(e){}}rLB(week);}catch(e){console.error('G:',e);}}
+async function rLB(w){try{const[xa,xp]=await hb.getXPLeaderboard(w);rL('LBx',xa,xp,'XP');}catch(e){}try{const[ba,bp]=await hb.getBattleLeaderboard(w);rL('LBb',ba,bp,'PTS');}catch(e){}}
+function rL(id,addrs,pts,suf){if(!addrs.length){$(id).innerHTML='<div class="lbe">No data yet</div>';return;}const lb=addrs.map((a,i)=>({a,p:Number(pts[i])})).sort((a,b)=>b.p-a.p).slice(0,15);const el=$(id);el.innerHTML=lb.map((e,i)=>{const r=i<3?['g','s','b'][i]:'';const sh=e.a.slice(0,6)+'...'+e.a.slice(-4);const me=e.a.toLowerCase()===ad.toLowerCase()?' (YOU)':'';return '<div class="lbr"><div class="lrk '+r+'">#'+(i+1)+'</div><div class="lnm"><span class="lad">'+sh+me+'</span></div><div class="lpt">'+e.p+' '+suf+'</div></div>';}).join('');lb.forEach(async(e,i)=>{try{const n=await um.getNickname(e.a);if(n){const rows=el.querySelectorAll('.lnm');if(rows[i])rows[i].innerHTML=n+'<br><span class="lad">'+e.a.slice(0,6)+'...'+e.a.slice(-4)+(e.a.toLowerCase()===ad.toLowerCase()?' (YOU)':'')+'</span>';}}catch(er){}});}
+async function PL(steal){const bs=$('btnS'),bp=$('btnP');if(bs.disabled)return;bs.disabled=true;bp.disabled=true;$('slA').disabled=true;$('slD').disabled=true;$('gSt').textContent='Waiting for wallet...';$('gSt').className='bc-st';const boost=parseInt(steal?$('slA').value:$('slD').value);const cost=ethers.parseEther((boost*0.02).toFixed(2));try{const tx=await hb.play(steal,boost,{value:cost});$('gSt').textContent='Confirming...';await tx.wait();$('gSt').textContent='Choice recorded! ⚔';LG();}catch(e){$('gSt').textContent=e.reason||'Failed';$('gSt').className='bc-st er';bs.disabled=false;bp.disabled=false;$('slA').disabled=false;$('slD').disabled=false;}}
+async function CR(){const btn=$('clBtn');btn.disabled=true;btn.textContent='CLAIMING...';try{const day=Number(await hb.currentDay())-1;const tx=await hb.claimReward(day);await tx.wait();btn.textContent='CLAIMED ✓';$('clA').textContent='Claimed ✓';$('pYou').textContent='Claimed ✓';}catch(e){btn.textContent='CLAIM';btn.disabled=false;alert(e.reason||'Failed');}}
 function ST(){if(ti)clearInterval(ti);hb.roundTimeLeft().then(l=>{let s=Number(l);const u=()=>{if(s<0)s=0;const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sc=s%60;$('gT').textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(sc).padStart(2,'0');s--;};u();ti=setInterval(u,1000);});}
-
-// GM
-async function LGM(){
-  try{
-    const rec=await hb.getRecentGMs();const ent=rec[0],cnt=Number(rec[1]);
-    const tgm=await hb.totalGMs();$('gAl').textContent=tgm.toString();
-    const pv2=await hb.getPlayerView(ad);$('gMy').textContent=pv2.totalGMCount.toString();
-    if(!cnt){$('gFd').innerHTML='<div class="lbe">No GMs yet ☀️</div>';return;}
-    const sorted=[];for(let i=0;i<cnt;i++)sorted.push(ent[i]);sorted.sort((a,b)=>Number(b.timestamp)-Number(a.timestamp));
-    const fd=$('gFd');
-    fd.innerHTML=sorted.map(e=>'<div class="ge"><div class="gd2"></div><div class="gc"><div class="gt"><span class="ga">'+e.sender.slice(0,6)+'...'+e.sender.slice(-4)+'</span><span class="gtm">'+TA(Number(e.timestamp))+'</span></div><div class="gms2">'+ES(e.message||'GM ☀️')+'</div></div></div>').join('');
-    sorted.forEach(async(e,i)=>{try{const n=await um.getNickname(e.sender);if(n){const t=fd.querySelectorAll('.gt');if(t[i]){const s=document.createElement('span');s.className='gn2';s.textContent=n;t[i].prepend(s);}}}catch(er){}});
-  }catch(e){console.error('GM:',e);}
-}
-
-async function GM(){
-  const b=$('gBtn'),m=$('gMsg').value.trim();b.disabled=true;
-  GSt('Sending 0.01 STT...',0);
-  try{const tx=await hb.sayGM(m,{value:ethers.parseEther('0.01')});GSt('Confirming...',0);await tx.wait();GSt('GM sent! +XP ☀️',0);$('gMsg').value='';LGM();LG();}
-  catch(e){GSt(e.reason||'Failed',1);b.disabled=false;}
-}
+async function LGM(){try{const rec=await hb.getRecentGMs();const ent=rec[0],cnt=Number(rec[1]);const tgm=await hb.totalGMs();$('gAl').textContent=tgm.toString();const pv2=await hb.getPlayerView(ad);$('gMy').textContent=pv2.totalGMCount.toString();if(!cnt){$('gFd').innerHTML='<div class="lbe">No GMs yet ☀️</div>';return;}const sorted=[];for(let i=0;i<cnt;i++)sorted.push(ent[i]);sorted.sort((a,b)=>Number(b.timestamp)-Number(a.timestamp));const fd=$('gFd');fd.innerHTML=sorted.map(e=>'<div class="ge"><div class="gd2"></div><div class="gc"><div class="gt"><span class="ga">'+e.sender.slice(0,6)+'...'+e.sender.slice(-4)+'</span><span class="gtm">'+TA(Number(e.timestamp))+'</span></div><div class="gms2">'+ES(e.message||'GM ☀️')+'</div></div></div>').join('');sorted.forEach(async(e,i)=>{try{const n=await um.getNickname(e.sender);if(n){const t=fd.querySelectorAll('.gt');if(t[i]){const s=document.createElement('span');s.className='gn2';s.textContent=n;t[i].prepend(s);}}}catch(er){}});}catch(e){console.error('GM:',e);}}
+async function GM(){const b=$('gBtn'),m=$('gMsg').value.trim();b.disabled=true;GSt('Sending 0.01 STT...',0);try{const tx=await hb.sayGM(m,{value:ethers.parseEther('0.01')});GSt('Confirming...',0);await tx.wait();GSt('GM sent! +XP ☀️',0);$('gMsg').value='';LGM();LG();}catch(e){GSt(e.reason||'Failed',1);b.disabled=false;}}
 function GSt(m,e){$('gSs').textContent=m;$('gSs').className='gss'+(e?' er':'');}
 function TA(ts){const d=Math.floor(Date.now()/1000)-ts;if(d<60)return'now';if(d<3600)return Math.floor(d/60)+'m';if(d<86400)return Math.floor(d/3600)+'h';return Math.floor(d/86400)+'d';}
 function ES(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}

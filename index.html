@@ -287,6 +287,15 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
 <!-- MAIN GAME -->
 <div id="gameWrap" style="display:none">
+
+<!-- HERO TITLE -->
+<div style="text-align:center;padding:20px 0 16px;position:relative">
+  <div style="font-family:'Orbitron';font-size:10px;letter-spacing:6px;color:var(--dm);text-transform:uppercase;margin-bottom:6px">Season 1 · Somnia Network</div>
+  <div style="font-family:'Orbitron';font-size:28px;font-weight:900;letter-spacing:5px;background:linear-gradient(135deg,var(--rd),var(--mg),var(--cy));-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-transform:uppercase">⚔ Steal or Protect ⚔</div>
+  <div style="font-family:'Share Tech Mono';font-size:10px;color:var(--dm);margin-top:6px;letter-spacing:2px">Choose your side · Earn glory · Claim rewards</div>
+  <div style="width:200px;height:1px;background:linear-gradient(90deg,transparent,var(--cy),transparent);margin:14px auto 0"></div>
+</div>
+
 <div class="tabs">
   <div class="tab a" data-t="game">⚔ Battle</div>
   <div class="tab" data-t="gm">☀ GM</div>
@@ -335,6 +344,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
           <button class="b-btn steal" id="btnS" onclick="PL(true)">🔥 STEAL</button>
           <button class="b-btn protect" id="btnP" onclick="PL(false)">🛡 PROTECT</button>
         </div>
+        <div id="gmLock" style="display:none;font-family:'Share Tech Mono';font-size:10px;color:var(--gd);border:1px solid rgba(255,215,0,.2);padding:8px 16px;background:rgba(255,215,0,.03)">☀ Say GM first to unlock battle</div>
         <div class="bc-st" id="gSt"></div>
       </div>
       <div class="warrior">
@@ -367,25 +377,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <div class="badge-title">Top-150 Streak</div>
       <div class="badge-display tier-0" id="badge">🎖 NEWCOMER</div>
       <div class="badge-sub" id="badgeSub">Win a battle and reach Top-150 to earn your first badge</div>
-    </div>
-  </div>
-
-  <!-- DAILY QUESTS -->
-  <div class="crd" style="margin-bottom:16px">
-    <div class="ch" style="color:var(--gn)">📋 Daily Quests</div>
-    <div style="padding:12px 20px;display:flex;gap:16px;flex-wrap:wrap;justify-content:center">
-      <div style="border:1px solid var(--bd);padding:10px 16px;display:flex;align-items:center;gap:8px;min-width:140px" id="qGM">
-        <span style="font-size:16px" id="qGMi">⬜</span>
-        <div><div style="font-family:'Orbitron';font-size:10px;font-weight:600">Say GM</div><div style="font-family:'Share Tech Mono';font-size:8px;color:var(--dm)">+100 XP</div></div>
-      </div>
-      <div style="border:1px solid var(--bd);padding:10px 16px;display:flex;align-items:center;gap:8px;min-width:140px" id="qBattle">
-        <span style="font-size:16px" id="qBi">⬜</span>
-        <div><div style="font-family:'Orbitron';font-size:10px;font-weight:600">Enter Battle</div><div style="font-family:'Share Tech Mono';font-size:8px;color:var(--dm)">+BP points</div></div>
-      </div>
-      <div style="border:1px solid var(--bd);padding:10px 16px;display:flex;align-items:center;gap:8px;min-width:140px" id="qAll">
-        <span style="font-size:16px" id="qAi">⬜</span>
-        <div><div style="font-family:'Orbitron';font-size:10px;font-weight:600">Both Done</div><div style="font-family:'Share Tech Mono';font-size:8px;color:var(--gd)">+20 bonus XP</div></div>
-      </div>
     </div>
   </div>
 
@@ -451,6 +442,36 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
 <!-- PROFILE -->
 <div class="pnl" id="t-profile">
+  <!-- DAILY QUESTS -->
+  <div class="crd" style="margin-bottom:16px">
+    <div class="ch" style="color:var(--gn)">📋 Daily Quests</div>
+    <div style="padding:12px 20px;display:flex;gap:16px;flex-wrap:wrap;justify-content:center">
+      <div style="border:1px solid var(--bd);padding:10px 16px;display:flex;align-items:center;gap:8px;min-width:140px" id="qGM">
+        <span style="font-size:16px" id="qGMi">⬜</span>
+        <div><div style="font-family:'Orbitron';font-size:10px;font-weight:600">Say GM</div><div style="font-family:'Share Tech Mono';font-size:8px;color:var(--dm)">+100 XP</div></div>
+      </div>
+      <div style="border:1px solid var(--bd);padding:10px 16px;display:flex;align-items:center;gap:8px;min-width:140px" id="qBattle">
+        <span style="font-size:16px" id="qBi">⬜</span>
+        <div><div style="font-family:'Orbitron';font-size:10px;font-weight:600">Enter Battle</div><div style="font-family:'Share Tech Mono';font-size:8px;color:var(--dm)">+BP points</div></div>
+      </div>
+      <div style="border:1px solid var(--bd);padding:10px 16px;display:flex;align-items:center;gap:8px;min-width:140px" id="qAll">
+        <span style="font-size:16px" id="qAi">⬜</span>
+        <div><div style="font-family:'Orbitron';font-size:10px;font-weight:600">Both Done</div><div style="font-family:'Share Tech Mono';font-size:8px;color:var(--gd)">+20 bonus XP</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MINT WARRIOR CARD -->
+  <div class="crd" style="margin-bottom:16px">
+    <div class="ch" style="color:var(--mg)">🗡 Warrior Card</div>
+    <div style="padding:20px;text-align:center">
+      <div style="font-family:'Orbitron';font-size:14px;font-weight:700;color:var(--tx);margin-bottom:6px">Mint Your Warrior Card</div>
+      <div style="font-family:'Share Tech Mono';font-size:10px;color:var(--dm);margin-bottom:16px;max-width:400px;margin-left:auto;margin-right:auto;line-height:1.5">Confirm your presence on-chain. Costs 0.01 STT (same as GM). Earns XP + Glory + records your warrior identity. Can be minted once per day.</div>
+      <button class="b-btn steal" id="mintCardBtn" onclick="mintCard()" style="display:inline-block;flex:none;padding:12px 32px;font-size:12px">🗡 MINT WARRIOR CARD — 0.01 STT</button>
+      <div style="font-family:'Share Tech Mono';font-size:10px;margin-top:8px;min-height:14px;color:var(--gn)" id="mintSt"></div>
+    </div>
+  </div>
+
   <div class="crd" id="PC" style="display:none"><div class="ch">◈ Digital Passport</div>
     <div class="ppb">
       <div style="text-align:center"><div class="avf" id="AV"><div class="avp">◈</div></div><div class="rk rg" id="RK">GENESIS</div></div>
@@ -588,6 +609,10 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <button class="owner-btn" onclick="OWfinYesterday()">FINALIZE YESTERDAY</button>
       <button class="owner-btn" onclick="OWbatch()">CLAIM LAST 7 DAYS</button>
     </div>
+    <div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,215,0,.1);text-align:center">
+      <div style="font-family:'Share Tech Mono';font-size:9px;color:var(--dm);margin-bottom:8px">🧪 TEST MODE — Resolve & finalize yesterday in one click:</div>
+      <button class="owner-btn" onclick="OWtestResolve()" style="border-color:var(--mg);color:var(--mg)">🧪 RESOLVE + FINALIZE YESTERDAY</button>
+    </div>
     <div id="ownSt" style="font-family:'Share Tech Mono';font-size:10px;color:var(--gn);text-align:center;margin-top:12px;min-height:14px"></div>
   </div>
 </div>
@@ -717,8 +742,10 @@ async function LG(){try{
   else{bd.className='badge-display tier-0';bd.textContent='🎖 NEWCOMER';bs.textContent='Win a battle and reach Top-150 to earn your first badge';}
 
   const bS=$('btnS'),bP=$('btnP');bS.classList.remove('off');bP.classList.remove('off');bS.disabled=false;bP.disabled=false;$('slA').disabled=false;$('slD').disabled=false;
-  if(v.playedToday){bS.disabled=true;bP.disabled=true;bS.classList.add('off');bP.classList.add('off');$('slA').disabled=true;$('slD').disabled=true;if(v.todaySide){bS.textContent='🔥 YOUR PICK';}else{bP.textContent='🛡 YOUR PICK';}$('gSt').textContent='Played today! Come back tomorrow.';}
-  if(v.gmToday){$('gBtn').disabled=true;$('gSs').textContent='GM done today ✓';}
+  // GM required before battle
+  if(!v.gmToday&&!v.playedToday){bS.disabled=true;bP.disabled=true;bS.classList.add('off');bP.classList.add('off');$('slA').disabled=true;$('slD').disabled=true;$('gmLock').style.display='block';}else{$('gmLock').style.display='none';}
+  if(v.playedToday){bS.disabled=true;bP.disabled=true;bS.classList.add('off');bP.classList.add('off');$('slA').disabled=true;$('slD').disabled=true;if(v.todaySide){bS.textContent='🔥 YOUR PICK';}else{bP.textContent='🛡 YOUR PICK';}$('gSt').textContent='Played today! Come back tomorrow.';$('gmLock').style.display='none';}
+  if(v.gmToday){$('gBtn').disabled=true;$('gSs').textContent='GM done today ✓';if($('mintCardBtn')){$('mintCardBtn').disabled=true;$('mintCardBtn').textContent='🗡 MINTED TODAY ✓';}}
 
   // Claim
   if(day>0){try{
@@ -802,6 +829,10 @@ function ES(s){const d=document.createElement('div');d.textContent=s;return d.in
 function $(id){return document.getElementById(id);}
 
 function shareWin(){const text='I just won in Steal or Protect on @SomniaNetwork! ⚔🔥 Play daily battles, earn XP, and claim rewards.';const url='https://angellsomniac.github.io/Somnia-umi-passport/';window.open('https://x.com/intent/tweet?text='+encodeURIComponent(text)+'&url='+encodeURIComponent(url),'_blank');}
+
+async function OWtestResolve(){try{$('ownSt').textContent='Resolving + finalizing yesterday...';$('ownSt').style.color='var(--mg)';const today=Number(await hb.currentDay());try{await(await hb.resolveRound(today-1)).wait();}catch(e){}$('ownSt').textContent='Resolved ✓ Now finalizing...';try{await(await hb.finalizeRankings(today-1)).wait();}catch(e){}$('ownSt').textContent='Done ✓ Resolve + Finalize complete';$('ownSt').style.color='var(--gn)';LG();}catch(e){$('ownSt').textContent=e.reason||'Failed';$('ownSt').style.color='var(--rd)';}}
+
+async function mintCard(){const btn=$('mintCardBtn');btn.disabled=true;$('mintSt').textContent='Minting warrior card...';$('mintSt').style.color='var(--gn)';try{const tx=await hb.sayGM('🗡 Warrior Card Minted!',{value:ethers.parseEther('0.01')});await tx.wait();$('mintSt').textContent='Warrior Card minted ✓ +XP +Glory earned!';btn.textContent='🗡 MINTED ✓';LG();LGM();}catch(e){$('mintSt').textContent=e.reason||'Failed — you may have already said GM today';$('mintSt').style.color='var(--rd)';btn.disabled=false;}}
 
 if(window.ethereum){window.ethereum.on('accountsChanged',()=>location.reload());window.ethereum.on('chainChanged',()=>location.reload());}
 

@@ -438,12 +438,9 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     </div>
     <div class="crd"><div class="ch" style="color:var(--mg)">◈ GM Feed</div><div class="gmf" id="gFd"><div class="lbe">No GMs yet ☀️</div></div></div>
   </div>
-</div>
 
-<!-- PROFILE -->
-<div class="pnl" id="t-profile">
   <!-- DAILY QUESTS -->
-  <div class="crd" style="margin-bottom:16px">
+  <div class="crd" style="margin-top:16px">
     <div class="ch" style="color:var(--gn)">📋 Daily Quests</div>
     <div style="padding:12px 20px;display:flex;gap:16px;flex-wrap:wrap;justify-content:center">
       <div style="border:1px solid var(--bd);padding:10px 16px;display:flex;align-items:center;gap:8px;min-width:140px" id="qGM">
@@ -462,16 +459,19 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   </div>
 
   <!-- MINT WARRIOR CARD -->
-  <div class="crd" style="margin-bottom:16px">
+  <div class="crd" style="margin-top:14px">
     <div class="ch" style="color:var(--mg)">🗡 Warrior Card</div>
     <div style="padding:20px;text-align:center">
       <div style="font-family:'Orbitron';font-size:14px;font-weight:700;color:var(--tx);margin-bottom:6px">Mint Your Warrior Card</div>
-      <div style="font-family:'Share Tech Mono';font-size:10px;color:var(--dm);margin-bottom:16px;max-width:400px;margin-left:auto;margin-right:auto;line-height:1.5">Confirm your presence on-chain. Costs 0.01 STT (same as GM). Earns XP + Glory + records your warrior identity. Can be minted once per day.</div>
+      <div style="font-family:'Share Tech Mono';font-size:10px;color:var(--dm);margin-bottom:16px;max-width:400px;margin-left:auto;margin-right:auto;line-height:1.5">Confirm your presence on-chain. Costs 0.01 STT (same as GM). Earns XP + Glory + records your warrior identity. One mint per day.</div>
       <button class="b-btn steal" id="mintCardBtn" onclick="mintCard()" style="display:inline-block;flex:none;padding:12px 32px;font-size:12px">🗡 MINT WARRIOR CARD — 0.01 STT</button>
       <div style="font-family:'Share Tech Mono';font-size:10px;margin-top:8px;min-height:14px;color:var(--gn)" id="mintSt"></div>
     </div>
   </div>
+</div>
 
+<!-- PROFILE -->
+<div class="pnl" id="t-profile">
   <div class="crd" id="PC" style="display:none"><div class="ch">◈ Digital Passport</div>
     <div class="ppb">
       <div style="text-align:center"><div class="avf" id="AV"><div class="avp">◈</div></div><div class="rk rg" id="RK">GENESIS</div></div>
@@ -644,7 +644,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 <script>
 // ═══════ CONFIG — UPDATE AFTER DEPLOY ═══════
 const CFG={
-  50312:{umi:'0x91Ee1c6C191dc6440B8058d99d2Fa94B8691adff',hub:'0xfB703edbe2c22Cf0AaEaaEcEBD71AD8F70A3b9EA',exp:'https://shannon-explorer.somnia.network'},
+  50312:{umi:'0x91Ee1c6C191dc6440B8058d99d2Fa94B8691adff',hub:'0x41ebBb28A5EF45793E223f49e21447b29341d1Fe',exp:'https://shannon-explorer.somnia.network'},
   5031:{umi:'0xfa9c15D8B508968fCDbdB9F495C8A493C19d7351',hub:'0x0000000000000000000000000000000000000000',exp:'https://explorer.somnia.network'}
 };
 
@@ -830,7 +830,19 @@ function $(id){return document.getElementById(id);}
 
 function shareWin(){const text='I just won in Steal or Protect on @SomniaNetwork! ⚔🔥 Play daily battles, earn XP, and claim rewards.';const url='https://angellsomniac.github.io/Somnia-umi-passport/';window.open('https://x.com/intent/tweet?text='+encodeURIComponent(text)+'&url='+encodeURIComponent(url),'_blank');}
 
-async function OWtestResolve(){try{$('ownSt').textContent='Resolving + finalizing yesterday...';$('ownSt').style.color='var(--mg)';const today=Number(await hb.currentDay());try{await(await hb.resolveRound(today-1)).wait();}catch(e){}$('ownSt').textContent='Resolved ✓ Now finalizing...';try{await(await hb.finalizeRankings(today-1)).wait();}catch(e){}$('ownSt').textContent='Done ✓ Resolve + Finalize complete';$('ownSt').style.color='var(--gn)';LG();}catch(e){$('ownSt').textContent=e.reason||'Failed';$('ownSt').style.color='var(--rd)';}}
+async function OWtestResolve(){try{
+  $('ownSt').textContent='Step 1/3: Resolving yesterday...';$('ownSt').style.color='var(--mg)';
+  const today=Number(await hb.currentDay());
+  // Step 1: Resolve
+  try{await(await hb.resolveRound(today-1)).wait();$('ownSt').textContent='Step 1 ✓ Resolved';}catch(e){$('ownSt').textContent='Step 1: Already resolved or no players';}
+  // Step 2: Finalize rankings
+  $('ownSt').textContent='Step 2/3: Finalizing rankings...';
+  try{await(await hb.finalizeRankings(today-1)).wait();$('ownSt').textContent='Step 2 ✓ Rankings finalized';}catch(e){$('ownSt').textContent='Step 2: Already finalized or no players';}
+  // Step 3: Full reload
+  $('ownSt').textContent='Step 3/3: Reloading game...';
+  await LG();await LGM();
+  $('ownSt').textContent='✓ All done! New day active. Yesterday\'s winners can now CLAIM.';$('ownSt').style.color='var(--gn)';
+}catch(e){$('ownSt').textContent=e.reason||'Failed';$('ownSt').style.color='var(--rd)';}}
 
 async function mintCard(){const btn=$('mintCardBtn');btn.disabled=true;$('mintSt').textContent='Minting warrior card...';$('mintSt').style.color='var(--gn)';try{const tx=await hb.sayGM('🗡 Warrior Card Minted!',{value:ethers.parseEther('0.01')});await tx.wait();$('mintSt').textContent='Warrior Card minted ✓ +XP +Glory earned!';btn.textContent='🗡 MINTED ✓';LG();LGM();}catch(e){$('mintSt').textContent=e.reason||'Failed — you may have already said GM today';$('mintSt').style.color='var(--rd)';btn.disabled=false;}}
 

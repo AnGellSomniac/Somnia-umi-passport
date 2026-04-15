@@ -217,6 +217,11 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 @keyframes sp{to{transform:rotate(360deg)}}.ld span{font-family:'Share Tech Mono';font-size:10px;color:var(--dm)}
 
 /* TRUST FOOTER */
+.rw-status{border:1px solid var(--bd);padding:20px;margin-bottom:20px;background:rgba(0,0,0,.2)}
+.rw-won{border-color:rgba(57,255,20,.2);background:linear-gradient(135deg,rgba(57,255,20,.04),transparent)}
+.rw-lost{border-color:rgba(255,51,68,.15);background:linear-gradient(135deg,rgba(255,51,68,.03),transparent)}
+
+/* TRUST FOOTER */
 .trust-footer{margin-top:40px;padding:32px 0;border-top:1px solid var(--bd)}
 .trust-header{text-align:center;margin-bottom:24px}
 .trust-title{font-family:'Orbitron';font-size:12px;letter-spacing:4px;color:var(--dm);text-transform:uppercase;margin-bottom:6px}
@@ -299,6 +304,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 <div class="tabs">
   <div class="tab a" data-t="game">⚔ Battle</div>
   <div class="tab" data-t="gm">☀ GM</div>
+  <div class="tab" data-t="rewards">🎁 Rewards</div>
   <div class="tab" data-t="profile">◈ Passport</div>
   <div class="tab" data-t="about">📖 About</div>
   <div class="tab owner-tab" data-t="owner" id="ownerTab" style="display:none">👑 Owner</div>
@@ -467,6 +473,39 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <button class="b-btn steal" id="mintCardBtn" onclick="mintCard()" style="display:inline-block;flex:none;padding:12px 32px;font-size:12px">🗡 MINT WARRIOR CARD — 0.01 STT</button>
       <div style="font-family:'Share Tech Mono';font-size:10px;margin-top:8px;min-height:14px;color:var(--gn)" id="mintSt"></div>
     </div>
+  </div>
+</div>
+
+<!-- REWARDS -->
+<div class="pnl" id="t-rewards">
+  <div class="crd">
+    <div class="ch" style="color:var(--gd)">🎁 Yesterday's Battle Results</div>
+    <div style="padding:24px 20px;text-align:center">
+      <div id="rwResult" style="font-family:'Orbitron';font-size:18px;font-weight:800;margin-bottom:8px;color:var(--dm)">Waiting for results...</div>
+      <div id="rwDetail" style="font-family:'Share Tech Mono';font-size:11px;color:var(--dm);margin-bottom:20px"></div>
+
+      <!-- YOUR STATUS -->
+      <div id="rwStatus" style="border:1px solid var(--bd);padding:20px;margin-bottom:20px;display:none">
+        <div style="font-family:'Orbitron';font-size:12px;letter-spacing:2px;color:var(--dm);margin-bottom:12px">YOUR STATUS</div>
+        <div id="rwRank" style="font-family:'Orbitron';font-size:24px;font-weight:900;margin-bottom:4px"></div>
+        <div id="rwTier" style="font-family:'Share Tech Mono';font-size:10px;letter-spacing:2px;margin-bottom:12px"></div>
+        <div id="rwAmount" style="font-family:'Orbitron';font-size:28px;font-weight:900;color:var(--gd);margin-bottom:16px"></div>
+        <button class="claim-btn" id="rwClaimBtn" onclick="rwClaim()" style="font-size:13px;padding:14px 40px">🎁 CLAIM YOUR REWARD</button>
+        <div id="rwClaimSt" style="font-family:'Share Tech Mono';font-size:10px;margin-top:10px;min-height:14px"></div>
+      </div>
+
+      <!-- NOT ELIGIBLE -->
+      <div id="rwNone" style="display:none">
+        <div style="font-size:36px;opacity:.3;margin-bottom:10px">⚔</div>
+        <div style="font-family:'Orbitron';font-size:13px;color:var(--dm)" id="rwNoneText">You didn't participate yesterday</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- YESTERDAY'S TOP WINNERS -->
+  <div class="crd">
+    <div class="ch" style="color:var(--mg)">🏆 Yesterday's Top Winners</div>
+    <div class="lb" id="rwLeaderboard"><div class="lbe">No data yet</div></div>
   </div>
 </div>
 
@@ -698,7 +737,7 @@ async function OB(){
   catch(e){$('obSt').textContent=e.reason||'Failed';$('obSt').className='fs er';bt.textContent='CREATE PASSPORT & ENTER';bt.disabled=false;}
 }
 
-async function LA(){LP();if(hb){LG();LGM();ST();}}
+async function LA(){LP();if(hb){LG();LGM();LR();ST();}}
 
 async function LP(){try{const p=await um.getProfile(ad);if(p.exists)SH(p);else{$('PLd').style.display='none';$('PE').style.display='block';}}catch(e){$('PLd').style.display='none';$('PE').style.display='block';}}
 function SH(p){$('PLd').style.display='none';$('PC').style.display='block';$('PE').style.display='none';$('FT').innerHTML='◈ Update Identity';$('PN').textContent=p.nickname;$('PA').textContent=ad;$('PB').textContent=p.bio||'No bio';const f=$('AV');if(p.avatarUrl)f.innerHTML='<img src="'+p.avatarUrl+'" onerror="this.parentElement.innerHTML=\'<div class=avp>◈</div>\'">';else f.innerHTML='<div class="avp">'+(p.nickname?p.nickname[0].toUpperCase():'◈')+'</div>';const s=$('PL2');if(p.socialUrl){s.style.display='inline-flex';s.href=p.socialUrl;$('PLT').textContent=p.socialUrl.replace('https://','');}else s.style.display='none';const cr=Number(p.createdAt),up=Number(p.updatedAt);$('PCr').textContent=cr?new Date(cr*1000).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'—';$('PUp').textContent=up?new Date(up*1000).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'—';const age=cr?Math.floor((Date.now()/1000-cr)/86400):0;let rk,rc;if(age>=365){rk='LEGEND';rc='rl';}else if(age>=90){rk='PIONEER';rc='rp';}else if(age>=7){rk='EXPLORER';rc='re';}else{rk='GENESIS';rc='rg';}$('RK').textContent=rk;$('RK').className='rk '+rc;$('PR2').textContent=rk;$('fN').value=p.nickname;$('fA').value=p.avatarUrl;$('fB').value=p.bio;$('fS').value=p.socialUrl;}
@@ -811,12 +850,15 @@ async function CR(){
   }catch(e){btn.textContent='CLAIM';btn.disabled=false;alert(e.reason||'Failed');}
 }
 
-function ST(){if(ti)clearInterval(ti);hb.roundTimeLeft().then(l=>{localLeft=Number(l);const u=()=>{if(localLeft<0)localLeft=0;const h=Math.floor(localLeft/3600),m=Math.floor((localLeft%3600)/60),s=localLeft%60;const tm=$('gT');tm.textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');if(localLeft<=30&&localLeft>0){$('snWarn').style.display='block';$('snWarn').textContent='🔒 VOTING LOCKED — Revealing in '+localLeft+'s';$('snWarn').style.borderColor='rgba(255,51,68,.4)';$('snWarn').style.color='var(--rd)';$('btnS').disabled=true;$('btnP').disabled=true;tm.style.color='var(--rd)';}else if(localLeft<=120){$('snWarn').style.display='block';$('snWarn').textContent='⚡ FINAL MINUTES — Choose your side now!';$('snWarn').style.borderColor='rgba(255,215,0,.3)';$('snWarn').style.color='var(--gd)';tm.style.color='var(--gd)';}else{$('snWarn').style.display='none';tm.style.color='var(--cy)';}localLeft--;};u();ti=setInterval(u,1000);});}
+function ST(){if(ti)clearInterval(ti);hb.roundTimeLeft().then(l=>{localLeft=Number(l);const u=()=>{if(localLeft<0)localLeft=0;const h=Math.floor(localLeft/3600),m=Math.floor((localLeft%3600)/60),s=localLeft%60;const tm=$('gT');tm.textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');if(localLeft<=300&&localLeft>0){$('snWarn').style.display='block';$('snWarn').textContent='🔒 VOTING LOCKED — Revealing in '+m+':'+String(s).padStart(2,'0');$('snWarn').style.borderColor='rgba(255,51,68,.4)';$('snWarn').style.color='var(--rd)';tm.style.color='var(--rd)';}else if(localLeft<=3600){$('snWarn').style.display='block';$('snWarn').textContent='⚡ LAST HOUR — Choose your side now!';$('snWarn').style.borderColor='rgba(255,215,0,.3)';$('snWarn').style.color='var(--gd)';tm.style.color='var(--gd)';}else{$('snWarn').style.display='none';tm.style.color='var(--cy)';}localLeft--;};u();ti=setInterval(u,1000);});}
 
 // GM
 async function LGM(){try{const rec=await hb.getRecentGMs();const ent=rec[0],cnt=Number(rec[1]);const tgm=await hb.totalGMs();if(!cnt){$('gFd').innerHTML='<div class="lbe">No GMs yet ☀️</div>';return;}const sorted=[];for(let i=0;i<cnt;i++)sorted.push(ent[i]);sorted.sort((a,b)=>Number(b.timestamp)-Number(a.timestamp));const fd=$('gFd');fd.innerHTML=sorted.map(e=>'<div class="ge"><div class="gd2"></div><div class="gc"><div class="gt"><span class="ga">'+e.sender.slice(0,6)+'...'+e.sender.slice(-4)+'</span><span class="gtm">'+TA(Number(e.timestamp))+'</span></div><div class="gms2">'+ES(e.message||'GM ☀️')+'</div></div></div>').join('');sorted.forEach(async(e,i)=>{try{const n=await um.getNickname(e.sender);if(n){const t=fd.querySelectorAll('.gt');if(t[i]){const s=document.createElement('span');s.className='gn2';s.textContent=n;t[i].prepend(s);}}}catch(er){}});}catch(e){console.error('GM:',e);}}
 
-async function GM(){const b=$('gBtn'),m=$('gMsg').value.trim();b.disabled=true;GSt('Sending 0.01 STT...',0);try{const tx=await hb.sayGM(m,{value:ethers.parseEther('0.01')});GSt('Confirming...',0);await tx.wait();GSt('GM sent! +XP ☀️',0);$('gMsg').value='';LGM();LG();}catch(e){GSt(e.reason||'Failed',1);b.disabled=false;}}
+async function GM(){const b=$('gBtn'),m=$('gMsg').value.trim();b.disabled=true;GSt('Sending 0.01 STT...',0);try{const tx=await hb.sayGM(m,{value:ethers.parseEther('0.01')});GSt('Confirming...',0);await tx.wait();GSt('GM sent! +XP ☀️ Battle unlocked!',0);$('gMsg').value='';await LGM();await LG();
+  // Switch to battle tab to show unlocked buttons
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('a'));document.querySelectorAll('.pnl').forEach(x=>x.classList.remove('a'));document.querySelector('[data-t=game]').classList.add('a');$('t-game').classList.add('a');
+}catch(e){GSt(e.reason||'Failed',1);b.disabled=false;}}
 function GSt(m,e){$('gSs').textContent=m;$('gSs').className='gss'+(e?' er':'');}
 
 // OWNER FUNCTIONS
@@ -830,6 +872,51 @@ function $(id){return document.getElementById(id);}
 
 function shareWin(){const text='I just won in Steal or Protect on @SomniaNetwork! ⚔🔥 Play daily battles, earn XP, and claim rewards.';const url='https://angellsomniac.github.io/Somnia-umi-passport/';window.open('https://x.com/intent/tweet?text='+encodeURIComponent(text)+'&url='+encodeURIComponent(url),'_blank');}
 
+// REWARDS TAB
+async function LR(){try{
+  const day=Number(await hb.currentDay());
+  if(day===0)return;
+  const yday=day-1;
+
+  // Get yesterday's round info (past day = revealed)
+  const ri=await hb.getRoundInfo(yday);
+  const sc=Number(ri[0]),pc=Number(ri[1]),res=ri[2],won=ri[3],fin=ri[4];
+
+  if(!res||sc===0){$('rwResult').textContent='No battle yesterday';$('rwNone').style.display='block';return;}
+
+  $('rwResult').textContent=(won?'🔥 STEAL WON':'🛡️ PROTECT WON');
+  $('rwResult').style.color=won?'var(--rd)':'var(--cy)';
+  $('rwDetail').textContent='Stealers: '+sc+' · Protectors: '+pc+(fin?' · Rankings finalized':' · Waiting for finalization');
+
+  // Check your reward
+  const[rew,can,rank,exp]=await hb.getPendingReward(ad,yday);
+
+  if(can&&Number(rew)>0){
+    $('rwStatus').style.display='block';$('rwNone').style.display='none';
+    $('rwRank').textContent='RANK #'+rank;$('rwRank').style.color=rank<=3?'var(--gd)':rank<=10?'var(--cy)':rank<=30?'var(--mg)':'var(--tx)';
+    const tierName=rank===1?'🏆 CHAMPION':rank===2?'🥈 RUNNER-UP':rank===3?'🥉 THIRD':rank<=10?'⚡ ELITE':rank<=30?'💎 MASTER':rank<=70?'🔷 PRO':'🎖 PARTICIPANT';
+    $('rwTier').textContent=tierName;$('rwTier').style.color=rank<=3?'var(--gd)':'var(--dm)';
+    $('rwAmount').textContent=ethers.formatEther(rew)+' STT';
+    $('rwClaimBtn').disabled=false;$('rwClaimBtn').textContent='🎁 CLAIM YOUR REWARD';
+  }else if(exp){
+    $('rwStatus').style.display='block';$('rwNone').style.display='none';
+    $('rwRank').textContent='EXPIRED';$('rwRank').style.color='var(--rd)';
+    $('rwTier').textContent='Claim window closed';$('rwTier').style.color='var(--rd)';
+    $('rwAmount').textContent='0 STT';
+    $('rwClaimBtn').disabled=true;$('rwClaimBtn').textContent='EXPIRED';
+  }else{
+    $('rwStatus').style.display='none';$('rwNone').style.display='block';
+    // Check if player participated but lost
+    try{
+      const v=await hb.getPlayerView(ad);
+      // If we played yesterday check via round info
+      $('rwNoneText').textContent='You were on the losing side (+2 XP) or did not participate';
+    }catch(e){}
+  }
+}catch(e){console.error('LR:',e);}}
+
+async function rwClaim(){const btn=$('rwClaimBtn');btn.disabled=true;btn.textContent='CLAIMING...';$('rwClaimSt').textContent='Signing transaction...';$('rwClaimSt').style.color='var(--gn)';try{const day=Number(await hb.currentDay())-1;const tx=await hb.claimReward(day);$('rwClaimSt').textContent='Confirming...';await tx.wait();btn.textContent='✓ CLAIMED';$('rwClaimSt').textContent='Reward claimed successfully! 🎉';$('rwAmount').textContent='Claimed ✓';LG();LR();}catch(e){$('rwClaimSt').textContent=e.reason||'Failed';$('rwClaimSt').style.color='var(--rd)';btn.disabled=false;btn.textContent='🎁 CLAIM YOUR REWARD';}}
+
 async function OWtestResolve(){try{
   $('ownSt').textContent='Step 1/3: Resolving yesterday...';$('ownSt').style.color='var(--mg)';
   const today=Number(await hb.currentDay());
@@ -840,7 +927,7 @@ async function OWtestResolve(){try{
   try{await(await hb.finalizeRankings(today-1)).wait();$('ownSt').textContent='Step 2 ✓ Rankings finalized';}catch(e){$('ownSt').textContent='Step 2: Already finalized or no players';}
   // Step 3: Full reload
   $('ownSt').textContent='Step 3/3: Reloading game...';
-  await LG();await LGM();
+  await LG();await LGM();await LR();
   $('ownSt').textContent='✓ All done! New day active. Yesterday\'s winners can now CLAIM.';$('ownSt').style.color='var(--gn)';
 }catch(e){$('ownSt').textContent=e.reason||'Failed';$('ownSt').style.color='var(--rd)';}}
 

@@ -250,6 +250,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   <div class="hs">
     <div class="si"><div class="sl">Level</div><div class="sv" style="color:var(--gd)" id="hLv">—</div></div>
     <div class="si"><div class="sl">XP</div><div class="sv" style="color:var(--mg)" id="hXP">—</div></div>
+    <div class="si"><div class="sl">GM Streak</div><div class="sv" style="color:var(--gn)" id="hGmS">—</div></div>
     <div class="si"><div class="sl">Glory</div><div class="sv" style="color:var(--gd)" id="hGl">—</div></div>
     <div class="si"><div class="sl">Net</div><div class="sv" style="font-size:10px;color:var(--cy)" id="hN">—</div></div>
     <button class="cb" id="cB" onclick="W()">CONNECT</button>
@@ -304,9 +305,9 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 <div class="tabs">
   <div class="tab a" data-t="game">⚔ Battle</div>
   <div class="tab" data-t="gm">☀ GM</div>
-  <div class="tab" data-t="rewards">🎁 Rewards</div>
   <div class="tab" data-t="profile">◈ Passport</div>
   <div class="tab" data-t="about">📖 About</div>
+  <div class="tab" data-t="rewards">🏆 Claim</div>
   <div class="tab owner-tab" data-t="owner" id="ownerTab" style="display:none">👑 Owner</div>
 </div>
 <div class="pools">
@@ -437,7 +438,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         <div class="gm-cost">0.01 STT → 90% to pool · 10% to owner</div>
         <div class="gss" id="gSs"></div>
         <div style="display:flex;gap:14px;margin-top:6px">
-          <div class="si"><div class="sv" style="color:var(--gn)" id="gMy">0</div><div class="sl">YOUR GMs</div></div>
+          <div class="si"><div class="sv" style="color:var(--gd)" id="gLv">1</div><div class="sl">LEVEL</div></div>
+          <div class="si"><div class="sv" style="color:var(--gn)" id="gStrk">0</div><div class="sl">GM STREAK 🔥</div></div>
           <div class="si"><div class="sv" style="color:var(--mg)" id="gXP">0</div><div class="sl">XP</div></div>
         </div>
       </div>
@@ -476,38 +478,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   </div>
 </div>
 
-<!-- REWARDS -->
-<div class="pnl" id="t-rewards">
-  <div class="crd">
-    <div class="ch" style="color:var(--gd)">🎁 Yesterday's Battle Results</div>
-    <div style="padding:24px 20px;text-align:center">
-      <div id="rwResult" style="font-family:'Orbitron';font-size:18px;font-weight:800;margin-bottom:8px;color:var(--dm)">Waiting for results...</div>
-      <div id="rwDetail" style="font-family:'Share Tech Mono';font-size:11px;color:var(--dm);margin-bottom:20px"></div>
-
-      <!-- YOUR STATUS -->
-      <div id="rwStatus" style="border:1px solid var(--bd);padding:20px;margin-bottom:20px;display:none">
-        <div style="font-family:'Orbitron';font-size:12px;letter-spacing:2px;color:var(--dm);margin-bottom:12px">YOUR STATUS</div>
-        <div id="rwRank" style="font-family:'Orbitron';font-size:24px;font-weight:900;margin-bottom:4px"></div>
-        <div id="rwTier" style="font-family:'Share Tech Mono';font-size:10px;letter-spacing:2px;margin-bottom:12px"></div>
-        <div id="rwAmount" style="font-family:'Orbitron';font-size:28px;font-weight:900;color:var(--gd);margin-bottom:16px"></div>
-        <button class="claim-btn" id="rwClaimBtn" onclick="rwClaim()" style="font-size:13px;padding:14px 40px">🎁 CLAIM YOUR REWARD</button>
-        <div id="rwClaimSt" style="font-family:'Share Tech Mono';font-size:10px;margin-top:10px;min-height:14px"></div>
-      </div>
-
-      <!-- NOT ELIGIBLE -->
-      <div id="rwNone" style="display:none">
-        <div style="font-size:36px;opacity:.3;margin-bottom:10px">⚔</div>
-        <div style="font-family:'Orbitron';font-size:13px;color:var(--dm)" id="rwNoneText">You didn't participate yesterday</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- YESTERDAY'S TOP WINNERS -->
-  <div class="crd">
-    <div class="ch" style="color:var(--mg)">🏆 Yesterday's Top Winners</div>
-    <div class="lb" id="rwLeaderboard"><div class="lbe">No data yet</div></div>
-  </div>
-</div>
 
 <!-- PROFILE -->
 <div class="pnl" id="t-profile">
@@ -634,24 +604,62 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   </div>
 </div>
 
+<!-- CLAIM (REWARDS) -->
+<div class="pnl" id="t-rewards">
+  <div class="crd">
+    <div class="ch" style="color:var(--gd)">🏆 Yesterday's Battle Results</div>
+    <div style="padding:24px 20px;text-align:center">
+      <div id="rwResult" style="font-family:'Orbitron';font-size:18px;font-weight:800;margin-bottom:8px;color:var(--dm)">Waiting for results...</div>
+      <div id="rwDetail" style="font-family:'Share Tech Mono';font-size:11px;color:var(--dm);margin-bottom:20px"></div>
+
+      <div id="rwStatus" style="border:1px solid rgba(255,215,0,.2);padding:24px;margin-bottom:20px;display:none;background:linear-gradient(135deg,rgba(255,215,0,.04),transparent)">
+        <div style="font-family:'Orbitron';font-size:12px;letter-spacing:3px;color:var(--gd);margin-bottom:14px">🏆 YOUR REWARD</div>
+        <div id="rwRank" style="font-family:'Orbitron';font-size:28px;font-weight:900;margin-bottom:4px"></div>
+        <div id="rwTier" style="font-family:'Share Tech Mono';font-size:11px;letter-spacing:2px;margin-bottom:14px"></div>
+        <div id="rwAmount" style="font-family:'Orbitron';font-size:32px;font-weight:900;color:var(--gd);margin-bottom:18px;text-shadow:0 0 20px rgba(255,215,0,.2)"></div>
+        <button class="claim-btn" id="rwClaimBtn" onclick="rwClaim()" style="font-size:14px;padding:16px 48px">🏆 CLAIM YOUR PRIZE</button>
+        <div id="rwClaimSt" style="font-family:'Share Tech Mono';font-size:10px;margin-top:12px;min-height:14px"></div>
+      </div>
+
+      <div id="rwNone" style="display:none">
+        <div style="font-size:40px;opacity:.3;margin-bottom:12px">⚔</div>
+        <div style="font-family:'Orbitron';font-size:14px;color:var(--dm)" id="rwNoneText">You didn't participate yesterday</div>
+        <div style="font-family:'Share Tech Mono';font-size:10px;color:var(--dm);margin-top:6px">Play today and claim tomorrow!</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="crd">
+    <div class="ch" style="color:var(--mg)">🏆 Yesterday's Winners</div>
+    <div class="lb" id="rwLeaderboard"><div class="lbe">No data yet</div></div>
+  </div>
+</div>
+
 <!-- OWNER PANEL -->
 <div class="pnl" id="t-owner">
   <div class="owner-pnl">
     <div class="owner-title">👑 OWNER CONTROL PANEL</div>
-    <div style="text-align:center;margin-bottom:16px;font-family:'Share Tech Mono';font-size:11px;color:var(--dm)">Current blockchain day: <span style="color:var(--gd)" id="ownCurDay">—</span> · Yesterday: <span style="color:var(--cy)" id="ownYDay">—</span></div>
+    <div style="text-align:center;margin-bottom:16px;font-family:'Share Tech Mono';font-size:11px;color:var(--dm)">Day: <span style="color:var(--gd)" id="ownCurDay">—</span> · Yesterday: <span style="color:var(--cy)" id="ownYDay">—</span></div>
     <div class="owner-grid">
-      <div class="owner-stat"><div class="owner-stat-v" id="ownToday">0 STT</div><div class="owner-stat-l">TODAY'S COMMISSION</div></div>
+      <div class="owner-stat"><div class="owner-stat-v" id="ownToday">0 STT</div><div class="owner-stat-l">TODAY'S 10% COMMISSION</div></div>
       <div class="owner-stat"><div class="owner-stat-v" id="ownRoll">0 STT</div><div class="owner-stat-l">ROLLOVER POOL</div></div>
     </div>
+
+    <div style="font-family:'Share Tech Mono';font-size:9px;color:var(--dm);text-align:center;margin-bottom:12px">CLAIM YOUR 10% COMMISSION</div>
     <div class="owner-actions">
-      <button class="owner-btn" onclick="OWclaimYesterday()">CLAIM YESTERDAY</button>
-      <button class="owner-btn" onclick="OWfinYesterday()">FINALIZE YESTERDAY</button>
-      <button class="owner-btn" onclick="OWbatch()">CLAIM LAST 7 DAYS</button>
+      <button class="owner-btn" onclick="OWclaimToday()">💰 CLAIM TODAY</button>
+      <button class="owner-btn" onclick="OWclaimYesterday()">💰 CLAIM YESTERDAY</button>
+      <button class="owner-btn" onclick="OWbatch()" style="border-color:var(--gn);color:var(--gn)">💰 CLAIM LAST 7 DAYS</button>
     </div>
-    <div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,215,0,.1);text-align:center">
-      <div style="font-family:'Share Tech Mono';font-size:9px;color:var(--dm);margin-bottom:8px">🧪 TEST MODE — Resolve & finalize yesterday in one click:</div>
-      <button class="owner-btn" onclick="OWtestResolve()" style="border-color:var(--mg);color:var(--mg)">🧪 RESOLVE + FINALIZE YESTERDAY</button>
+
+    <div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,215,0,.1)">
+      <div style="font-family:'Share Tech Mono';font-size:9px;color:var(--dm);text-align:center;margin-bottom:12px">ROUND MANAGEMENT</div>
+      <div class="owner-actions">
+        <button class="owner-btn" onclick="OWfinYesterday()">📊 FINALIZE YESTERDAY</button>
+        <button class="owner-btn" onclick="OWtestResolve()" style="border-color:var(--mg);color:var(--mg)">🧪 RESOLVE + FINALIZE</button>
+      </div>
     </div>
+
     <div id="ownSt" style="font-family:'Share Tech Mono';font-size:10px;color:var(--gn);text-align:center;margin-top:12px;min-height:14px"></div>
   </div>
 </div>
@@ -756,7 +764,10 @@ async function LG(){try{
   $('xGS').textContent=v.gmStreak.toString();$('xBS').textContent=v.battleStreak.toString();
   $('xW').textContent=v.battleWins.toString();$('xGl').textContent=v.monthGlory.toString();
   $('hXP').textContent=v.xp.toString();$('hLv').textContent='Lv '+v.level;$('hGl').textContent=v.monthGlory.toString();
-  $('gXP').textContent=v.xp.toString();$('gMy').textContent=v.xp.toString();
+  $('gXP').textContent=v.xp.toString();
+  if($('gLv'))$('gLv').textContent=v.level.toString();
+  if($('gStrk'))$('gStrk').textContent=v.gmStreak.toString();
+  if($('hGmS'))$('hGmS').textContent=v.gmStreak.toString()+'🔥';
   $('atkLv').textContent='Warrior Lv '+v.level;$('defLv').textContent='Warrior Lv '+v.level;
 
   // XP progress bar
@@ -862,7 +873,8 @@ async function GM(){const b=$('gBtn'),m=$('gMsg').value.trim();b.disabled=true;G
 function GSt(m,e){$('gSs').textContent=m;$('gSs').className='gss'+(e?' er':'');}
 
 // OWNER FUNCTIONS
-async function OWclaimYesterday(){try{$('ownSt').textContent='Claiming yesterday...';$('ownSt').style.color='var(--gn)';const today=Number(await hb.currentDay());const tx=await hb.claimOwnerFee(today-1);await tx.wait();$('ownSt').textContent='Claimed ✓';LG();}catch(e){$('ownSt').textContent=e.reason||'Failed';$('ownSt').style.color='var(--rd)';}}
+async function OWclaimToday(){try{$('ownSt').textContent='Claiming today...';$('ownSt').style.color='var(--gn)';const today=Number(await hb.currentDay());const tx=await hb.claimOwnerFee(today);await tx.wait();$('ownSt').textContent='Today claimed ✓';LG();}catch(e){$('ownSt').textContent=e.reason||'No commission today or not resolved yet';$('ownSt').style.color='var(--rd)';}}
+async function OWclaimYesterday(){try{$('ownSt').textContent='Claiming yesterday...';$('ownSt').style.color='var(--gn)';const today=Number(await hb.currentDay());const tx=await hb.claimOwnerFee(today-1);await tx.wait();$('ownSt').textContent='Yesterday claimed ✓';LG();}catch(e){$('ownSt').textContent=e.reason||'Nothing to claim';$('ownSt').style.color='var(--rd)';}}
 async function OWfinYesterday(){try{$('ownSt').textContent='Finalizing yesterday...';$('ownSt').style.color='var(--gn)';const today=Number(await hb.currentDay());const tx=await hb.finalizeRankings(today-1);await tx.wait();$('ownSt').textContent='Finalized ✓';LG();}catch(e){$('ownSt').textContent=e.reason||'Failed';$('ownSt').style.color='var(--rd)';}}
 async function OWbatch(){try{$('ownSt').textContent='Claiming last 7 days...';$('ownSt').style.color='var(--gn)';const today=Number(await hb.currentDay());for(let i=1;i<=7;i++){try{await(await hb.claimOwnerFee(today-i)).wait();}catch(e){}}$('ownSt').textContent='Batch done ✓';LG();}catch(e){$('ownSt').textContent=e.reason||'Failed';$('ownSt').style.color='var(--rd)';}}
 

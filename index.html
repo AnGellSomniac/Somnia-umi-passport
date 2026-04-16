@@ -3,699 +3,1204 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Steal or Protect — Somnia</title>
+<title>Steal or Protect — Chronicles of Somnia</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.4/ethers.umd.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--cy:#00f0ff;--mg:#ff00e5;--gn:#39ff14;--gd:#ffd700;--rd:#ff3344;--bg:#0a0a12;--cd:#11111d;--bd:rgba(0,240,255,.15);--tx:#e8e8f0;--dm:#6a6a8a}
-body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 20% 10%,rgba(0,240,255,.06),transparent),radial-gradient(ellipse 60% 50% at 80% 90%,rgba(255,0,229,.05),transparent);z-index:-2}
-.gbg{position:fixed;inset:0;z-index:-1;opacity:.03;background-image:linear-gradient(rgba(0,240,255,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(0,240,255,.5) 1px,transparent 1px);background-size:60px 60px}
-.hdr{padding:12px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--bd);backdrop-filter:blur(20px);position:sticky;top:0;z-index:100;background:rgba(10,10,18,.92);flex-wrap:wrap;gap:8px}
-.logo{display:flex;align-items:center;gap:10px}
-.lbox{width:36px;height:36px;border:2px solid var(--cy);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Orbitron';font-weight:900;font-size:11px;color:var(--cy);box-shadow:0 0 15px rgba(0,240,255,.2)}
-.lt{font-family:'Orbitron';font-weight:700;font-size:17px;letter-spacing:3px}
-.ls{font-size:9px;color:var(--dm);letter-spacing:3px;font-family:'Share Tech Mono'}
-.hs{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
-.si{text-align:right}.sl{font-family:'Share Tech Mono';font-size:8px;color:var(--dm);letter-spacing:1px;text-transform:uppercase}
-.sv{font-family:'Orbitron';font-size:13px;font-weight:600}
-.cb{font-family:'Orbitron';font-weight:600;font-size:10px;letter-spacing:2px;padding:9px 20px;border:1px solid var(--cy);background:0;color:var(--cy);cursor:pointer;clip-path:polygon(0 0,calc(100% - 9px) 0,100% 9px,100% 100%,9px 100%,0 calc(100% - 9px));transition:.3s;text-transform:uppercase}
-.cb:hover{background:rgba(0,240,255,.1)}.cb.on{border-color:var(--gn);color:var(--gn)}
-.main{max-width:1300px;margin:0 auto;padding:24px 16px}
-.tabs{display:flex;gap:2px;margin-bottom:18px;border-bottom:1px solid var(--bd);overflow-x:auto}
-.tab{font-family:'Orbitron';font-size:11px;letter-spacing:2px;padding:10px 20px;cursor:pointer;color:var(--dm);border-bottom:2px solid transparent;transition:.3s;text-transform:uppercase;white-space:nowrap}
-.tab:hover{color:var(--tx)}.tab.a{color:var(--cy);border-bottom-color:var(--cy)}
-.tab.owner-tab{color:var(--gd);border-color:rgba(255,215,0,.3)}.tab.owner-tab.a{border-bottom-color:var(--gd)}
-.pnl{display:none}.pnl.a{display:block}
+:root{
+  --pink:#e85a8e;
+  --pink-light:#ffb3c8;
+  --pink-deep:#8b1f4a;
+  --purple:#b262d9;
+  --purple-light:#cfbdff;
+  --purple-deep:#3d2a80;
+  --gold:#ffc8a0;
+  --cream:#f4ebd0;
+  --bg:#0a0612;
+  --bg-raised:#150a24;
+  --bg-card:rgba(20,12,34,.65);
+  --border:rgba(255,200,220,.15);
+  --border-bright:rgba(255,200,220,.35);
+  --text:#f4ebd0;
+  --text-dim:rgba(244,235,208,.6);
+  --text-faint:rgba(244,235,208,.4);
+  --red:#ff5577;
+  --green:#7dd8a8;
+}
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+  position:relative;
+}
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(ellipse 70% 50% at 30% 20%,rgba(255,120,180,.18),transparent 55%),
+    radial-gradient(ellipse 60% 50% at 75% 75%,rgba(130,90,255,.15),transparent 55%),
+    radial-gradient(ellipse 50% 40% at 50% 50%,rgba(255,180,100,.06),transparent 60%);
+  z-index:-2;
+  pointer-events:none;
+}
+body::after{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:
+    radial-gradient(1px 1px at 15% 25%,rgba(255,220,180,.5),transparent),
+    radial-gradient(1px 1px at 75% 15%,rgba(255,200,220,.4),transparent),
+    radial-gradient(1.5px 1.5px at 45% 65%,rgba(200,180,255,.4),transparent),
+    radial-gradient(1px 1px at 85% 55%,rgba(255,230,200,.3),transparent),
+    radial-gradient(1px 1px at 10% 75%,rgba(255,180,200,.4),transparent),
+    radial-gradient(2px 2px at 60% 35%,rgba(200,200,255,.3),transparent);
+  z-index:-1;
+  pointer-events:none;
+}
 
-/* POOLS */
-.pools{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
-.pc2{border:1px solid;padding:20px;text-align:center;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));position:relative;overflow:hidden}
-.pc2.pool-daily{border-color:rgba(0,240,255,.25);background:linear-gradient(135deg,rgba(0,240,255,.06),var(--cd))}
-.pc2.pool-daily::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--cy),transparent)}
-.pc2.pool-pending{border-color:rgba(255,215,0,.25);background:linear-gradient(135deg,rgba(255,215,0,.06),var(--cd))}
-.pc2.pool-pending::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gd),transparent)}
-.pc2 .pl{font-family:'Orbitron';font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:6px}
-.pc2.pool-daily .pl{color:var(--cy)}.pc2.pool-pending .pl{color:var(--gd)}
-.pc2 .pv{font-family:'Orbitron';font-size:26px;font-weight:900;text-shadow:0 0 25px currentColor}
-.pc2.pool-daily .pv{color:var(--cy)}.pc2.pool-pending .pv{color:var(--gd)}
-.pc2 .ps{font-family:'Share Tech Mono';font-size:9px;color:var(--dm);margin-top:4px}
-.pc2 .pool-icon{font-size:20px;margin-bottom:6px}
+/* Petals */
+.petals{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.petal{position:absolute;width:8px;height:8px;border-radius:60% 30% 60% 30%;animation:fall linear infinite}
+.petal:nth-child(1){left:8%;background:rgba(255,120,180,.6);animation-duration:14s;animation-delay:0s}
+.petal:nth-child(2){left:22%;background:rgba(200,150,255,.5);animation-duration:17s;animation-delay:-3s;width:6px;height:6px}
+.petal:nth-child(3){left:38%;background:rgba(255,180,120,.5);animation-duration:11s;animation-delay:-5s;width:10px;height:10px}
+.petal:nth-child(4){left:54%;background:rgba(255,100,160,.6);animation-duration:15s;animation-delay:-1s}
+.petal:nth-child(5){left:68%;background:rgba(180,130,255,.4);animation-duration:12s;animation-delay:-7s;width:7px;height:7px}
+.petal:nth-child(6){left:82%;background:rgba(255,200,140,.5);animation-duration:16s;animation-delay:-4s}
+.petal:nth-child(7){left:92%;background:rgba(255,140,200,.5);animation-duration:18s;animation-delay:-9s;width:5px;height:5px}
+@keyframes fall{0%{transform:translateY(-20px) rotate(0deg);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
 
-/* CARDS */
-.crd{border:1px solid var(--bd);background:var(--cd);position:relative;overflow:hidden;clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));margin-bottom:16px}
-.crd::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--cy),var(--mg),var(--cy));background-size:200% 100%;animation:gs 4s linear infinite}
-@keyframes gs{0%{background-position:0% 0}100%{background-position:200% 0}}
-.ch{padding:14px 20px 10px;border-bottom:1px solid var(--bd);font-family:'Orbitron';font-size:11px;letter-spacing:3px;color:var(--dm);text-transform:uppercase;display:flex;align-items:center;gap:8px}
-.ch::before{content:'';width:16px;height:2px;background:var(--cy)}
+/* Header */
+.hdr{
+  padding:18px 32px;
+  display:flex;align-items:center;justify-content:space-between;
+  backdrop-filter:blur(20px);
+  position:sticky;top:0;z-index:100;
+  background:rgba(10,6,18,.75);
+  border-bottom:1px solid var(--border);
+  flex-wrap:wrap;gap:12px;
+}
+.brand{display:flex;align-items:center;gap:14px}
+.emblem{
+  width:48px;height:48px;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,rgba(255,140,180,.2),rgba(180,130,255,.2));
+  border:1.5px solid rgba(255,170,200,.4);
+  box-shadow:0 0 20px rgba(255,140,180,.25),inset 0 0 10px rgba(255,200,220,.1);
+  position:relative;
+}
+.emblem::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:1px solid rgba(255,140,180,.2);animation:breathe 3s ease-in-out infinite}
+@keyframes breathe{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:.8;transform:scale(1.05)}}
+.emblem svg{width:24px;height:24px}
+.brand-name{font-family:'Cinzel',serif;font-size:17px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#fff;text-shadow:0 0 16px rgba(255,180,220,.3)}
+.brand-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--text-dim);letter-spacing:1px;margin-top:2px}
 
-/* ARENA */
-.arena{display:grid;grid-template-columns:1fr 240px 1fr;align-items:start;padding:20px 16px;gap:8px}
-.warrior{text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px}
-.w-img{width:100%;max-width:280px;aspect-ratio:3/4;background:#0d0d1a;border:1px solid var(--bd);display:flex;align-items:flex-end;justify-content:center;overflow:hidden}
-.w-img.atk-bg{border-bottom:2px solid rgba(255,51,68,.3);box-shadow:inset 0 -40px 60px rgba(255,51,68,.06)}
-.w-img.def-bg{border-bottom:2px solid rgba(0,240,255,.3);box-shadow:inset 0 -40px 60px rgba(0,240,255,.06)}
-.w-img img{max-height:100%;max-width:100%;object-fit:contain;filter:drop-shadow(0 4px 20px rgba(0,0,0,.5))}
-.w-label{font-family:'Orbitron';font-size:16px;font-weight:800;letter-spacing:4px}
-.w-label.atk{color:var(--rd);text-shadow:0 0 15px rgba(255,51,68,.3)}.w-label.def{color:var(--cy);text-shadow:0 0 15px rgba(0,240,255,.3)}
-.w-level{font-family:'Orbitron';font-size:11px;font-weight:700;padding:3px 14px;border:1px solid}
-.w-level.atk{color:var(--rd);border-color:rgba(255,51,68,.3);background:rgba(255,51,68,.05)}
-.w-level.def{color:var(--cy);border-color:rgba(0,240,255,.3);background:rgba(0,240,255,.05)}
-.w-boost{width:100%;max-width:220px;margin-top:8px}
-.w-boost-lbl{font-family:'Share Tech Mono';font-size:8px;color:var(--dm);letter-spacing:1px;margin-bottom:4px}
-.w-slider{width:100%;-webkit-appearance:none;height:4px;background:rgba(255,255,255,.08);outline:none;border-radius:2px}
-.w-slider.atk-s::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--rd);cursor:pointer;box-shadow:0 0 10px rgba(255,51,68,.5)}
-.w-slider.def-s::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--cy);cursor:pointer;box-shadow:0 0 10px rgba(0,240,255,.5)}
-.w-boost-row{display:flex;justify-content:space-between;margin-top:4px}
-.w-bv{font-family:'Orbitron';font-size:12px;font-weight:700}.w-bc{font-family:'Share Tech Mono';font-size:9px;color:var(--dm)}
+.hs{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.si{text-align:right}
+.sl{font-family:'Cinzel',serif;font-size:10px;color:var(--text-faint);letter-spacing:2px;text-transform:uppercase}
+.sv{font-family:'Cinzel',serif;font-size:15px;font-weight:600}
+.cb{
+  font-family:'Cinzel',serif;font-weight:600;font-size:12px;letter-spacing:3px;
+  padding:11px 24px;
+  background:linear-gradient(135deg,var(--pink),var(--purple));
+  border:none;border-radius:24px;
+  color:#fff;cursor:pointer;text-transform:uppercase;
+  box-shadow:0 4px 20px rgba(232,90,142,.4),inset 0 1px 0 rgba(255,220,230,.4);
+  transition:all .3s;
+}
+.cb:hover{transform:translateY(-1px);box-shadow:0 6px 28px rgba(232,90,142,.55),inset 0 1px 0 rgba(255,220,230,.5)}
+.cb.on{background:linear-gradient(135deg,var(--purple-deep),var(--pink-deep))}
 
-/* FOG OF WAR CENTER */
-.bc{text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;padding:16px 0;justify-content:center}
-.bc-tl{font-family:'Share Tech Mono';font-size:10px;color:var(--dm);letter-spacing:1px}
-.bc-tm{font-family:'Orbitron';font-size:28px;font-weight:800;color:var(--cy);letter-spacing:2px;text-shadow:0 0 20px rgba(0,240,255,.15)}
-.fog-wrap{width:100%;padding:14px 0;border:1px solid rgba(255,0,229,.15);margin:8px 0;background:linear-gradient(135deg,rgba(255,0,229,.03),rgba(0,240,255,.03));position:relative;overflow:hidden}
-.fog-wrap::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--mg);opacity:.4;animation:fogScan 3s linear infinite}
-@keyframes fogScan{0%{top:0}100%{top:100%}}
-.fog-title{font-family:'Orbitron';font-size:11px;letter-spacing:4px;color:var(--mg);margin-bottom:8px;text-transform:uppercase;text-shadow:0 0 10px rgba(255,0,229,.3)}
-.fog-icon-wrap{display:flex;gap:6px;justify-content:center;margin-bottom:6px;opacity:.5}
-.fog-dot{width:4px;height:4px;border-radius:50%;background:var(--mg);animation:fogBlink 1.5s ease-in-out infinite}
-.fog-dot:nth-child(2){animation-delay:.3s}.fog-dot:nth-child(3){animation-delay:.6s}.fog-dot:nth-child(4){animation-delay:.9s}.fog-dot:nth-child(5){animation-delay:1.2s}
-@keyframes fogBlink{0%,100%{opacity:.2}50%{opacity:1}}
-.fog-total{font-family:'Orbitron';font-size:16px;font-weight:700;color:var(--tx)}
-.fog-msg{font-family:'Share Tech Mono';font-size:9px;color:var(--dm);margin-top:4px;font-style:italic}
-.fog-bar{width:100%;height:6px;background:rgba(255,255,255,.04);margin-top:10px;display:flex;overflow:hidden;position:relative}
-.fog-bar-inner{position:absolute;inset:0;background:linear-gradient(90deg,var(--rd),var(--mg),var(--cy));animation:fogShift 4s ease-in-out infinite}
-@keyframes fogShift{0%,100%{transform:translateX(-30%)}50%{transform:translateX(30%)}}
+.main{max-width:1400px;margin:0 auto;padding:32px 24px;position:relative;z-index:1}
 
-.bc-btns{display:flex;gap:8px;width:100%}
-.b-btn{flex:1;font-family:'Orbitron';font-weight:700;font-size:12px;letter-spacing:2px;padding:12px 8px;border:2px solid;background:0;cursor:pointer;transition:.3s;text-transform:uppercase;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px))}
-.b-btn.steal{color:var(--rd);border-color:rgba(255,51,68,.4)}.b-btn.protect{color:var(--cy);border-color:rgba(0,240,255,.4)}
-.b-btn.steal:hover{background:rgba(255,51,68,.1);border-color:var(--rd);box-shadow:0 0 25px rgba(255,51,68,.15)}
-.b-btn.protect:hover{background:rgba(0,240,255,.1);border-color:var(--cy);box-shadow:0 0 25px rgba(0,240,255,.15)}
-.b-btn:disabled,.b-btn.off{opacity:.25;cursor:not-allowed;box-shadow:none!important}
-.bc-st{font-family:'Share Tech Mono';font-size:10px;min-height:16px;color:var(--gn)}.bc-st.er{color:var(--rd)}
-.snipe-warn{font-family:'Share Tech Mono';font-size:10px;color:var(--rd);padding:6px 14px;border:1px solid rgba(255,51,68,.3);display:none;animation:snPulse 1.5s ease-in-out infinite}
-@keyframes snPulse{0%,100%{opacity:1}50%{opacity:.5}}
+/* Hero title */
+.hero-wrap{text-align:center;padding:28px 0 32px;position:relative}
+.chapter{
+  display:inline-flex;align-items:center;gap:12px;
+  font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;
+  color:var(--gold);
+  margin-bottom:16px;letter-spacing:1.5px;
+}
+.chapter::before,.chapter::after{content:'';width:28px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.hero-title{
+  font-family:'Cinzel',serif;font-size:56px;font-weight:800;letter-spacing:-1px;
+  line-height:1;margin:0 0 12px;color:#fff;
+  text-shadow:0 4px 40px rgba(255,150,200,.35),0 0 60px rgba(180,130,255,.25);
+}
+.hero-title em{
+  font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;
+  background:linear-gradient(135deg,#ffd0e0,var(--pink),var(--purple));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  font-size:.85em;
+}
+.hero-sub{
+  font-family:'Cormorant Garamond',serif;font-style:italic;font-size:18px;
+  color:var(--text-dim);letter-spacing:.5px;
+}
+.hero-divider{width:240px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:24px auto 0}
 
-/* CLAIM */
-.claim-bar{padding:16px 20px;border-top:1px solid rgba(255,215,0,.15);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;background:linear-gradient(90deg,rgba(255,215,0,.03),transparent)}
-.claim-left{display:flex;flex-direction:column;gap:4px}
-.claim-info{font-family:'Share Tech Mono';font-size:10px;color:var(--dm)}
-.claim-amt{font-family:'Orbitron';font-size:18px;font-weight:800;color:var(--gd);text-shadow:0 0 15px rgba(255,215,0,.3)}
-.claim-rank{font-family:'Orbitron';font-size:10px;color:var(--cy);letter-spacing:1px}
-.claim-btn{font-family:'Orbitron';font-weight:700;font-size:11px;letter-spacing:2px;padding:11px 26px;border:2px solid var(--gd);background:0;color:var(--gd);cursor:pointer;clip-path:polygon(0 0,calc(100% - 9px) 0,100% 9px,100% 100%,9px 100%,0 calc(100% - 9px));transition:.3s}
-.claim-btn:hover{background:rgba(255,215,0,.1);box-shadow:0 0 25px rgba(255,215,0,.15)}.claim-btn:disabled{opacity:.3;cursor:not-allowed}
+/* Tabs */
+.tabs{
+  display:flex;gap:0;margin-bottom:24px;
+  border-bottom:1px solid var(--border);
+  overflow-x:auto;
+  padding:0 4px;
+}
+.tab{
+  font-family:'Cinzel',serif;font-size:12px;letter-spacing:2.5px;
+  padding:14px 24px;cursor:pointer;
+  color:var(--text-dim);
+  border-bottom:2px solid transparent;
+  transition:all .3s;
+  text-transform:uppercase;white-space:nowrap;
+  position:relative;
+}
+.tab:hover{color:var(--gold)}
+.tab.a{color:var(--gold)}
+.tab.a::after{
+  content:'';position:absolute;bottom:-1px;left:20%;right:20%;
+  height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);
+}
+.tab.owner-tab{color:var(--purple-light)}
+.tab.owner-tab.a{color:var(--gold)}
+.pnl{display:none}
+.pnl.a{display:block}
 
-/* YESTERDAY BADGE (rank streak) */
-.yday{padding:12px 20px;border-top:1px solid var(--bd);display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
-.yl{font-family:'Share Tech Mono';font-size:9px;color:var(--dm)}.yr{font-family:'Orbitron';font-size:13px;font-weight:700}
-.yw{color:var(--gn)}.ylo{color:var(--rd)}
+/* Pools */
+.pools{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:24px}
+.pool{
+  background:linear-gradient(180deg,rgba(42,20,64,.7),rgba(26,16,38,.7));
+  backdrop-filter:blur(10px);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:22px 24px;
+  position:relative;overflow:hidden;
+  transition:border-color .3s;
+}
+.pool:hover{border-color:var(--border-bright)}
+.pool::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--pink),var(--purple),transparent);
+}
+.pool-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.pool-label{font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;color:var(--text-dim);text-transform:uppercase}
+.pool-icon{
+  width:36px;height:36px;border-radius:50%;
+  background:linear-gradient(135deg,rgba(255,200,160,.2),rgba(232,90,142,.15));
+  border:1px solid rgba(255,200,220,.25);
+  display:flex;align-items:center;justify-content:center;
+}
+.pool-icon svg{width:18px;height:18px}
+.pool-value{
+  font-family:'Cinzel',serif;font-size:32px;font-weight:700;
+  color:#fff;letter-spacing:-.5px;line-height:1;
+  text-shadow:0 0 30px rgba(255,180,220,.25);
+}
+.pool-value .unit{
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:18px;color:var(--gold);margin-left:6px;font-weight:500;
+}
+.pool-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--text-faint);margin-top:4px}
 
-/* STATS */
-.srow{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin-bottom:16px}
-.sc{border:1px solid var(--bd);background:var(--cd);padding:14px 8px;text-align:center;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px))}
-.sc .v{font-family:'Orbitron';font-size:20px;font-weight:800}.sc .l{font-family:'Share Tech Mono';font-size:8px;color:var(--dm);letter-spacing:1px;margin-top:2px}
+/* Cards */
+.crd{
+  background:linear-gradient(180deg,rgba(42,20,64,.65),rgba(26,16,38,.75));
+  backdrop-filter:blur(10px);
+  border:1px solid var(--border);
+  border-radius:22px;
+  margin-bottom:20px;
+  position:relative;overflow:hidden;
+  transition:border-color .3s;
+}
+.crd::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--pink),var(--purple),transparent);
+  background-size:200% 100%;
+  animation:shimmer 6s linear infinite;
+}
+@keyframes shimmer{0%{background-position:0 0}100%{background-position:200% 0}}
+.ch{
+  padding:18px 26px 14px;
+  border-bottom:1px solid var(--border);
+  font-family:'Cinzel',serif;font-size:13px;letter-spacing:3px;
+  color:var(--gold);
+  text-transform:uppercase;font-weight:600;
+  display:flex;align-items:center;gap:10px;
+}
 
-/* BADGES */
-.badge-card{padding:16px 20px;text-align:center}
-.badge-title{font-family:'Orbitron';font-size:11px;letter-spacing:2px;color:var(--dm);margin-bottom:10px;text-transform:uppercase}
-.badge-display{display:inline-flex;align-items:center;gap:10px;padding:10px 20px;border:1px solid;font-family:'Orbitron';font-size:13px;font-weight:700;letter-spacing:2px}
-.badge-display.tier-0{border-color:var(--dm);color:var(--dm)}
-.badge-display.tier-1{border-color:#cd7f32;color:#cd7f32;background:rgba(205,127,50,.05)}
-.badge-display.tier-3{border-color:var(--rd);color:var(--rd);background:rgba(255,51,68,.05);box-shadow:0 0 20px rgba(255,51,68,.1)}
-.badge-display.tier-5{border-color:var(--mg);color:var(--mg);background:rgba(255,0,229,.05);box-shadow:0 0 25px rgba(255,0,229,.15)}
-.badge-display.tier-7{border-color:var(--gd);color:var(--gd);background:rgba(255,215,0,.05);box-shadow:0 0 30px rgba(255,215,0,.2);animation:badgePulse 2s ease-in-out infinite}
-@keyframes badgePulse{0%,100%{box-shadow:0 0 30px rgba(255,215,0,.2)}50%{box-shadow:0 0 45px rgba(255,215,0,.35)}}
-.badge-sub{font-family:'Share Tech Mono';font-size:9px;color:var(--dm);margin-top:6px}
+/* Arena */
+.arena{
+  display:grid;grid-template-columns:1fr auto 1fr;
+  gap:24px;padding:28px;align-items:stretch;
+}
+.warrior{
+  border-radius:20px;
+  padding:24px;
+  position:relative;overflow:hidden;
+  min-height:480px;
+  display:flex;flex-direction:column;
+  transition:all .3s;
+}
+.warrior.atk{
+  background:linear-gradient(180deg,rgba(232,90,142,.15),rgba(120,30,80,.2));
+  border:1px solid rgba(232,90,142,.3);
+}
+.warrior.atk:hover{border-color:rgba(232,90,142,.6);box-shadow:0 16px 48px rgba(232,90,142,.25),inset 0 0 40px rgba(232,90,142,.08)}
+.warrior.def{
+  background:linear-gradient(180deg,rgba(130,100,220,.15),rgba(80,50,180,.2));
+  border:1px solid rgba(130,100,220,.3);
+}
+.warrior.def:hover{border-color:rgba(160,130,255,.6);box-shadow:0 16px 48px rgba(130,100,220,.25),inset 0 0 40px rgba(130,100,220,.08)}
+.w-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.w-label{
+  font-family:'Cinzel',serif;font-size:22px;font-weight:800;
+  letter-spacing:4px;text-transform:uppercase;
+}
+.w-label.atk{color:#fff;text-shadow:0 0 24px rgba(255,80,140,.7),0 2px 8px rgba(255,80,140,.4)}
+.w-label.def{color:#fff;text-shadow:0 0 24px rgba(140,100,255,.7),0 2px 8px rgba(140,100,255,.4)}
+.w-level{
+  font-family:'Cinzel',serif;font-size:12px;font-weight:600;letter-spacing:2px;
+  padding:8px 14px;border-radius:16px;
+}
+.w-level.atk{background:rgba(232,90,142,.15);border:1px solid rgba(232,90,142,.35);color:#ffb3c8}
+.w-level.def{background:rgba(130,100,220,.15);border:1px solid rgba(130,100,220,.35);color:#cfbdff}
+.w-img{
+  width:100%;max-width:280px;margin:10px auto;
+  aspect-ratio:1;border-radius:18px;overflow:hidden;
+  position:relative;
+  background:linear-gradient(135deg,rgba(20,10,30,.8),rgba(10,6,18,.9));
+  box-shadow:0 10px 30px rgba(0,0,0,.4),inset 0 0 20px rgba(255,200,220,.05);
+}
+.w-img.atk{border:2px solid rgba(232,90,142,.4)}
+.w-img.def{border:2px solid rgba(130,100,220,.4)}
+.w-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.w-img:hover img{transform:scale(1.05)}
+.w-img::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,transparent 50%,rgba(13,8,24,.7));
+}
+.w-quote{
+  font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;
+  text-align:center;color:var(--text-dim);margin:8px 0 16px;line-height:1.5;
+  padding:0 10px;
+}
+.w-boost{
+  border-top:1px solid rgba(255,255,255,.06);
+  padding-top:16px;margin-top:auto;
+}
+.w-boost-lbl{
+  font-family:'Cinzel',serif;font-size:10px;letter-spacing:2.5px;
+  color:var(--text-dim);margin-bottom:10px;text-transform:uppercase;
+}
+.w-slider{
+  width:100%;height:24px;-webkit-appearance:none;appearance:none;
+  background:transparent;cursor:pointer;
+}
+.w-slider::-webkit-slider-runnable-track{
+  height:4px;background:rgba(255,255,255,.08);border-radius:2px;
+}
+.w-slider::-moz-range-track{
+  height:4px;background:rgba(255,255,255,.08);border-radius:2px;
+}
+.w-slider::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;
+  width:18px;height:18px;border-radius:50%;
+  margin-top:-7px;cursor:pointer;
+  box-shadow:0 2px 12px rgba(0,0,0,.5);
+}
+.w-slider.atk-s::-webkit-slider-thumb{background:var(--pink);box-shadow:0 0 16px rgba(232,90,142,.8)}
+.w-slider.def-s::-webkit-slider-thumb{background:var(--purple);box-shadow:0 0 16px rgba(178,98,217,.8)}
+.w-slider.atk-s::-moz-range-thumb{background:var(--pink);border:none;width:18px;height:18px;border-radius:50%;box-shadow:0 0 16px rgba(232,90,142,.8)}
+.w-slider.def-s::-moz-range-thumb{background:var(--purple);border:none;width:18px;height:18px;border-radius:50%;box-shadow:0 0 16px rgba(178,98,217,.8)}
+.w-boost-row{
+  display:flex;justify-content:space-between;align-items:center;
+  font-family:'Cinzel',serif;font-size:11px;letter-spacing:1.5px;margin-top:8px;
+}
+.w-bv{color:var(--text-dim);font-weight:500}
+.w-bc{color:var(--gold);font-weight:600}
 
-/* LEADERBOARD */
-.lbs-wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.lb{padding:8px 0;max-height:300px;overflow-y:auto}.lb::-webkit-scrollbar{width:3px}.lb::-webkit-scrollbar-thumb{background:var(--bd)}
-.lbr{display:flex;align-items:center;padding:7px 16px;border-bottom:1px solid rgba(255,255,255,.03);gap:8px}.lbr:hover{background:rgba(0,240,255,.02)}
-.lrk{font-family:'Orbitron';font-size:12px;font-weight:700;width:26px;text-align:center}.lrk.g{color:var(--gd)}.lrk.s{color:#c0c0c0}.lrk.b{color:#cd7f32}
-.lnm{font-family:'Orbitron';font-size:10px;font-weight:600;flex:1}.lad{font-family:'Share Tech Mono';font-size:8px;color:var(--dm)}
-.lpt{font-family:'Orbitron';font-size:13px;font-weight:700;color:var(--cy)}.lbe{padding:24px;text-align:center;font-family:'Share Tech Mono';font-size:11px;color:var(--dm)}
+/* Battlecenter */
+.bc{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-width:200px;padding:24px 16px;gap:16px;
+}
+.bc-tl{
+  font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;
+  color:var(--gold);letter-spacing:1px;text-align:center;
+}
+.bc-tm{
+  font-family:'Cinzel',serif;font-size:36px;font-weight:700;
+  color:#fff;letter-spacing:2px;font-feature-settings:"tnum";
+  text-shadow:0 0 30px rgba(255,180,220,.4);
+}
+.vs-seal{
+  font-family:'Cinzel',serif;font-size:52px;font-weight:900;
+  background:linear-gradient(135deg,var(--gold),var(--pink),var(--purple));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  line-height:1;letter-spacing:-2px;position:relative;
+}
+.vs-seal::before,.vs-seal::after{
+  content:'';position:absolute;width:50px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  left:50%;transform:translateX(-50%);
+}
+.vs-seal::before{top:-16px}.vs-seal::after{bottom:-16px}
+.snipe-warn{
+  font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;
+  color:var(--red);padding:8px 16px;
+  border:1px solid rgba(255,85,119,.3);border-radius:16px;
+  display:none;animation:pulseWarn 1.5s ease-in-out infinite;
+}
+@keyframes pulseWarn{0%,100%{opacity:1}50%{opacity:.6}}
+.fog-wrap{
+  width:100%;padding:16px 20px;
+  background:rgba(13,8,24,.7);backdrop-filter:blur(10px);
+  border:1px solid rgba(255,200,220,.2);border-radius:16px;
+  text-align:center;position:relative;overflow:hidden;
+}
+.fog-wrap::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:var(--pink);opacity:.4;
+  animation:scan 3s linear infinite;
+}
+@keyframes scan{0%{top:0}100%{top:100%}}
+.fog-icon-wrap{display:flex;gap:6px;justify-content:center;margin-bottom:8px;opacity:.6}
+.fog-dot{width:5px;height:5px;border-radius:50%;background:var(--pink);animation:fogBlink 1.5s ease-in-out infinite}
+.fog-dot:nth-child(2){animation-delay:.2s}
+.fog-dot:nth-child(3){animation-delay:.4s}
+.fog-dot:nth-child(4){animation-delay:.6s}
+.fog-dot:nth-child(5){animation-delay:.8s}
+@keyframes fogBlink{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:1;transform:scale(1.4)}}
+.fog-title{
+  font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;
+  color:var(--gold);margin-bottom:4px;letter-spacing:1px;
+}
+.fog-total{
+  font-family:'Cinzel',serif;font-size:26px;font-weight:700;
+  color:#fff;letter-spacing:-.5px;line-height:1;
+}
+.fog-msg{
+  font-family:'Cormorant Garamond',serif;font-style:italic;font-size:12px;
+  color:var(--text-faint);margin-top:4px;
+}
 
-/* GM */
-.gmr{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.gma{padding:20px;text-align:center;display:flex;flex-direction:column;align-items:center}
-.gmb{font-family:'Orbitron';font-weight:800;font-size:22px;letter-spacing:4px;padding:14px 44px;border:2px solid var(--gn);background:0;color:var(--gn);cursor:pointer;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));transition:.3s;margin:8px 0}
-.gmb:hover{background:rgba(57,255,20,.08);box-shadow:0 0 30px rgba(57,255,20,.12)}.gmb:disabled{opacity:.25;cursor:not-allowed;border-color:var(--dm);color:var(--dm)}
-.gmi{width:100%;font-family:'Rajdhani';font-size:13px;padding:8px;background:rgba(0,0,0,.3);border:1px solid var(--bd);color:var(--tx);outline:none;text-align:center}.gmi:focus{border-color:var(--gn)}
-.gmf{max-height:260px;overflow-y:auto;padding:4px 0}
-.ge{padding:7px 16px;border-bottom:1px solid rgba(255,255,255,.03);display:flex;gap:7px;align-items:flex-start}
-.gd2{width:5px;height:5px;border-radius:50%;background:var(--gn);margin-top:5px;flex-shrink:0;box-shadow:0 0 6px rgba(57,255,20,.4)}
-.gc{flex:1}.gt{display:flex;gap:4px;align-items:center;flex-wrap:wrap}.gn2{font-family:'Orbitron';font-size:9px;font-weight:600}
-.ga{font-family:'Share Tech Mono';font-size:8px;color:var(--dm)}.gtm{font-family:'Share Tech Mono';font-size:8px;color:var(--dm);margin-left:auto}
-.gms2{font-size:10px;opacity:.7;margin-top:1px}.gss{font-family:'Share Tech Mono';font-size:10px;margin-top:5px;min-height:14px}.gss.er{color:var(--rd)}
-.gm-cost{font-family:'Share Tech Mono';font-size:9px;color:var(--dm);margin-top:3px}
+/* Fight buttons */
+.bc-btns{display:flex;flex-direction:column;gap:10px;width:100%;max-width:180px}
+.b-btn{
+  font-family:'Cinzel',serif;font-size:13px;font-weight:700;letter-spacing:3px;
+  padding:14px 20px;border:none;border-radius:24px;
+  cursor:pointer;text-transform:uppercase;color:#fff;
+  transition:all .3s;
+}
+.b-btn.steal{
+  background:linear-gradient(135deg,#ff3c70,var(--pink));
+  box-shadow:0 6px 20px rgba(232,90,142,.4),inset 0 1px 0 rgba(255,220,230,.4);
+}
+.b-btn.steal:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 28px rgba(232,90,142,.55)}
+.b-btn.protect{
+  background:linear-gradient(135deg,#7040e0,var(--purple));
+  box-shadow:0 6px 20px rgba(178,98,217,.4),inset 0 1px 0 rgba(220,200,255,.4);
+}
+.b-btn.protect:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 28px rgba(178,98,217,.55)}
+.b-btn.off,.b-btn:disabled{opacity:.5;cursor:not-allowed}
+.gm-lock{
+  display:none;
+  font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;
+  color:var(--gold);padding:10px 20px;
+  background:rgba(255,200,160,.05);border:1px solid rgba(255,200,160,.2);
+  border-radius:16px;text-align:center;margin-top:4px;
+}
+.bc-st{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--green);text-align:center;min-height:16px}
 
-/* PROFILE */
-.fg{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:20px}.ff{display:flex;flex-direction:column;gap:3px}.ff.fu{grid-column:1/-1}
-.fl{font-family:'Share Tech Mono';font-size:8px;letter-spacing:2px;color:var(--dm);text-transform:uppercase}
-.fi{font-family:'Rajdhani';font-size:13px;font-weight:500;padding:9px 12px;background:rgba(0,0,0,.3);border:1px solid var(--bd);color:var(--tx);outline:none;transition:.3s}.fi:focus{border-color:var(--cy)}
-.fa{padding:0 20px 20px;display:flex;gap:10px;align-items:center}
-.fb{font-family:'Orbitron';font-weight:600;font-size:11px;letter-spacing:2px;padding:10px 26px;border:none;cursor:pointer;background:linear-gradient(135deg,var(--cy),#0080ff);color:#0a0a12;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));text-transform:uppercase}.fb:disabled{opacity:.3;cursor:not-allowed}
-.fs{font-family:'Share Tech Mono';font-size:10px;color:var(--gn)}.fs.er{color:var(--rd)}
-.ppb{padding:24px 20px;display:flex;gap:24px;align-items:flex-start}
-.avf{width:100px;height:100px;border:2px solid var(--bd);display:flex;align-items:center;justify-content:center;background:rgba(0,240,255,.03);overflow:hidden;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));flex-shrink:0}
-.avf img{width:100%;height:100%;object-fit:cover}.avp{font-family:'Orbitron';font-size:36px;font-weight:900;color:rgba(0,240,255,.15)}
-.pn{font-family:'Orbitron';font-size:24px;font-weight:700;letter-spacing:1px;margin-bottom:2px}
-.pa{font-family:'Share Tech Mono';font-size:9px;color:var(--dm);margin-bottom:10px;word-break:break-all}
-.pb3{font-size:13px;line-height:1.4;opacity:.85;margin-bottom:10px}
-.ps3{display:inline-flex;align-items:center;gap:5px;color:var(--cy);font-family:'Share Tech Mono';font-size:10px;text-decoration:none;padding:4px 10px;border:1px solid var(--bd)}
-.pm{display:flex;gap:18px;margin-top:12px;padding-top:10px;border-top:1px solid var(--bd);flex-wrap:wrap}
-.pml{font-family:'Share Tech Mono';font-size:8px;color:var(--dm);letter-spacing:1px;text-transform:uppercase}.pmv{font-family:'Orbitron';font-size:11px;margin-top:2px}
-.rk{margin-top:8px;padding:3px 10px;font-family:'Share Tech Mono';font-size:8px;letter-spacing:2px;display:inline-block;border:1px solid}
-.rg{border-color:var(--cy);color:var(--cy)}.re{border-color:var(--gn);color:var(--gn)}.rp{border-color:var(--mg);color:var(--mg)}.rl{border-color:var(--gd);color:var(--gd)}
+/* Yesterday banner */
+.yday-banner{
+  display:none;margin-bottom:18px;padding:18px 24px;
+  text-align:center;border:1px solid;
+  border-radius:18px;position:relative;overflow:hidden;
+}
+.yd-text{font-family:'Cinzel',serif;font-size:15px;font-weight:700;letter-spacing:2px}
+.yd-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;margin-top:4px}
 
-/* NFT TROPHY */
-.nft-block{border:2px solid rgba(255,215,0,.2);background:linear-gradient(135deg,rgba(255,215,0,.04),rgba(255,0,229,.03),var(--cd));position:relative;overflow:hidden;margin-top:16px;padding:32px 24px;text-align:center}
-.nft-block::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gd),var(--mg),var(--gd));background-size:200% 100%;animation:gs 3s linear infinite}
-.nft-trophy{font-size:56px;margin-bottom:12px;animation:tFloat 3s ease-in-out infinite}
-.nft-image-wrap{margin:20px auto 24px;display:flex;justify-content:center;align-items:center;max-width:480px}
-.nft-big-image{width:100%;max-width:420px;height:auto;max-height:500px;object-fit:contain;filter:drop-shadow(0 10px 40px rgba(255,215,0,.3)) drop-shadow(0 0 60px rgba(255,0,229,.15));animation:tFloat 4s ease-in-out infinite;border-radius:8px}
-.nft-fallback{font-size:120px;animation:tFloat 4s ease-in-out infinite}
-@keyframes tFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-8px) scale(1.05)}}
-.nft-title{font-family:'Orbitron';font-size:22px;font-weight:900;letter-spacing:4px;background:linear-gradient(135deg,var(--gd),#fff5cc,var(--gd));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px;text-transform:uppercase}
-.nft-sub{font-family:'Share Tech Mono';font-size:11px;color:var(--mg);letter-spacing:2px;margin-bottom:16px}
-.nft-countdown{display:flex;gap:16px;justify-content:center;margin-bottom:20px}
-.nft-cd-item{text-align:center}
-.nft-cd-num{font-family:'Orbitron';font-size:28px;font-weight:800;color:var(--gd);text-shadow:0 0 15px rgba(255,215,0,.2);display:block;min-width:48px;padding:4px 8px;border:1px solid rgba(255,215,0,.15);background:rgba(0,0,0,.3)}
-.nft-cd-lbl{font-family:'Share Tech Mono';font-size:8px;color:var(--dm);letter-spacing:1px;margin-top:4px}
-.nft-desc{font-size:14px;color:var(--tx);opacity:.85;max-width:520px;margin:0 auto 20px;line-height:1.6}
-.nft-criteria{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
-.nft-crit{border:1px solid var(--bd);padding:10px 16px;text-align:center;background:rgba(0,0,0,.2);min-width:120px}
-.nft-crit-val{font-family:'Orbitron';font-size:12px;font-weight:700;color:var(--cy)}
-.nft-crit-lbl{font-family:'Share Tech Mono';font-size:8px;color:var(--dm);margin-top:2px;letter-spacing:1px}
-.nft-tip{font-family:'Share Tech Mono';font-size:10px;color:var(--gn);border:1px solid rgba(57,255,20,.2);padding:8px 16px;display:inline-block;margin-bottom:20px;background:rgba(57,255,20,.03)}
-.nft-claim{font-family:'Orbitron';font-weight:800;font-size:14px;letter-spacing:3px;padding:14px 40px;border:2px solid var(--gd);background:linear-gradient(135deg,rgba(255,215,0,.1),transparent);color:var(--gd);cursor:pointer;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));transition:.3s;text-transform:uppercase}
-.nft-claim:disabled{opacity:.3;cursor:not-allowed}
+/* Claim bar */
+.claim-bar{
+  display:none;padding:16px 24px;margin-top:16px;
+  background:linear-gradient(90deg,rgba(255,200,160,.06),transparent);
+  border-top:1px solid rgba(255,200,160,.15);
+  align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
+}
+.claim-info{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--text-dim)}
+.claim-amt{font-family:'Cinzel',serif;font-size:22px;font-weight:700;color:var(--gold);margin:0 10px}
+.claim-rank{font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;color:var(--text-dim)}
+.claim-btn{
+  font-family:'Cinzel',serif;font-size:12px;font-weight:700;letter-spacing:2px;
+  padding:12px 26px;background:linear-gradient(135deg,var(--gold),#ff9678);
+  border:none;border-radius:22px;color:#2a0818;cursor:pointer;
+  text-transform:uppercase;
+  box-shadow:0 4px 16px rgba(255,200,160,.4);transition:all .3s;
+}
+.claim-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,200,160,.55)}
 
-/* OWNER PANEL */
-.owner-pnl{border:2px solid rgba(255,215,0,.3);background:linear-gradient(135deg,rgba(255,215,0,.04),var(--cd));padding:24px;margin-top:16px}
-.owner-title{font-family:'Orbitron';font-size:14px;font-weight:800;color:var(--gd);letter-spacing:3px;margin-bottom:16px;text-align:center}
+.yday{display:none;justify-content:center;gap:10px;align-items:center;padding:12px;margin-top:12px;border-top:1px solid var(--border)}
+.yl{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--text-dim)}
+.yr{font-family:'Cinzel',serif;font-size:15px;font-weight:700;padding:6px 14px;border-radius:14px;letter-spacing:1.5px}
+.yr.yw{background:rgba(178,98,217,.15);color:var(--purple-light);border:1px solid rgba(178,98,217,.3)}
+.yr.ylo{background:rgba(232,90,142,.15);color:#ffb3c8;border:1px solid rgba(232,90,142,.3)}
+
+/* Stats row */
+.srow{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:14px;margin-bottom:20px;
+}
+.sc{
+  background:linear-gradient(180deg,rgba(42,20,64,.6),rgba(26,16,38,.6));
+  backdrop-filter:blur(8px);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:16px;text-align:center;
+  transition:all .3s;
+}
+.sc:hover{border-color:var(--border-bright);transform:translateY(-2px)}
+.sc .v{
+  font-family:'Cinzel',serif;font-size:26px;font-weight:700;line-height:1;
+  text-shadow:0 0 20px currentColor;
+  filter:saturate(.8);
+}
+.sc .l{
+  font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;
+  color:var(--text-dim);text-transform:uppercase;margin-top:6px;
+}
+.sc .xp-bar{
+  width:80%;height:4px;background:rgba(255,255,255,.08);
+  border-radius:2px;overflow:hidden;margin:8px auto 0;
+}
+.sc .xp-bar-fill{
+  height:100%;background:linear-gradient(90deg,var(--gold),var(--pink));
+  transition:width .5s;
+}
+.sc .xp-prog{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:10px;color:var(--text-faint);margin-top:2px}
+
+/* GM tab */
+.gmr{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.gma{padding:24px}
+.gmi{
+  width:100%;font-family:'Inter',sans-serif;font-size:14px;
+  padding:12px 16px;
+  background:rgba(13,8,24,.6);
+  border:1px solid var(--border);border-radius:12px;
+  color:var(--text);outline:none;
+  margin-bottom:12px;
+}
+.gmi:focus{border-color:var(--pink)}
+.gmb{
+  width:100%;padding:16px;
+  font-family:'Cinzel',serif;font-size:14px;font-weight:700;letter-spacing:3px;
+  background:linear-gradient(135deg,var(--gold),#ff9678);
+  border:none;border-radius:14px;color:#2a0818;cursor:pointer;
+  text-transform:uppercase;
+  box-shadow:0 6px 20px rgba(255,200,160,.4);
+  transition:all .3s;
+}
+.gmb:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 28px rgba(255,200,160,.55)}
+.gmb:disabled{opacity:.5;cursor:not-allowed}
+.gm-cost{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:12px;color:var(--text-dim);text-align:center;margin-top:10px}
+.gss{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--green);text-align:center;min-height:16px;margin-top:8px}
+
+.gmf{max-height:420px;overflow-y:auto;padding:8px}
+.gmf::-webkit-scrollbar{width:6px}
+.gmf::-webkit-scrollbar-track{background:transparent}
+.gmf::-webkit-scrollbar-thumb{background:rgba(255,200,220,.15);border-radius:3px}
+.ge{
+  display:flex;gap:12px;padding:14px;
+  background:rgba(13,8,24,.5);
+  border:1px solid var(--border);border-radius:14px;
+  margin-bottom:10px;transition:border-color .3s;
+}
+.ge:hover{border-color:var(--border-bright)}
+.gd2{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--gold);
+  box-shadow:0 0 10px var(--gold);
+  margin-top:6px;flex-shrink:0;
+}
+.gc{flex:1;min-width:0}
+.gt{display:flex;gap:8px;align-items:center;margin-bottom:4px;flex-wrap:wrap}
+.gn2{font-family:'Cinzel',serif;font-size:12px;font-weight:600;color:var(--gold)}
+.ga{font-family:'Inter',sans-serif;font-size:11px;color:var(--text-dim);font-family:monospace}
+.gtm{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:11px;color:var(--text-faint);margin-left:auto}
+.gms2{font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--text);line-height:1.4}
+
+/* Daily Quests */
+.quests{padding:16px 24px;display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
+.quest{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 18px;min-width:160px;
+  background:rgba(13,8,24,.5);
+  border:1px solid var(--border);border-radius:14px;
+  transition:all .3s;
+}
+.q-icon{font-size:18px}
+.q-title{font-family:'Cinzel',serif;font-size:11px;letter-spacing:1.5px;font-weight:600;color:var(--text)}
+.q-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:11px;color:var(--text-dim)}
+
+/* Referral */
+.ref-box{padding:24px;text-align:center}
+.ref-title{font-family:'Cinzel',serif;font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;letter-spacing:1px}
+.ref-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--text-dim);margin-bottom:14px;line-height:1.5}
+.ref-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.ref-input{
+  font-family:monospace;font-size:11px;padding:11px 14px;
+  background:rgba(13,8,24,.6);
+  border:1px solid rgba(255,200,220,.15);
+  border-radius:12px;color:var(--pink-light);
+  outline:none;min-width:300px;max-width:100%;
+}
+.ref-copy{
+  font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;
+  padding:11px 20px;
+  background:linear-gradient(135deg,var(--pink),var(--purple));
+  border:none;border-radius:12px;color:#fff;cursor:pointer;
+  text-transform:uppercase;font-weight:600;
+  box-shadow:0 4px 12px rgba(232,90,142,.3);
+  transition:all .3s;
+}
+.ref-copy:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(232,90,142,.5)}
+.ref-stats{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--text-dim)}
+.ref-stats strong{color:var(--gold);font-weight:700}
+.ref-st{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:12px;margin-top:10px;color:var(--green);min-height:16px}
+
+/* Passport / profile */
+.ppb{padding:24px;display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap}
+.avf{
+  width:120px;height:120px;border-radius:50%;
+  background:linear-gradient(135deg,rgba(255,140,180,.3),rgba(180,130,255,.3));
+  border:2px solid rgba(255,200,220,.4);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 32px rgba(255,140,180,.2);
+  overflow:hidden;
+}
+.avf img{width:100%;height:100%;object-fit:cover}
+.avp{font-family:'Cinzel',serif;font-size:40px;color:var(--gold)}
+.rk{
+  font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;font-weight:600;
+  padding:6px 14px;border-radius:12px;margin-top:10px;
+  text-transform:uppercase;
+}
+.rk.rg{background:rgba(255,200,160,.15);color:var(--gold);border:1px solid rgba(255,200,160,.3)}
+.pn{font-family:'Cinzel',serif;font-size:24px;font-weight:700;color:#fff;margin-bottom:4px}
+.pa{font-family:monospace;font-size:12px;color:var(--text-dim);margin-bottom:10px;word-break:break-all}
+.pb3{font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--text);margin-bottom:14px;line-height:1.5}
+.ps3{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:'Cinzel',serif;font-size:12px;color:var(--gold);
+  text-decoration:none;letter-spacing:1.5px;
+  padding:8px 16px;border:1px solid rgba(255,200,160,.3);border-radius:12px;
+  transition:all .3s;
+}
+.ps3:hover{background:rgba(255,200,160,.1)}
+.pm{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:16px;margin-top:18px;padding-top:18px;border-top:1px solid var(--border)}
+.pml{font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--text-faint);text-transform:uppercase}
+.pmv{font-family:'Cinzel',serif;font-size:13px;font-weight:600;color:var(--text);margin-top:2px}
+
+/* Forms */
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:24px}
+.ff{margin-bottom:14px}
+.fl{display:block;font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;color:var(--text-dim);margin-bottom:6px;text-transform:uppercase}
+.fi{
+  width:100%;padding:12px 16px;
+  font-family:'Inter',sans-serif;font-size:14px;
+  background:rgba(13,8,24,.6);
+  border:1px solid var(--border);border-radius:12px;
+  color:var(--text);outline:none;
+}
+.fi:focus{border-color:var(--pink)}
+.fi.ta{resize:vertical;min-height:80px;font-family:inherit}
+.fa{padding:0 24px 24px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.fb{
+  font-family:'Cinzel',serif;font-size:13px;font-weight:700;letter-spacing:2.5px;
+  padding:14px 30px;
+  background:linear-gradient(135deg,var(--pink),var(--purple));
+  border:none;border-radius:14px;color:#fff;cursor:pointer;
+  text-transform:uppercase;
+  box-shadow:0 6px 20px rgba(232,90,142,.35);transition:all .3s;
+}
+.fb:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 28px rgba(232,90,142,.5)}
+.fb:disabled{opacity:.6;cursor:not-allowed}
+.fs{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--green)}
+.fs.er{color:var(--red)}
+
+/* Leaderboards */
+.lbs-wrap{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.lb{padding:14px;max-height:360px;overflow-y:auto}
+.lb::-webkit-scrollbar{width:6px}
+.lb::-webkit-scrollbar-thumb{background:rgba(255,200,220,.15);border-radius:3px}
+.lbe{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--text-faint);text-align:center;padding:20px}
+.lbr{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 14px;
+  background:rgba(13,8,24,.4);
+  border:1px solid var(--border);border-radius:12px;
+  margin-bottom:8px;transition:border-color .3s;
+}
+.lbr:hover{border-color:var(--border-bright)}
+.lbr.top1{border-color:rgba(255,200,160,.4);background:rgba(255,200,160,.06)}
+.lbr.top2{border-color:rgba(192,192,192,.3)}
+.lbr.top3{border-color:rgba(205,127,50,.3)}
+.lbn{font-family:'Cinzel',serif;font-size:12px;font-weight:700;color:var(--gold);min-width:26px}
+.lbaddr{font-family:'Cinzel',serif;font-size:12px;color:var(--text);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.lbval{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--gold)}
+
+/* Owner panel */
+.owner-pnl{padding:28px}
+.owner-title{font-family:'Cinzel',serif;font-size:16px;font-weight:700;color:var(--gold);text-align:center;margin-bottom:18px;letter-spacing:3px;text-transform:uppercase}
 .owner-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
-.owner-stat{border:1px solid rgba(255,215,0,.2);padding:14px;text-align:center}
-.owner-stat-v{font-family:'Orbitron';font-size:22px;font-weight:800;color:var(--gd)}
-.owner-stat-l{font-family:'Share Tech Mono';font-size:9px;color:var(--dm);margin-top:4px;letter-spacing:1px}
-.owner-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
-.owner-btn{font-family:'Orbitron';font-weight:700;font-size:11px;letter-spacing:2px;padding:11px 24px;border:2px solid var(--gd);background:0;color:var(--gd);cursor:pointer;transition:.3s}
-.owner-btn:hover{background:rgba(255,215,0,.1)}
-.owner-input{font-family:'Share Tech Mono';font-size:11px;padding:10px 14px;background:rgba(0,0,0,.3);border:1px solid rgba(255,215,0,.2);color:var(--tx);outline:none;width:100px;text-align:center}
+.owner-stat{padding:18px;background:rgba(13,8,24,.5);border:1px solid rgba(255,200,160,.2);border-radius:14px;text-align:center}
+.owner-stat-v{font-family:'Cinzel',serif;font-size:24px;font-weight:700;color:var(--gold);margin-bottom:4px}
+.owner-stat-l{font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase}
+.owner-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:12px}
+.owner-btn{
+  font-family:'Cinzel',serif;font-size:11px;font-weight:600;letter-spacing:2px;
+  padding:11px 22px;
+  background:transparent;border:1px solid rgba(255,200,160,.3);
+  border-radius:20px;color:var(--gold);cursor:pointer;
+  text-transform:uppercase;transition:all .3s;
+}
+.owner-btn:hover{background:rgba(255,200,160,.08);border-color:rgba(255,200,160,.6)}
 
-/* CONNECT */
-.cn{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:50vh;text-align:center;padding:32px}
-.cn-icon{width:80px;height:80px;border:2px solid var(--bd);display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0 75%,0 25%);background:rgba(0,240,255,.03);animation:fl 4s ease-in-out infinite;font-family:'Orbitron';font-size:28px;font-weight:900;color:rgba(0,240,255,.3)}
-@keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-.cn h2{font-family:'Orbitron';font-size:22px;font-weight:700;margin:16px 0 8px;letter-spacing:2px}
-.cn p{font-size:14px;color:var(--dm);max-width:380px;line-height:1.5;margin-bottom:24px}
-.cnt{font-family:'Share Tech Mono';font-size:9px;color:var(--dm);padding:4px 10px;border:1px solid var(--bd);letter-spacing:2px;margin-top:12px}
-.ld{display:flex;align-items:center;gap:8px;padding:24px;justify-content:center}
-.spn{width:14px;height:14px;border:2px solid var(--bd);border-top-color:var(--cy);border-radius:50%;animation:sp .8s linear infinite}
-@keyframes sp{to{transform:rotate(360deg)}}.ld span{font-family:'Share Tech Mono';font-size:10px;color:var(--dm)}
+/* About page */
+.about-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;padding:28px}
+.about-step{
+  padding:22px;text-align:center;
+  background:rgba(13,8,24,.4);
+  border:1px solid var(--border);border-radius:18px;
+  transition:all .3s;
+}
+.about-step:hover{border-color:var(--border-bright);transform:translateY(-2px)}
+.about-step-icon{font-size:36px;margin-bottom:12px}
+.about-step-title{font-family:'Cinzel',serif;font-size:14px;font-weight:700;letter-spacing:2px;margin-bottom:8px;text-transform:uppercase}
+.about-step-desc{font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--text-dim);line-height:1.6}
 
-/* TRUST FOOTER */
-.rw-status{border:1px solid var(--bd);padding:20px;margin-bottom:20px;background:rgba(0,0,0,.2)}
-.rw-won{border-color:rgba(57,255,20,.2);background:linear-gradient(135deg,rgba(57,255,20,.04),transparent)}
-.rw-lost{border-color:rgba(255,51,68,.15);background:linear-gradient(135deg,rgba(255,51,68,.03),transparent)}
+/* Connect screen */
+.cn{
+  text-align:center;padding:80px 20px;
+  max-width:540px;margin:0 auto;
+}
+.cn-emblem{
+  width:100px;height:100px;margin:0 auto 28px;
+  border-radius:50%;
+  background:linear-gradient(135deg,rgba(255,140,180,.2),rgba(180,130,255,.2));
+  border:2px solid rgba(255,170,200,.4);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 40px rgba(255,140,180,.3),inset 0 0 20px rgba(255,200,220,.1);
+}
+.cn-emblem svg{width:48px;height:48px}
+.cn-title{
+  font-family:'Cinzel',serif;font-size:38px;font-weight:800;color:#fff;
+  margin-bottom:12px;letter-spacing:-1px;
+  text-shadow:0 0 40px rgba(255,180,220,.3);
+}
+.cn-sub{
+  font-family:'Cormorant Garamond',serif;font-style:italic;font-size:18px;
+  color:var(--text-dim);margin-bottom:32px;line-height:1.6;
+}
 
-/* TRUST FOOTER */
-.trust-footer{margin-top:40px;padding:32px 0;border-top:1px solid var(--bd)}
+/* Trust footer */
+.trust-footer{
+  max-width:1400px;margin:56px auto 32px;padding:32px 24px;
+  border-top:1px solid var(--border);
+}
 .trust-header{text-align:center;margin-bottom:24px}
-.trust-title{font-family:'Orbitron';font-size:12px;letter-spacing:4px;color:var(--dm);text-transform:uppercase;margin-bottom:6px}
-.trust-badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:10px}
-.trust-badge{font-family:'Share Tech Mono';font-size:9px;letter-spacing:1px;padding:4px 12px;border:1px solid}
-.trust-badge.verified{border-color:rgba(57,255,20,.3);color:var(--gn)}.trust-badge.onchain{border-color:rgba(0,240,255,.3);color:var(--cy)}.trust-badge.open{border-color:rgba(255,0,229,.3);color:var(--mg)}
-.contracts-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
-.contract-card{border:1px solid var(--bd);background:rgba(0,0,0,.2);padding:14px 16px;display:flex;flex-direction:column;gap:6px}
-.cc-label{font-family:'Orbitron';font-size:9px;letter-spacing:2px;color:var(--dm);text-transform:uppercase;display:flex;align-items:center;gap:6px}
-.cc-dot{width:6px;height:6px;border-radius:50%}
-.cc-dot.live{background:var(--gn);box-shadow:0 0 6px rgba(57,255,20,.5)}
-.cc-addr{font-family:'Share Tech Mono';font-size:10px;color:var(--cy);word-break:break-all}
-.cc-link{font-family:'Share Tech Mono';font-size:9px;color:var(--mg);text-decoration:none}.cc-link:hover{color:var(--cy)}
-.trust-links{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:16px}
-.trust-link{font-family:'Orbitron';font-size:10px;font-weight:600;letter-spacing:2px;color:var(--tx);text-decoration:none;padding:10px 20px;border:1px solid var(--bd);transition:.3s;display:flex;align-items:center;gap:6px;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px))}
-.trust-link:hover{border-color:var(--cy);color:var(--cy);background:rgba(0,240,255,.05)}
-.trust-copy{font-family:'Share Tech Mono';font-size:8px;color:var(--dm);text-align:center;margin-top:20px;letter-spacing:1px}
+.trust-title{font-family:'Cinzel',serif;font-size:18px;font-weight:700;color:var(--gold);letter-spacing:2px;text-transform:uppercase}
+.trust-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--text-dim);margin-top:4px}
+.contracts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.contract-card{
+  padding:18px;
+  background:rgba(13,8,24,.5);
+  border:1px solid var(--border);border-radius:14px;
+  transition:all .3s;
+}
+.contract-card:hover{border-color:var(--border-bright)}
+.cc-label{font-family:'Cinzel',serif;font-size:11px;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px;display:flex;align-items:center;gap:6px;text-transform:uppercase}
+.cc-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
+.cc-dot.live{animation:dotPulse 2s ease-in-out infinite}
+@keyframes dotPulse{0%,100%{opacity:1}50%{opacity:.5}}
+.cc-addr{font-family:monospace;font-size:11px;color:var(--text);word-break:break-all;margin-bottom:8px}
+.cc-link{font-family:'Cinzel',serif;font-size:10px;color:var(--pink-light);letter-spacing:1.5px;text-decoration:none;text-transform:uppercase}
+.cc-link:hover{color:var(--gold)}
+.trust-copy{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:12px;color:var(--text-faint);text-align:center;margin-top:20px}
 
-@media(max-width:900px){.arena{grid-template-columns:1fr;gap:12px}.w-img{max-width:200px;aspect-ratio:auto;height:220px}.gmr,.lbs-wrap,.contracts-grid,.owner-grid,.pools{grid-template-columns:1fr}.ppb{flex-direction:column;align-items:center;text-align:center}.fg{grid-template-columns:1fr}.srow{grid-template-columns:repeat(3,1fr)}.nft-countdown{gap:10px}.nft-cd-num{font-size:22px}}
+/* Claim / rewards tab */
+.rw-status{padding:28px;text-align:center}
+.rw-result{font-family:'Cinzel',serif;font-size:22px;font-weight:800;margin-bottom:8px;letter-spacing:2px;color:var(--text-dim)}
+.rw-detail{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--text-dim);margin-bottom:24px}
+.rw-prize{
+  padding:24px;margin-bottom:20px;display:none;
+  background:linear-gradient(135deg,rgba(255,200,160,.06),transparent);
+  border:1px solid rgba(255,200,160,.25);border-radius:18px;
+}
+.rw-prize-label{font-family:'Cinzel',serif;font-size:12px;letter-spacing:3px;color:var(--gold);margin-bottom:12px;text-transform:uppercase}
+.rw-rank{font-family:'Cinzel',serif;font-size:30px;font-weight:900}
+.rw-tier{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;margin:6px 0 16px;letter-spacing:1px}
+.rw-amount{font-family:'Cinzel',serif;font-size:36px;font-weight:900;color:var(--gold);margin-bottom:20px;text-shadow:0 0 30px rgba(255,200,160,.3)}
+.rw-none{display:none;padding:28px;text-align:center}
+
+/* Mobile */
+@media(max-width:1000px){
+  .arena{grid-template-columns:1fr;gap:16px}
+  .bc{order:-1}
+  .gmr,.lbs-wrap,.pools,.owner-grid,.fg{grid-template-columns:1fr}
+  .hero-title{font-size:40px}
+  .ppb{flex-direction:column;align-items:center;text-align:center}
+}
 </style>
 </head>
 <body>
-<div class="gbg"></div>
+
+<!-- Floating petals -->
+<div class="petals">
+  <div class="petal"></div><div class="petal"></div><div class="petal"></div>
+  <div class="petal"></div><div class="petal"></div><div class="petal"></div>
+  <div class="petal"></div>
+</div>
+
+<!-- Header -->
 <header class="hdr">
-  <div class="logo"><div class="lbox">UMI</div><div><div class="lt">STEAL OR PROTECT</div><div class="ls">Somnia Network v3</div></div></div>
+  <div class="brand">
+    <div class="emblem">
+      <svg viewBox="0 0 32 32" fill="none">
+        <path d="M16 2L5 7v10c0 6 4.5 11.5 11 13 6.5-1.5 11-7 11-13V7l-11-5z" stroke="#ffc8a0" stroke-width="1.5" stroke-linejoin="round"/>
+        <circle cx="16" cy="14" r="4" stroke="#ffc8a0" stroke-width="1.5"/>
+      </svg>
+    </div>
+    <div>
+      <div class="brand-name">Steal or Protect</div>
+      <div class="brand-sub">Chronicles of Somnia</div>
+    </div>
+  </div>
   <div class="hs">
-    <div class="si"><div class="sl">Level</div><div class="sv" style="color:var(--gd)" id="hLv">—</div></div>
-    <div class="si"><div class="sl">XP</div><div class="sv" style="color:var(--mg)" id="hXP">—</div></div>
-    <div class="si"><div class="sl">GM Streak</div><div class="sv" style="color:var(--gn)" id="hGmS">—</div></div>
-    <div class="si"><div class="sl">Glory</div><div class="sv" style="color:var(--gd)" id="hGl">—</div></div>
-    <div class="si"><div class="sl">Net</div><div class="sv" style="font-size:10px;color:var(--cy)" id="hN">—</div></div>
-    <button class="cb" id="cB" onclick="W()">CONNECT</button>
+    <div class="si"><div class="sl">Level</div><div class="sv" style="color:var(--gold)" id="hLv">—</div></div>
+    <div class="si"><div class="sl">XP</div><div class="sv" style="color:var(--pink-light)" id="hXP">—</div></div>
+    <div class="si"><div class="sl">GM Streak</div><div class="sv" style="color:var(--green)" id="hGmS">—</div></div>
+    <div class="si"><div class="sl">Glory</div><div class="sv" style="color:var(--gold)" id="hGl">—</div></div>
+    <div class="si"><div class="sl">Realm</div><div class="sv" style="font-size:11px;color:var(--purple-light)" id="hN">—</div></div>
+    <button class="cb" id="cB" onclick="W()">Enter Realm</button>
   </div>
 </header>
+
 <main class="main">
-<div class="cn" id="CS">
-  <div class="cn-icon">⚔</div>
-  <h2>Steal or Protect</h2>
-  <p>Choose your side in daily battles. Earn XP, climb Top-150, claim treasury rewards.</p>
-  <button class="cb" onclick="W()" style="font-size:11px;padding:11px 30px">CONNECT WALLET</button>
-  <div class="cnt">SOMNIA NETWORK</div>
+
+<!-- Connect screen -->
+<div id="CS">
+  <div class="cn">
+    <div class="cn-emblem">
+      <svg viewBox="0 0 32 32" fill="none">
+        <path d="M16 2L5 7v10c0 6 4.5 11.5 11 13 6.5-1.5 11-7 11-13V7l-11-5z" stroke="#ffc8a0" stroke-width="1.5" stroke-linejoin="round"/>
+        <circle cx="16" cy="14" r="4" stroke="#ffc8a0" stroke-width="1.5"/>
+      </svg>
+    </div>
+    <h1 class="cn-title">Two houses await</h1>
+    <p class="cn-sub">"Every sunrise, warriors choose. Every sunset, glory is claimed by the bold. Connect your wallet and write your name into the chronicles."</p>
+    <button class="cb" onclick="W()" style="font-size:13px;padding:14px 32px">Connect Wallet</button>
+  </div>
 </div>
+
+<!-- Onboarding -->
+<div id="onboard" style="display:none">
+  <div class="hero-wrap">
+    <div class="chapter">A new warrior enters</div>
+    <h1 class="hero-title">Forge Your <em>Identity</em></h1>
+    <p class="hero-sub">Before battle, every soul needs a name.</p>
+  </div>
+  <div class="crd">
+    <div class="ch">◈ Create Your Passport</div>
+    <div class="fg">
+      <div class="ff"><label class="fl">Warrior Name * (required)</label><input class="fi" id="obN" placeholder="The name history will remember" maxlength="64"></div>
+      <div class="ff"><label class="fl">Avatar URL</label><input class="fi" id="obA" placeholder="https://..."></div>
+      <div class="ff" style="grid-column:1/-1"><label class="fl">Your Story</label><textarea class="fi ta" id="obB" placeholder="What brings you to the arena?" maxlength="500"></textarea></div>
+      <div class="ff" style="grid-column:1/-1"><label class="fl">Twitter / Social (optional)</label><input class="fi" id="obS" placeholder="https://x.com/..."></div>
+    </div>
+    <div class="fa">
+      <button class="fb" id="obBtn" onclick="OB()">Create Passport & Enter</button>
+      <span class="fs" id="obSt"></span>
+    </div>
+  </div>
+</div>
+
+<!-- Main app -->
 <div id="AP" style="display:none">
 
-<!-- ONBOARDING -->
-<div id="onboard" style="display:none">
-  <div class="crd"><div class="ch" style="color:var(--gd)">⚔ Welcome, Warrior!</div>
-    <div style="text-align:center;padding:40px 24px">
-      <div style="font-size:48px;margin-bottom:16px">🛡️</div>
-      <div style="font-family:'Orbitron';font-size:18px;font-weight:700;margin-bottom:8px;color:var(--cy)">Create Your Identity First</div>
-      <div style="font-size:14px;color:var(--dm);max-width:440px;margin:0 auto 24px;line-height:1.6">Before you can battle, say GM, or earn XP — you need a Metaverse Passport. It takes 10 seconds.</div>
-      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:24px">
-        <div style="border:1px solid var(--bd);padding:12px 18px;text-align:center"><div style="font-family:'Orbitron';font-size:14px;color:var(--cy)">Step 1</div><div style="font-family:'Share Tech Mono';font-size:10px;color:var(--dm);margin-top:4px">Create Profile</div></div>
-        <div style="border:1px solid var(--bd);padding:12px 18px;text-align:center"><div style="font-family:'Orbitron';font-size:14px;color:var(--mg)">Step 2</div><div style="font-family:'Share Tech Mono';font-size:10px;color:var(--dm);margin-top:4px">Say GM (earn XP)</div></div>
-        <div style="border:1px solid var(--bd);padding:12px 18px;text-align:center"><div style="font-family:'Orbitron';font-size:14px;color:var(--rd)">Step 3</div><div style="font-family:'Share Tech Mono';font-size:10px;color:var(--dm);margin-top:4px">Battle & Earn</div></div>
+<div class="hero-wrap">
+  <div class="chapter">Season One · Somnia Network</div>
+  <h1 class="hero-title">Steal <em>or</em> Protect</h1>
+  <p class="hero-sub">Choose your side · Earn glory · Claim your spoils</p>
+  <div class="hero-divider"></div>
+</div>
+
+<!-- Tabs -->
+<div class="tabs">
+  <div class="tab a" data-t="game">⚔ Arena</div>
+  <div class="tab" data-t="gm">☀ Rituals</div>
+  <div class="tab" data-t="profile">◈ Passport</div>
+  <div class="tab" data-t="about">📖 Lore</div>
+  <div class="tab" data-t="rewards">🏆 Spoils</div>
+  <div class="tab owner-tab" data-t="owner" id="ownerTab" style="display:none">👑 Sovereign</div>
+</div>
+
+<!-- Pools -->
+<div class="pools">
+  <div class="pool">
+    <div class="pool-head">
+      <span class="pool-label">Daily Treasury</span>
+      <div class="pool-icon">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18v10H3z M3 11h18 M7 7V5h10v2" stroke="#ffc8a0" stroke-width="1.5"/></svg>
       </div>
     </div>
+    <div class="pool-value" id="pDay">0<span class="unit">STT</span></div>
+    <div class="pool-sub">90% → warriors · 10% → sovereign</div>
   </div>
-  <div class="crd"><div class="ch" style="color:var(--cy)">◈ Create Your Passport</div>
-    <div class="fg">
-      <div class="ff"><label class="fl">Nickname * (required)</label><input class="fi" id="obN" placeholder="Your warrior name" maxlength="64"></div>
-      <div class="ff"><label class="fl">Social URL (optional)</label><input class="fi" id="obS" placeholder="https://x.com/..."></div>
-      <div class="ff fu"><label class="fl">Avatar URL (optional)</label><input class="fi" id="obA" placeholder="https://..."></div>
-      <div class="ff fu"><label class="fl">Bio (optional)</label><input class="fi" id="obB" placeholder="About you" maxlength="280"></div>
+  <div class="pool">
+    <div class="pool-head">
+      <span class="pool-label">Your Spoils</span>
+      <div class="pool-icon">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2l3 6 6 1-4.5 4.5L18 20l-6-3-6 3 1.5-6.5L3 9l6-1z" stroke="#ffc8a0" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      </div>
     </div>
-    <div class="fa"><button class="fb" id="obBtn" onclick="OB()">CREATE PASSPORT & ENTER</button><span class="fs" id="obSt"></span></div>
+    <div class="pool-value" id="pYou">—</div>
+    <div class="pool-sub">Claim within 24 hours or lose to rollover</div>
   </div>
 </div>
 
-<!-- MAIN GAME -->
-<div id="gameWrap" style="display:none">
-
-<!-- HERO TITLE -->
-<div style="text-align:center;padding:20px 0 16px;position:relative">
-  <div style="font-family:'Orbitron';font-size:10px;letter-spacing:6px;color:var(--dm);text-transform:uppercase;margin-bottom:6px">Season 1 · Somnia Network</div>
-  <div style="font-family:'Orbitron';font-size:28px;font-weight:900;letter-spacing:5px;background:linear-gradient(135deg,var(--rd),var(--mg),var(--cy));-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-transform:uppercase">⚔ Steal or Protect ⚔</div>
-  <div style="font-family:'Share Tech Mono';font-size:10px;color:var(--dm);margin-top:6px;letter-spacing:2px">Choose your side · Earn glory · Claim rewards</div>
-  <div style="width:200px;height:1px;background:linear-gradient(90deg,transparent,var(--cy),transparent);margin:14px auto 0"></div>
-</div>
-
-<div class="tabs">
-  <div class="tab a" data-t="game">⚔ Battle</div>
-  <div class="tab" data-t="gm">☀ GM</div>
-  <div class="tab" data-t="profile">◈ Passport</div>
-  <div class="tab" data-t="about">📖 About</div>
-  <div class="tab" data-t="rewards">🏆 Claim</div>
-  <div class="tab owner-tab" data-t="owner" id="ownerTab" style="display:none">👑 Owner</div>
-</div>
-<div class="pools">
-  <div class="pc2 pool-daily"><div class="pool-icon">💎</div><div class="pl">Daily Prize Pool</div><div class="pv" id="pDay">0 STT</div><div class="ps">90% → players · 10% → owner</div></div>
-  <div class="pc2 pool-pending"><div class="pool-icon">⚡</div><div class="pl">Your Pending Reward</div><div class="pv" id="pYou">—</div><div class="ps">claim within 24h or it expires</div></div>
-</div>
-
-<!-- BATTLE -->
+<!-- ARENA / BATTLE -->
 <div class="pnl a" id="t-game">
-  <!-- YESTERDAY BANNER -->
-  <div id="ydayBanner" style="display:none;margin-bottom:14px;padding:14px 20px;text-align:center;border:1px solid;position:relative;overflow:hidden">
-    <div style="font-family:'Orbitron';font-size:14px;font-weight:800;letter-spacing:2px" id="ydBanText"></div>
-    <div style="font-family:'Share Tech Mono';font-size:10px;margin-top:4px" id="ydBanSub"></div>
+
+  <div class="yday-banner" id="ydayBanner">
+    <div class="yd-text" id="ydBanText"></div>
+    <div class="yd-sub" id="ydBanSub"></div>
   </div>
 
   <div class="crd">
-    <div class="ch" style="color:var(--mg)">⚔ Daily Battlefield</div>
+    <div class="ch" style="color:var(--pink-light)">⚔ Today's Battlefield</div>
     <div class="arena">
-      <div class="warrior">
-        <div class="w-label atk">ATTACK</div>
-        <div class="w-img atk-bg"><img src="attack.png" alt="Attack"></div>
-        <div class="w-level atk" id="atkLv">Warrior Lv 1</div>
+      <div class="warrior atk">
+        <div class="w-top">
+          <div class="w-label atk">Attack</div>
+          <div class="w-level atk" id="atkLv">Lv 1</div>
+        </div>
+        <div class="w-img atk"><img src="attack.png" alt="Attack"></div>
+        <div class="w-quote">"Fortune favors those who strike first."</div>
         <div class="w-boost">
-          <div class="w-boost-lbl">BOOST ATTACK POWER</div>
+          <div class="w-boost-lbl">Boost Attack Power</div>
           <input type="range" class="w-slider atk-s" id="slA" min="0" max="1" value="0" oninput="uB('A')">
-          <div class="w-boost-row"><span class="w-bv" style="color:var(--rd)" id="bvA">Normal</span><span class="w-bc" id="bcA">FREE</span></div>
+          <div class="w-boost-row"><span class="w-bv" id="bvA">Normal</span><span class="w-bc" id="bcA">Free</span></div>
         </div>
       </div>
+
       <div class="bc">
-        <div class="bc-tl">ROUND ENDS IN</div>
+        <div class="bc-tl">The hourglass empties in</div>
         <div class="bc-tm" id="gT">--:--:--</div>
-        <div class="snipe-warn" id="snWarn">⚠ LOCKED — Last 5 min</div>
+        <div class="vs-seal">VS</div>
+        <div class="snipe-warn" id="snWarn">🔒 Gates closing</div>
         <div class="fog-wrap">
           <div class="fog-icon-wrap"><div class="fog-dot"></div><div class="fog-dot"></div><div class="fog-dot"></div><div class="fog-dot"></div><div class="fog-dot"></div></div>
-          <div class="fog-title">⚔ FOG OF WAR ⚔</div>
+          <div class="fog-title">The mists conceal</div>
           <div class="fog-total" id="fogTotal">0 Warriors</div>
-          <div class="fog-msg">Both sides hidden · Choose wisely</div>
-          <div class="fog-bar"><div class="fog-bar-inner"></div></div>
+          <div class="fog-msg">Both houses hidden · Choose wisely</div>
         </div>
         <div class="bc-btns">
-          <button class="b-btn steal" id="btnS" onclick="PL(true)">🔥 STEAL</button>
-          <button class="b-btn protect" id="btnP" onclick="PL(false)">🛡 PROTECT</button>
+          <button class="b-btn steal" id="btnS" onclick="PL(true)">🔥 Steal</button>
+          <button class="b-btn protect" id="btnP" onclick="PL(false)">🛡 Protect</button>
         </div>
-        <div id="gmLock" style="display:none;font-family:'Share Tech Mono';font-size:10px;color:var(--gd);border:1px solid rgba(255,215,0,.2);padding:8px 16px;background:rgba(255,215,0,.03)">☀ Say GM first to unlock battle</div>
+        <div class="gm-lock" id="gmLock">☀ Perform the morning ritual first</div>
         <div class="bc-st" id="gSt"></div>
       </div>
-      <div class="warrior">
-        <div class="w-label def">DEFENSE</div>
-        <div class="w-img def-bg"><img src="defense.png" alt="Defense"></div>
-        <div class="w-level def" id="defLv">Warrior Lv 1</div>
+
+      <div class="warrior def">
+        <div class="w-top">
+          <div class="w-label def">Protect</div>
+          <div class="w-level def" id="defLv">Lv 1</div>
+        </div>
+        <div class="w-img def"><img src="defense.png" alt="Defense"></div>
+        <div class="w-quote">"Stand firm when others falter."</div>
         <div class="w-boost">
-          <div class="w-boost-lbl">BOOST DEFENSE POWER</div>
+          <div class="w-boost-lbl">Boost Defense Power</div>
           <input type="range" class="w-slider def-s" id="slD" min="0" max="1" value="0" oninput="uB('D')">
-          <div class="w-boost-row"><span class="w-bv" style="color:var(--cy)" id="bvD">Normal</span><span class="w-bc" id="bcD">FREE</span></div>
+          <div class="w-boost-row"><span class="w-bv" id="bvD">Normal</span><span class="w-bc" id="bcD">Free</span></div>
         </div>
       </div>
     </div>
-    <div class="claim-bar" id="clB" style="display:none">
-      <div class="claim-left">
-        <span class="claim-info">Yesterday's result:</span>
+
+    <div class="claim-bar" id="clB">
+      <div>
+        <span class="claim-info">Yesterday's spoils:</span>
         <span class="claim-amt" id="clA">0 STT</span>
         <span class="claim-rank" id="clRank"></span>
       </div>
-      <button class="claim-btn" id="clBtn" onclick="CR()">CLAIM REWARD</button>
-      <button class="claim-btn" style="border-color:var(--cy);color:var(--cy)" onclick="shareWin()">SHARE ON X</button>
+      <div style="display:flex;gap:10px">
+        <button class="claim-btn" id="clBtn" onclick="CR()">Claim Reward</button>
+        <button class="claim-btn" style="background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff" onclick="shareWin()">Share Victory</button>
+      </div>
     </div>
-    <div class="yday" id="YD" style="display:none"><span class="yl">YESTERDAY:</span><span class="yr" id="YR"></span></div>
-  </div>
-
-  <!-- BADGE -->
-  <div class="crd">
-    <div class="ch" style="color:var(--gd)">⚔ Warrior Badge</div>
-    <div class="badge-card">
-      <div class="badge-title">Top-150 Streak</div>
-      <div class="badge-display tier-0" id="badge">🎖 NEWCOMER</div>
-      <div class="badge-sub" id="badgeSub">Win a battle and reach Top-150 to earn your first badge</div>
-    </div>
+    <div class="yday" id="YD"><span class="yl">Yesterday:</span><span class="yr" id="YR"></span></div>
   </div>
 
   <div class="srow">
     <div class="sc">
-      <div class="v" style="color:var(--gd)" id="xLv">1</div><div class="l">LEVEL</div>
-      <div style="width:80%;height:4px;background:rgba(255,255,255,.06);margin:6px auto 0;overflow:hidden"><div style="height:100%;background:var(--gd);transition:width .5s" id="xpBar"></div></div>
-      <div style="font-family:'Share Tech Mono';font-size:7px;color:var(--dm);margin-top:2px" id="xpProg">0/100</div>
+      <div class="v" style="color:var(--gold)" id="xLv">1</div>
+      <div class="l">Level</div>
+      <div class="xp-bar"><div class="xp-bar-fill" id="xpBar"></div></div>
+      <div class="xp-prog" id="xpProg">0/100</div>
     </div>
-    <div class="sc"><div class="v" style="color:var(--mg)" id="xXP">0</div><div class="l">XP</div></div>
-    <div class="sc"><div class="v" style="color:var(--gn)" id="xGS">0</div><div class="l">GM STREAK</div></div>
-    <div class="sc"><div class="v" style="color:var(--rd)" id="xBS">0</div><div class="l">BATTLE STREAK</div></div>
-    <div class="sc"><div class="v" style="color:var(--cy)" id="xW">0</div><div class="l">WINS</div></div>
-    <div class="sc"><div class="v" style="color:var(--gd)" id="xGl">0</div><div class="l">GLORY</div></div>
-  </div>
-  <div class="lbs-wrap">
-    <div class="crd"><div class="ch" style="color:var(--mg)">⭐ XP Leaderboard</div><div class="lb" id="LBx"><div class="lbe">Say GM to earn XP!</div></div></div>
-    <div class="crd"><div class="ch" style="color:var(--gd)">🏆 Glory Leaderboard</div><div class="lb" id="LBg"><div class="lbe">Play to earn Glory!</div></div></div>
+    <div class="sc"><div class="v" style="color:var(--pink-light)" id="xXP">0</div><div class="l">Experience</div></div>
+    <div class="sc"><div class="v" style="color:var(--green)" id="xGS">0</div><div class="l">GM Streak</div></div>
+    <div class="sc"><div class="v" style="color:var(--purple-light)" id="xBS">0</div><div class="l">Battle Streak</div></div>
+    <div class="sc"><div class="v" style="color:var(--pink)" id="xW">0</div><div class="l">Victories</div></div>
+    <div class="sc"><div class="v" style="color:var(--gold)" id="xGl">0</div><div class="l">Glory</div></div>
   </div>
 
-  <!-- NFT -->
-  <div class="nft-block">
-    <div class="nft-title">Glory Champion NFT</div>
-    <div class="nft-sub">MONTHLY GRAND PRIZE · EXCLUSIVE ON-CHAIN TROPHY</div>
-    <div class="nft-image-wrap"><img src="nft-trophy.png" alt="NFT Trophy" class="nft-big-image" onerror="this.parentElement.innerHTML='<div class=nft-fallback>🏆</div>'"></div>
-    <div class="nft-countdown">
-      <div class="nft-cd-item"><span class="nft-cd-num" id="nftD">--</span><div class="nft-cd-lbl">DAYS</div></div>
-      <div class="nft-cd-item"><span class="nft-cd-num" id="nftH">--</span><div class="nft-cd-lbl">HOURS</div></div>
-      <div class="nft-cd-item"><span class="nft-cd-num" id="nftM">--</span><div class="nft-cd-lbl">MINS</div></div>
-      <div class="nft-cd-item"><span class="nft-cd-num" id="nftS">--</span><div class="nft-cd-lbl">SECS</div></div>
+  <div class="lbs-wrap">
+    <div class="crd">
+      <div class="ch">⚡ Weekly XP Leaders</div>
+      <div class="lb" id="LBx"><div class="lbe">The arena awaits its champions</div></div>
     </div>
-    <div class="nft-desc">At the end of each month, the warrior with the highest <strong style="color:var(--gd)">Glory Points</strong> earns the right to mint an exclusive NFT trophy.</div>
-    <div class="nft-criteria">
-      <div class="nft-crit"><div class="nft-crit-val">40%</div><div class="nft-crit-lbl">FROM XP</div></div>
-      <div class="nft-crit"><div class="nft-crit-val">60%</div><div class="nft-crit-lbl">FROM BATTLES</div></div>
-      <div class="nft-crit"><div class="nft-crit-val">GM DAILY</div><div class="nft-crit-lbl">MAX XP GAIN</div></div>
-      <div class="nft-crit"><div class="nft-crit-val">TOP-150</div><div class="nft-crit-lbl">BONUS GLORY</div></div>
+    <div class="crd">
+      <div class="ch">🏆 Monthly Glory Leaders</div>
+      <div class="lb" id="LBg"><div class="lbe">Legends are still being written</div></div>
     </div>
-    <div class="nft-tip">💡 LIFEHACK: GM daily + reach Top-150 consistently. Glory = XP×0.4 + BattlePts×0.6</div>
-    <br><br>
-    <button class="nft-claim" disabled>MINT NFT — COMING SOON</button>
   </div>
 </div>
 
-<!-- GM -->
+<!-- GM / RITUALS -->
 <div class="pnl" id="t-gm">
   <div class="gmr">
-    <div class="crd"><div class="ch" style="color:var(--gn)">☀ Say GM · 1 STT</div>
+    <div class="crd">
+      <div class="ch" style="color:var(--gold)">☀ Morning Ritual · 1 STT</div>
       <div class="gma">
-        <input class="gmi" id="gMsg" placeholder="Optional message" maxlength="140">
-        <button class="gmb" id="gBtn" onclick="GM()">GM ☀</button>
-        <div class="gm-cost">1 STT → 90% to pool · 10% to owner</div>
+        <input class="gmi" id="gMsg" placeholder="Whisper to the arena (optional)" maxlength="140">
+        <button class="gmb" id="gBtn" onclick="GM()">Perform Ritual ☀</button>
+        <div class="gm-cost">1 STT · 90% to treasury · 10% to sovereign</div>
         <div class="gss" id="gSs"></div>
-        <div style="display:flex;gap:24px;margin-top:14px;justify-content:center;flex-wrap:wrap">
-          <div style="text-align:center;min-width:80px"><div style="font-family:'Orbitron';font-size:26px;font-weight:900;color:var(--gd);text-shadow:0 0 15px rgba(255,215,0,.2)" id="gLv">1</div><div style="font-family:'Share Tech Mono';font-size:10px;color:var(--dm);letter-spacing:2px;margin-top:4px">LEVEL</div></div>
-          <div style="text-align:center;min-width:80px"><div style="font-family:'Orbitron';font-size:26px;font-weight:900;color:var(--gn);text-shadow:0 0 15px rgba(57,255,20,.2)" id="gStrk">0</div><div style="font-family:'Share Tech Mono';font-size:10px;color:var(--dm);letter-spacing:2px;margin-top:4px">STREAK 🔥</div></div>
-          <div style="text-align:center;min-width:80px"><div style="font-family:'Orbitron';font-size:26px;font-weight:900;color:var(--mg);text-shadow:0 0 15px rgba(255,0,229,.2)" id="gXP">0</div><div style="font-family:'Share Tech Mono';font-size:10px;color:var(--dm);letter-spacing:2px;margin-top:4px">TOTAL XP</div></div>
+        <div style="display:flex;gap:22px;margin-top:20px;justify-content:center;flex-wrap:wrap">
+          <div style="text-align:center;min-width:80px">
+            <div style="font-family:'Cinzel',serif;font-size:28px;font-weight:800;color:var(--gold);line-height:1" id="gLv">1</div>
+            <div style="font-family:'Cinzel',serif;font-size:10px;color:var(--text-dim);letter-spacing:2px;margin-top:4px">Level</div>
+          </div>
+          <div style="text-align:center;min-width:80px">
+            <div style="font-family:'Cinzel',serif;font-size:28px;font-weight:800;color:var(--green);line-height:1" id="gStrk">0</div>
+            <div style="font-family:'Cinzel',serif;font-size:10px;color:var(--text-dim);letter-spacing:2px;margin-top:4px">Streak</div>
+          </div>
+          <div style="text-align:center;min-width:80px">
+            <div style="font-family:'Cinzel',serif;font-size:28px;font-weight:800;color:var(--pink-light);line-height:1" id="gXP">0</div>
+            <div style="font-family:'Cinzel',serif;font-size:10px;color:var(--text-dim);letter-spacing:2px;margin-top:4px">Total XP</div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="crd"><div class="ch" style="color:var(--mg)">◈ GM Feed</div><div class="gmf" id="gFd"><div class="lbe">No GMs yet ☀️</div></div></div>
+    <div class="crd">
+      <div class="ch">◈ Ritual Chronicle</div>
+      <div class="gmf" id="gFd"><div class="lbe">The chronicle begins with you</div></div>
+    </div>
   </div>
 
-  <!-- DAILY QUESTS -->
-  <div class="crd" style="margin-top:16px">
-    <div class="ch" style="color:var(--gn)">📋 Daily Quests</div>
-    <div style="padding:12px 20px;display:flex;gap:16px;flex-wrap:wrap;justify-content:center">
-      <div style="border:1px solid var(--bd);padding:10px 16px;display:flex;align-items:center;gap:8px;min-width:140px" id="qGM">
-        <span style="font-size:16px" id="qGMi">⬜</span>
-        <div><div style="font-family:'Orbitron';font-size:10px;font-weight:600">Say GM</div><div style="font-family:'Share Tech Mono';font-size:8px;color:var(--dm)">+100 XP</div></div>
+  <div class="crd" style="margin-top:18px">
+    <div class="ch" style="color:var(--green)">📋 Daily Quests</div>
+    <div class="quests">
+      <div class="quest" id="qGM">
+        <span class="q-icon" id="qGMi">⬜</span>
+        <div><div class="q-title">Morning Ritual</div><div class="q-sub">Perform GM</div></div>
       </div>
-      <div style="border:1px solid var(--bd);padding:10px 16px;display:flex;align-items:center;gap:8px;min-width:140px" id="qBattle">
-        <span style="font-size:16px" id="qBi">⬜</span>
-        <div><div style="font-family:'Orbitron';font-size:10px;font-weight:600">Enter Battle</div><div style="font-family:'Share Tech Mono';font-size:8px;color:var(--dm)">+BP points</div></div>
+      <div class="quest" id="qBattle">
+        <span class="q-icon" id="qBi">⬜</span>
+        <div><div class="q-title">Enter Arena</div><div class="q-sub">Choose a house</div></div>
       </div>
-      <div style="border:1px solid var(--bd);padding:10px 16px;display:flex;align-items:center;gap:8px;min-width:140px" id="qAll">
-        <span style="font-size:16px" id="qAi">⬜</span>
-        <div><div style="font-family:'Orbitron';font-size:10px;font-weight:600">Both Done</div><div style="font-family:'Share Tech Mono';font-size:8px;color:var(--gd)">+20 bonus XP</div></div>
+      <div class="quest" id="qAll">
+        <span class="q-icon" id="qAi">⬜</span>
+        <div><div class="q-title">Complete Both</div><div class="q-sub">+20 bonus XP</div></div>
       </div>
     </div>
   </div>
 
-  <!-- MINT WARRIOR CARD -->
-  <!-- REFERRAL -->
   <div class="crd" style="margin-top:14px">
-    <div class="ch" style="color:var(--mg)">🔗 Your Referral Link</div>
-    <div style="padding:20px;text-align:center">
-      <div style="font-family:'Share Tech Mono';font-size:11px;color:var(--dm);margin-bottom:12px;line-height:1.5">Share your link. For every friend who creates a profile, you earn <strong style="color:var(--gd)">+20 Glory</strong> per month.</div>
-      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;align-items:center;margin-bottom:12px">
-        <input id="refLink" readonly style="font-family:'Share Tech Mono';font-size:10px;padding:10px 14px;background:rgba(0,0,0,.4);border:1px solid rgba(255,0,229,.2);color:var(--cy);outline:none;min-width:280px;max-width:100%">
-        <button class="owner-btn" onclick="copyRef()" style="border-color:var(--mg);color:var(--mg);padding:10px 20px">📋 COPY</button>
+    <div class="ch" style="color:var(--pink-light)">🔗 Bring a Soul to the Realm</div>
+    <div class="ref-box">
+      <div class="ref-title">Your Invitation Link</div>
+      <div class="ref-sub">For every warrior you bring, earn <strong style="color:var(--gold)">+20 Glory</strong> per their ritual. Your name echoes through their journey.</div>
+      <div class="ref-row">
+        <input id="refLink" class="ref-input" readonly>
+        <button class="ref-copy" onclick="copyRef()">📋 Copy Link</button>
       </div>
-      <div style="font-family:'Share Tech Mono';font-size:10px;color:var(--dm);margin-top:6px">
-        Your referrals: <span style="color:var(--gd)" id="refCount">0</span> · Glory earned: <span style="color:var(--gd)" id="refGlory">0</span>
+      <div class="ref-stats">
+        Souls summoned: <strong id="refCount">0</strong> · Glory earned: <strong id="refGlory">0</strong>
       </div>
-      <div id="refSt" style="font-family:'Share Tech Mono';font-size:10px;margin-top:8px;color:var(--gn);min-height:14px"></div>
+      <div class="ref-st" id="refSt"></div>
     </div>
   </div>
 </div>
 
-
-<!-- PROFILE -->
+<!-- PROFILE / PASSPORT -->
 <div class="pnl" id="t-profile">
-  <div class="crd" id="PC" style="display:none"><div class="ch">◈ Digital Passport</div>
+  <div class="crd" id="PC" style="display:none">
+    <div class="ch">◈ Your Passport</div>
     <div class="ppb">
-      <div style="text-align:center"><div class="avf" id="AV"><div class="avp">◈</div></div><div class="rk rg" id="RK">GENESIS</div></div>
-      <div style="flex:1;min-width:0"><div class="pn" id="PN"></div><div class="pa" id="PA"></div><div class="pb3" id="PB"></div>
+      <div style="text-align:center">
+        <div class="avf" id="AV"><div class="avp">◈</div></div>
+        <div class="rk rg" id="RK">Genesis</div>
+      </div>
+      <div style="flex:1;min-width:0">
+        <div class="pn" id="PN"></div>
+        <div class="pa" id="PA"></div>
+        <div class="pb3" id="PB"></div>
         <a class="ps3" id="PL2" href="#" target="_blank" style="display:none"><span>✦</span><span id="PLT"></span></a>
-        <div class="pm"><div><div class="pml">Created</div><div class="pmv" id="PCr">—</div></div><div><div class="pml">Updated</div><div class="pmv" id="PUp">—</div></div><div><div class="pml">Rank</div><div class="pmv" id="PR2">—</div></div></div>
+        <div class="pm">
+          <div><div class="pml">Forged</div><div class="pmv" id="PCr">—</div></div>
+          <div><div class="pml">Refined</div><div class="pmv" id="PUp">—</div></div>
+          <div><div class="pml">Rank</div><div class="pmv" id="PR2">—</div></div>
+        </div>
       </div>
     </div>
   </div>
-  <div class="crd" id="PE" style="display:none"><div style="text-align:center;padding:44px"><div style="font-size:36px;opacity:.2;margin-bottom:10px">◇</div><div style="font-family:'Orbitron';font-size:14px;color:var(--dm)">No Identity Found</div></div></div>
-  <div id="PLd" class="crd"><div class="ld"><div class="spn"></div><span>Loading...</span></div></div>
-  <div class="crd"><div class="ch" id="FT">◈ Create Identity</div>
+
+  <div class="crd">
+    <div class="ch" id="FT">◈ Refine Your Identity</div>
     <div class="fg">
-      <div class="ff"><label class="fl">Nickname *</label><input class="fi" id="fN" placeholder="Name" maxlength="64"></div>
-      <div class="ff"><label class="fl">Social</label><input class="fi" id="fS" placeholder="https://x.com/..."></div>
-      <div class="ff fu"><label class="fl">Avatar URL</label><input class="fi" id="fA" placeholder="https://..."></div>
-      <div class="ff fu"><label class="fl">Bio</label><input class="fi" id="fB" placeholder="About you" maxlength="280"></div>
+      <div class="ff"><label class="fl">Warrior Name</label><input class="fi" id="N" maxlength="64"></div>
+      <div class="ff"><label class="fl">Avatar URL</label><input class="fi" id="A"></div>
+      <div class="ff" style="grid-column:1/-1"><label class="fl">Your Story</label><textarea class="fi ta" id="B" maxlength="500"></textarea></div>
+      <div class="ff" style="grid-column:1/-1"><label class="fl">Social Link</label><input class="fi" id="S"></div>
     </div>
-    <div class="fa"><button class="fb" id="fBtn" onclick="SP()" disabled>SAVE IDENTITY</button><span class="fs" id="fSt"></span></div>
+    <div class="fa">
+      <button class="fb" id="fBtn" onclick="SV()" disabled>Save Passport</button>
+      <span class="fs" id="St"></span>
+    </div>
   </div>
 </div>
 
-<!-- ABOUT -->
+<!-- ABOUT / LORE -->
 <div class="pnl" id="t-about">
   <div class="crd">
-    <div class="ch" style="color:var(--gd)">📖 How to Play</div>
-    <div style="padding:24px 20px">
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px">
-        <div style="border:1px solid var(--bd);padding:16px;text-align:center">
-          <div style="font-size:28px;margin-bottom:8px">☀</div>
-          <div style="font-family:'Orbitron';font-size:12px;font-weight:700;color:var(--gn);margin-bottom:6px">STEP 1 — SAY GM</div>
-          <div style="font-size:12px;color:var(--dm);line-height:1.5">Pay 1 STT daily. Earn XP. Build streaks for bonus XP. This fills the prize pool.</div>
-        </div>
-        <div style="border:1px solid var(--bd);padding:16px;text-align:center">
-          <div style="font-size:28px;margin-bottom:8px">⚔</div>
-          <div style="font-family:'Orbitron';font-size:12px;font-weight:700;color:var(--rd);margin-bottom:6px">STEP 2 — CHOOSE SIDE</div>
-          <div style="font-size:12px;color:var(--dm);line-height:1.5">Pick STEAL or PROTECT. Optionally boost (+1 STT) for double weight. Sides are hidden until resolve.</div>
-        </div>
-        <div style="border:1px solid var(--bd);padding:16px;text-align:center">
-          <div style="font-size:28px;margin-bottom:8px">🏆</div>
-          <div style="font-family:'Orbitron';font-size:12px;font-weight:700;color:var(--gd);margin-bottom:6px">STEP 3 — CLAIM REWARD</div>
-          <div style="font-size:12px;color:var(--dm);line-height:1.5">Winners ranked by Battle Power. Top-150 share the prize pool. Claim within 24h or it expires.</div>
-        </div>
+    <div class="ch" style="color:var(--gold)">📖 The Tale of Two Houses</div>
+    <div class="about-grid">
+      <div class="about-step">
+        <div class="about-step-icon">☀</div>
+        <div class="about-step-title" style="color:var(--green)">I. Morning Ritual</div>
+        <div class="about-step-desc">Each dawn, offer 1 STT to the treasury. Earn experience. Build a sacred streak for bonus XP.</div>
+      </div>
+      <div class="about-step">
+        <div class="about-step-icon">⚔</div>
+        <div class="about-step-title" style="color:var(--pink-light)">II. Choose House</div>
+        <div class="about-step-desc">Steal or Protect. Boost your power with additional offerings. Houses remain veiled until resolution.</div>
+      </div>
+      <div class="about-step">
+        <div class="about-step-icon">🏆</div>
+        <div class="about-step-title" style="color:var(--gold)">III. Claim Spoils</div>
+        <div class="about-step-desc">Victors ranked by Battle Power. Top-150 share the treasury. Claim within 24 hours or it returns to the vault.</div>
       </div>
     </div>
   </div>
 
   <div class="crd">
-    <div class="ch" style="color:var(--cy)">💰 Economy — Where Tokens Go</div>
-    <div style="padding:24px 20px">
+    <div class="ch" style="color:var(--pink-light)">💰 The Economics</div>
+    <div style="padding:28px;text-align:center">
       <div style="display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-bottom:20px">
-        <div style="border:1px solid rgba(0,240,255,.2);padding:14px 20px;text-align:center;min-width:100px"><div style="font-family:'Orbitron';font-size:20px;font-weight:800;color:var(--cy)">90%</div><div style="font-family:'Share Tech Mono';font-size:9px;color:var(--dm);margin-top:4px">TO PLAYERS</div></div>
-        <div style="border:1px solid rgba(255,215,0,.2);padding:14px 20px;text-align:center;min-width:100px"><div style="font-family:'Orbitron';font-size:20px;font-weight:800;color:var(--gd)">10%</div><div style="font-family:'Share Tech Mono';font-size:9px;color:var(--dm);margin-top:4px">PLATFORM FEE</div></div>
+        <div style="padding:16px 26px;border:1px solid rgba(255,200,160,.2);border-radius:16px;min-width:120px"><div style="font-family:'Cinzel',serif;font-size:26px;font-weight:800;color:var(--gold)">90%</div><div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:12px;color:var(--text-dim);margin-top:4px">To Warriors</div></div>
+        <div style="padding:16px 26px;border:1px solid rgba(255,200,220,.2);border-radius:16px;min-width:120px"><div style="font-family:'Cinzel',serif;font-size:26px;font-weight:800;color:var(--pink-light)">10%</div><div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:12px;color:var(--text-dim);margin-top:4px">Sovereign Tax</div></div>
       </div>
-      <div style="font-size:12px;color:var(--dm);text-align:center;line-height:1.6">Every GM (1 STT) and every Boost (1 STT) feeds the daily prize pool.<br>90% distributed to winners by rank. 10% platform commission.</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--text-dim);line-height:1.7">Every offering feeds the daily treasury.<br>Spoils distributed by rank. Sovereign takes their due.</div>
     </div>
   </div>
 
   <div class="crd">
-    <div class="ch" style="color:var(--mg)">🏅 Top-150 Reward Distribution</div>
-    <div style="padding:20px">
+    <div class="ch" style="color:var(--purple-light)">🏅 Tiers of Glory (Top-150)</div>
+    <div style="padding:24px">
       <div style="overflow-x:auto">
-        <table style="width:100%;border-collapse:collapse;font-family:'Share Tech Mono';font-size:11px">
-          <tr style="border-bottom:1px solid var(--bd)">
-            <td style="padding:8px;color:var(--gd)">🏆 #1</td><td style="padding:8px;color:var(--tx)">6% of pool</td><td style="padding:8px;color:var(--dm)">Champion</td>
-          </tr>
-          <tr style="border-bottom:1px solid var(--bd)">
-            <td style="padding:8px;color:#c0c0c0">🥈 #2</td><td style="padding:8px">4% of pool</td><td style="padding:8px;color:var(--dm)">Runner-up</td>
-          </tr>
-          <tr style="border-bottom:1px solid var(--bd)">
-            <td style="padding:8px;color:#cd7f32">🥉 #3</td><td style="padding:8px">3% of pool</td><td style="padding:8px;color:var(--dm)">Third place</td>
-          </tr>
-          <tr style="border-bottom:1px solid var(--bd)">
-            <td style="padding:8px;color:var(--cy)">#4 — #10</td><td style="padding:8px">12% ÷ 7</td><td style="padding:8px;color:var(--dm)">Elite</td>
-          </tr>
-          <tr style="border-bottom:1px solid var(--bd)">
-            <td style="padding:8px;color:var(--mg)">#11 — #30</td><td style="padding:8px">20% ÷ 20</td><td style="padding:8px;color:var(--dm)">Masters</td>
-          </tr>
-          <tr style="border-bottom:1px solid var(--bd)">
-            <td style="padding:8px">#31 — #70</td><td style="padding:8px">25% ÷ 40</td><td style="padding:8px;color:var(--dm)">Pro</td>
-          </tr>
-          <tr>
-            <td style="padding:8px">#71 — #150</td><td style="padding:8px">20% ÷ 80</td><td style="padding:8px;color:var(--dm)">Participants</td>
-          </tr>
+        <table style="width:100%;border-collapse:collapse;font-family:'Cinzel',serif;font-size:12px">
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:10px;color:var(--gold);font-weight:700">🏆 #1</td><td style="padding:10px">6% of treasury</td><td style="padding:10px;color:var(--text-dim);font-family:'Cormorant Garamond',serif;font-style:italic">Sovereign Champion</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:10px;color:#c0c0c0">🥈 #2</td><td style="padding:10px">4%</td><td style="padding:10px;color:var(--text-dim);font-family:'Cormorant Garamond',serif;font-style:italic">Second of the Bold</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:10px;color:#cd7f32">🥉 #3</td><td style="padding:10px">3%</td><td style="padding:10px;color:var(--text-dim);font-family:'Cormorant Garamond',serif;font-style:italic">Bronzed Warrior</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:10px;color:var(--pink-light)">#4–10</td><td style="padding:10px">12% ÷ 7</td><td style="padding:10px;color:var(--text-dim);font-family:'Cormorant Garamond',serif;font-style:italic">Elite Guard</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:10px;color:var(--purple-light)">#11–30</td><td style="padding:10px">20% ÷ 20</td><td style="padding:10px;color:var(--text-dim);font-family:'Cormorant Garamond',serif;font-style:italic">Masters of Arcane</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:10px">#31–70</td><td style="padding:10px">25% ÷ 40</td><td style="padding:10px;color:var(--text-dim);font-family:'Cormorant Garamond',serif;font-style:italic">Proven Duelists</td></tr>
+          <tr><td style="padding:10px">#71–150</td><td style="padding:10px">20% ÷ 80</td><td style="padding:10px;color:var(--text-dim);font-family:'Cormorant Garamond',serif;font-style:italic">Chronicled Warriors</td></tr>
         </table>
       </div>
-      <div style="font-size:11px;color:var(--dm);margin-top:12px;text-align:center">Losers receive +2 XP · Unclaimed rewards roll over to next day</div>
-    </div>
-  </div>
-
-  <div class="crd">
-    <div class="ch" style="color:var(--gn)">⚡ XP, Battle Power & Glory</div>
-    <div style="padding:20px">
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
-        <div style="border:1px solid var(--bd);padding:14px">
-          <div style="font-family:'Orbitron';font-size:11px;font-weight:700;color:var(--gn);margin-bottom:8px">XP (Experience)</div>
-          <div style="font-size:11px;color:var(--dm);line-height:1.6">GM = 100 XP base<br>3-day streak = 110 XP<br>5-day streak = 125 XP<br>7+ day streak = 150 XP<br>Loss = +2 XP<br><br>Level = XP ÷ 100 + 1</div>
-        </div>
-        <div style="border:1px solid var(--bd);padding:14px">
-          <div style="font-family:'Orbitron';font-size:11px;font-weight:700;color:var(--rd);margin-bottom:8px">Battle Power (BP)</div>
-          <div style="font-size:11px;color:var(--dm);line-height:1.6">BP = Weight × (Level + 10) × (Streak + 1)<br><br>Determines your rank within winners.<br>Higher BP = higher tier = bigger reward.</div>
-        </div>
-        <div style="border:1px solid var(--bd);padding:14px">
-          <div style="font-family:'Orbitron';font-size:11px;font-weight:700;color:var(--gd);margin-bottom:8px">Glory Points</div>
-          <div style="font-size:11px;color:var(--dm);line-height:1.6">Glory = XP×0.4 + PTS×0.6<br><br>Monthly total determines NFT winner.<br>Top-1 Glory = mint exclusive NFT.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="crd">
-    <div class="ch" style="color:var(--rd)">🛡 Key Rules</div>
-    <div style="padding:20px;font-size:12px;color:var(--dm);line-height:1.8">
-      <div style="margin-bottom:6px">🔒 <strong style="color:var(--tx)">Anti-Snipe:</strong> Voting locks 5 minutes before round ends</div>
-      <div style="margin-bottom:6px">⏰ <strong style="color:var(--tx)">24h Claim:</strong> Rewards expire 24 hours after resolve</div>
-      <div style="margin-bottom:6px">🌫 <strong style="color:var(--tx)">Fog of War:</strong> Side counts hidden during battle — only total warriors shown</div>
-      <div style="margin-bottom:6px">⚖ <strong style="color:var(--tx)">Tie Breaker:</strong> If weights are equal, PROTECT wins (defender advantage)</div>
-      <div style="margin-bottom:6px">🔥 <strong style="color:var(--tx)">Streaks:</strong> Missing a day resets your battle streak to 0</div>
-      <div>💀 <strong style="color:var(--tx)">Expired Claims:</strong> Unclaimed tokens roll over to the next day's pool</div>
     </div>
   </div>
 </div>
 
-<!-- CLAIM (REWARDS) -->
+<!-- REWARDS / SPOILS -->
 <div class="pnl" id="t-rewards">
   <div class="crd">
-    <div class="ch" style="color:var(--gd)">🏆 Yesterday's Battle Results</div>
-    <div style="padding:24px 20px;text-align:center">
-      <div id="rwResult" style="font-family:'Orbitron';font-size:18px;font-weight:800;margin-bottom:8px;color:var(--dm)">Waiting for results...</div>
-      <div id="rwDetail" style="font-family:'Share Tech Mono';font-size:11px;color:var(--dm);margin-bottom:20px"></div>
+    <div class="ch" style="color:var(--gold)">🏆 Yesterday's Resolution</div>
+    <div class="rw-status">
+      <div class="rw-result" id="rwResult">The arena is resolving...</div>
+      <div class="rw-detail" id="rwDetail"></div>
 
-      <div id="rwStatus" style="border:1px solid rgba(255,215,0,.2);padding:24px;margin-bottom:20px;display:none;background:linear-gradient(135deg,rgba(255,215,0,.04),transparent)">
-        <div style="font-family:'Orbitron';font-size:12px;letter-spacing:3px;color:var(--gd);margin-bottom:14px">🏆 YOUR REWARD</div>
-        <div id="rwRank" style="font-family:'Orbitron';font-size:28px;font-weight:900;margin-bottom:4px"></div>
-        <div id="rwTier" style="font-family:'Share Tech Mono';font-size:11px;letter-spacing:2px;margin-bottom:14px"></div>
-        <div id="rwAmount" style="font-family:'Orbitron';font-size:32px;font-weight:900;color:var(--gd);margin-bottom:18px;text-shadow:0 0 20px rgba(255,215,0,.2)"></div>
-        <button class="claim-btn" id="rwClaimBtn" onclick="rwClaim()" style="font-size:14px;padding:16px 48px">🏆 CLAIM YOUR PRIZE</button>
-        <div id="rwClaimSt" style="font-family:'Share Tech Mono';font-size:10px;margin-top:12px;min-height:14px"></div>
+      <div class="rw-prize" id="rwStatus">
+        <div class="rw-prize-label">🏆 Your Spoils</div>
+        <div class="rw-rank" id="rwRank"></div>
+        <div class="rw-tier" id="rwTier"></div>
+        <div class="rw-amount" id="rwAmount"></div>
+        <button class="claim-btn" id="rwClaimBtn" onclick="rwClaim()" style="font-size:14px;padding:16px 40px">🏆 Claim Your Prize</button>
+        <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:12px;margin-top:12px;min-height:16px" id="rwClaimSt"></div>
       </div>
 
-      <div id="rwNone" style="display:none">
-        <div style="font-size:40px;opacity:.3;margin-bottom:12px">⚔</div>
-        <div style="font-family:'Orbitron';font-size:14px;color:var(--dm)" id="rwNoneText">You didn't participate yesterday</div>
-        <div style="font-family:'Share Tech Mono';font-size:10px;color:var(--dm);margin-top:6px">Play today and claim tomorrow!</div>
+      <div class="rw-none" id="rwNone">
+        <div style="font-size:48px;opacity:.3;margin-bottom:12px">⚔</div>
+        <div style="font-family:'Cinzel',serif;font-size:15px;color:var(--text-dim);letter-spacing:1px" id="rwNoneText">You did not enter yesterday's arena</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--text-faint);margin-top:6px">Rise tomorrow. Glory awaits.</div>
       </div>
     </div>
   </div>
-
-  <div class="crd">
-    <div class="ch" style="color:var(--mg)">🏆 Yesterday's Winners</div>
-    <div class="lb" id="rwLeaderboard"><div class="lbe">No data yet</div></div>
-  </div>
 </div>
 
-<!-- OWNER PANEL -->
+<!-- OWNER / SOVEREIGN -->
 <div class="pnl" id="t-owner">
-  <div class="owner-pnl">
-    <div class="owner-title">👑 OWNER CONTROL PANEL</div>
-    <div style="text-align:center;margin-bottom:16px;font-family:'Share Tech Mono';font-size:11px;color:var(--dm)">Day: <span style="color:var(--gd)" id="ownCurDay">—</span> · Yesterday: <span style="color:var(--cy)" id="ownYDay">—</span></div>
-    <div class="owner-grid">
-      <div class="owner-stat"><div class="owner-stat-v" id="ownToday">0 STT</div><div class="owner-stat-l">TODAY'S 10% COMMISSION</div></div>
-      <div class="owner-stat"><div class="owner-stat-v" id="ownRoll">0 STT</div><div class="owner-stat-l">ROLLOVER POOL</div></div>
-    </div>
-
-    <div style="font-family:'Share Tech Mono';font-size:9px;color:var(--dm);text-align:center;margin-bottom:12px">CLAIM YOUR 10% COMMISSION</div>
-    <div class="owner-actions">
-      <button class="owner-btn" onclick="OWclaimToday()">💰 CLAIM TODAY</button>
-      <button class="owner-btn" onclick="OWclaimYesterday()">💰 CLAIM YESTERDAY</button>
-      <button class="owner-btn" onclick="OWbatch()" style="border-color:var(--gn);color:var(--gn)">💰 CLAIM LAST 7 DAYS</button>
-    </div>
-
-    <div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,215,0,.1)">
-      <div style="font-family:'Share Tech Mono';font-size:9px;color:var(--dm);text-align:center;margin-bottom:12px">ROUND MANAGEMENT</div>
-      <div class="owner-actions">
-        <button class="owner-btn" onclick="OWfinYesterday()">📊 FINALIZE YESTERDAY</button>
-        <button class="owner-btn" onclick="OWtestResolve()" style="border-color:var(--mg);color:var(--mg)">🧪 RESOLVE + FINALIZE</button>
+  <div class="crd">
+    <div class="owner-pnl">
+      <div class="owner-title">👑 Sovereign Council</div>
+      <div style="text-align:center;margin-bottom:18px;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--text-dim)">Day: <span style="color:var(--gold);font-family:'Cinzel',serif" id="ownCurDay">—</span> · Yesterday: <span style="color:var(--pink-light);font-family:'Cinzel',serif" id="ownYDay">—</span></div>
+      <div class="owner-grid">
+        <div class="owner-stat"><div class="owner-stat-v" id="ownToday">0 STT</div><div class="owner-stat-l">Today's Tax</div></div>
+        <div class="owner-stat"><div class="owner-stat-v" id="ownRoll">0 STT</div><div class="owner-stat-l">Rollover Vault</div></div>
       </div>
-    </div>
 
-    <div id="ownSt" style="font-family:'Share Tech Mono';font-size:10px;color:var(--gn);text-align:center;margin-top:12px;min-height:14px"></div>
+      <div style="font-family:'Cinzel',serif;font-size:10px;color:var(--text-dim);text-align:center;margin-bottom:12px;letter-spacing:2px">Claim Your 10% Tribute</div>
+      <div class="owner-actions">
+        <button class="owner-btn" onclick="OWclaimToday()">💰 Today</button>
+        <button class="owner-btn" onclick="OWclaimYesterday()">💰 Yesterday</button>
+        <button class="owner-btn" onclick="OWbatch()" style="border-color:rgba(125,216,168,.4);color:var(--green)">💰 Last 7 Days</button>
+      </div>
+
+      <div style="margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,200,160,.15)">
+        <div style="font-family:'Cinzel',serif;font-size:10px;color:var(--text-dim);text-align:center;margin-bottom:12px;letter-spacing:2px">Arena Management</div>
+        <div class="owner-actions">
+          <button class="owner-btn" onclick="OWfinYesterday()">📊 Finalize Yesterday</button>
+          <button class="owner-btn" onclick="OWtestResolve()" style="border-color:rgba(178,98,217,.4);color:var(--purple-light)">🧪 Resolve + Finalize</button>
+        </div>
+      </div>
+
+      <div id="ownSt" style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--green);text-align:center;margin-top:14px;min-height:16px"></div>
+    </div>
   </div>
 </div>
 
-</div><!-- /gameWrap -->
 </div><!-- /AP -->
+</main>
 
-<!-- TRUST FOOTER -->
+<!-- Trust footer -->
 <div class="trust-footer">
   <div class="trust-header">
-    <div class="trust-title">Transparency & Trust</div>
-    <div class="trust-badges">
-      <div class="trust-badge verified">✓ VERIFIED CONTRACTS</div>
-      <div class="trust-badge onchain">◈ 100% ON-CHAIN</div>
-      <div class="trust-badge open">⟐ OPEN SOURCE</div>
-    </div>
+    <div class="trust-title">⚔ Forged on Somnia ⚔</div>
+    <div class="trust-sub">Open source · Verifiable · Immutable</div>
   </div>
-  <div class="contracts-grid" id="contractsGrid">
-    <!-- filled by JS -->
-  </div>
-  <div class="trust-links">
-    <a class="trust-link" href="https://github.com/angellsomniac/Somnia-umi-passport" target="_blank"><span>⟐</span> GitHub Source</a>
-    <a class="trust-link" href="https://somnia.network" target="_blank"><span>⬡</span> Somnia Network</a>
-  </div>
-  <div class="trust-copy">ALL GAME LOGIC RUNS ON-CHAIN · NO SERVER · NO ADMIN BACKDOORS · YOUR KEYS = YOUR REWARDS<br>Built on Somnia Network · Steal or Protect © 2026</div>
+  <div class="contracts-grid" id="contractsGrid"></div>
+  <div class="trust-copy">Every battle is on-chain. Every spoil is earned. Every warrior is chronicled forever.</div>
 </div>
 
-</main>
 <script>
-// ═══════ CONFIG — UPDATE AFTER DEPLOY ═══════
 const CFG={
   50312:{umi:'0x91Ee1c6C191dc6440B8058d99d2Fa94B8691adff',hub:'0xc7Bd21FB6aB13f9C12CE86C826293E14D0Ae9e9c',exp:'https://shannon-explorer.somnia.network'},
   5031:{umi:'0xfa9c15D8B508968fCDbdB9F495C8A493C19d7351',hub:'0x0000000000000000000000000000000000000000',exp:'https://explorer.somnia.network'}
@@ -703,300 +1208,500 @@ const CFG={
 
 const AU=['function setProfile(string,string,string,string)','function getProfile(address) view returns (tuple(string nickname,string avatarUrl,string bio,string socialUrl,uint256 createdAt,uint256 updatedAt,bool exists))','function hasProfile(address) view returns (bool)','function getNickname(address) view returns (string)'];
 
-const AH=['function sayGM(string) payable','function play(bool,uint256) payable','function claimReward(uint256)','function claimOwnerFee(uint256)','function claimOwnerFeeBatch(uint256[])','function resolveRound(uint256)','function finalizeRankings(uint256)','function expireUnclaimed(uint256)','function registerReferrer(address)','function currentDay() view returns (uint256)','function currentWeek() view returns (uint256)','function roundTimeLeft() view returns (uint256)','function totalGMs() view returns (uint256)','function totalReferrals() view returns (uint256)','function owner() view returns (address)','function getRoundInfo(uint256) view returns (uint256,uint256,uint256,bool,bool,uint256,bool)','function getPlayerView(address) view returns (tuple(uint256 xp,uint256 level,uint256 gmStreak,uint256 battleStreak,uint256 battleWins,uint256 battleGames,bool gmToday,bool playedToday,bool todaySide,uint128 todayWeight,uint128 todayBP,uint16 todayRank,uint256 weekXPVal,uint256 weekBattleVal,uint256 monthGlory,uint256 top150Streak,uint256 referralCount,address referredBy))','function getPendingReward(address,uint256) view returns (uint256,bool,uint16,bool)','function getXPLeaderboard(uint256) view returns (address[],uint256[])','function getBattleLeaderboard(uint256) view returns (address[],uint256[])','function getGloryLeaderboard(uint256) view returns (address[],uint256[])','function getRecentGMs() view returns (tuple(address sender,uint256 timestamp,string message)[],uint256)','function getPoolInfo() view returns (uint256,uint256,uint256)','function getOwnerPending(uint256,uint256) view returns (uint256)'];
+const AH=['function sayGM(string) payable','function play(bool,uint256) payable','function claimReward(uint256)','function claimOwnerFee(uint256)','function claimOwnerFeeBatch(uint256[])','function resolveRound(uint256)','function finalizeRankings(uint256)','function expireUnclaimed(uint256)','function registerReferrer(address)','function currentDay() view returns (uint256)','function currentWeek() view returns (uint256)','function roundTimeLeft() view returns (uint256)','function totalGMs() view returns (uint256)','function owner() view returns (address)','function getRoundInfo(uint256) view returns (uint256,uint256,uint256,bool,bool,uint256,bool)','function getPlayerView(address) view returns (tuple(uint256 xp,uint256 level,uint256 gmStreak,uint256 battleStreak,uint256 battleWins,uint256 battleGames,bool gmToday,bool playedToday,bool todaySide,uint128 todayWeight,uint128 todayBP,uint16 todayRank,uint256 weekXPVal,uint256 weekBattleVal,uint256 monthGlory,uint256 top150Streak,uint256 referralCount,address referredBy))','function getPendingReward(address,uint256) view returns (uint256,bool,uint16,bool)','function getXPLeaderboard(uint256) view returns (address[],uint256[])','function getGloryLeaderboard(uint256) view returns (address[],uint256[])','function getRecentGMs() view returns (tuple(address sender,uint256 timestamp,string message)[],uint256)','function getPoolInfo() view returns (uint256,uint256,uint256)'];
 
 let pv,sg,um,hb,ad,ch,ti,localLeft=0,isOwnerAccount=false;
+const $=id=>document.getElementById(id);
 
-document.querySelectorAll('.tab').forEach(t=>t.onclick=function(){document.querySelectorAll('.tab').forEach(x=>x.classList.remove('a'));document.querySelectorAll('.pnl').forEach(x=>x.classList.remove('a'));this.classList.add('a');$('t-'+this.dataset.t).classList.add('a');});
-function uB(s){const v=$(s==='A'?'slA':'slD').value;$('bv'+s).textContent=v==='0'?'Normal':'Boosted';$('bc'+s).textContent=v==='0'?'FREE':'1 STT';}
+document.querySelectorAll('.tab').forEach(t=>t.onclick=function(){
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('a'));
+  document.querySelectorAll('.pnl').forEach(x=>x.classList.remove('a'));
+  this.classList.add('a');
+  $('t-'+this.dataset.t).classList.add('a');
+});
 
-async function W(){if(!window.ethereum){alert('Install MetaMask');return;}try{
-  pv=new ethers.BrowserProvider(window.ethereum);await pv.send('eth_requestAccounts',[]);
-  sg=await pv.getSigner();ad=await sg.getAddress();ch=Number((await pv.getNetwork()).chainId);
-  const c=CFG[ch];if(!c){alert('Switch to Somnia (50312 or 5031)');return;}
-  um=new ethers.Contract(c.umi,AU,sg);
-  if(c.hub&&c.hub!=='0x0000000000000000000000000000000000000000'){
-    hb=new ethers.Contract(c.hub,AH,sg);
-    // Check owner
-    try{const ownAddr=await hb.owner();isOwnerAccount=ownAddr.toLowerCase()===ad.toLowerCase();if(isOwnerAccount)$('ownerTab').style.display='block';}catch(e){}
+function uB(s){
+  const v=$(s==='A'?'slA':'slD').value;
+  $('bv'+s).textContent=v==='0'?'Normal':'Boosted';
+  $('bc'+s).textContent=v==='0'?'Free':'1 STT';
+}
+
+function initRef(){
+  try{
+    const url=new URL(window.location.href);
+    const ref=url.searchParams.get('ref');
+    if(ref&&ref.length===42&&ref.startsWith('0x')){
+      localStorage.setItem('refBy',ref);
+    }
+  }catch(e){}
+}
+
+function setupMyRef(){
+  if(!ad)return;
+  const base=window.location.origin+window.location.pathname;
+  $('refLink').value=base+'?ref='+ad;
+  if(hb){
+    hb.getPlayerView(ad).then(v=>{
+      $('refCount').textContent=v.referralCount.toString();
+      $('refGlory').textContent=(Number(v.referralCount)*20).toString();
+    }).catch(()=>{});
   }
-  $('cB').textContent=ad.slice(0,6)+'...'+ad.slice(-4);$('cB').classList.add('on');
-  $('hN').textContent=ch===5031?'MAINNET':'TESTNET';
-  $('CS').style.display='none';$('AP').style.display='block';$('fBtn').disabled=false;
-  buildContractsGrid();
-  checkProfile();
-}catch(e){console.error(e);alert(e.message);}}
+}
+
+function copyRef(){
+  const input=$('refLink');
+  input.select();input.setSelectionRange(0,999);
+  try{
+    navigator.clipboard.writeText(input.value);
+    $('refSt').textContent='✓ Copied! Share with warriors.';
+    $('refSt').style.color='var(--green)';
+  }catch(e){
+    $('refSt').textContent='Link selected — press Ctrl+C';
+    $('refSt').style.color='var(--pink-light)';
+  }
+}
+
+async function W(){
+  if(!window.ethereum){alert('Install MetaMask to enter the realm');return;}
+  try{
+    pv=new ethers.BrowserProvider(window.ethereum);
+    await pv.send('eth_requestAccounts',[]);
+    sg=await pv.getSigner();
+    ad=await sg.getAddress();
+    ch=Number((await pv.getNetwork()).chainId);
+    const c=CFG[ch];
+    if(!c){alert('Switch to Somnia (50312 or 5031)');return;}
+    um=new ethers.Contract(c.umi,AU,sg);
+    if(c.hub&&c.hub!=='0x0000000000000000000000000000000000000000'){
+      hb=new ethers.Contract(c.hub,AH,sg);
+      try{
+        const ownAddr=await hb.owner();
+        isOwnerAccount=ownAddr.toLowerCase()===ad.toLowerCase();
+        if(isOwnerAccount)$('ownerTab').style.display='block';
+      }catch(e){}
+    }
+    $('cB').textContent=ad.slice(0,6)+'...'+ad.slice(-4);
+    $('cB').classList.add('on');
+    $('hN').textContent=ch===5031?'Mainnet':'Testnet';
+    $('CS').style.display='none';
+    $('fBtn').disabled=false;
+    buildContractsGrid();
+    checkProfile();
+  }catch(e){console.error(e);alert(e.message);}
+}
 
 function buildContractsGrid(){
   const g=$('contractsGrid');let html='';
   for(const[chainId,c] of Object.entries(CFG)){
-    const netName=chainId==='5031'?'MAINNET':'TESTNET';
-    html+=`<div class="contract-card"><div class="cc-label"><span class="cc-dot live"></span>UMI PASSPORT (${netName})</div><div class="cc-addr">${c.umi}</div><a class="cc-link" href="${c.exp}/address/${c.umi}" target="_blank">View on Explorer →</a></div>`;
+    const netName=chainId==='5031'?'Mainnet':'Testnet';
+    html+='<div class="contract-card"><div class="cc-label"><span class="cc-dot live"></span>UMI Passport · '+netName+'</div><div class="cc-addr">'+c.umi+'</div><a class="cc-link" href="'+c.exp+'/address/'+c.umi+'" target="_blank">View on Explorer →</a></div>';
     if(c.hub&&c.hub!=='0x0000000000000000000000000000000000000000'){
-      html+=`<div class="contract-card"><div class="cc-label"><span class="cc-dot live"></span>GAMEHUB v3 (${netName})</div><div class="cc-addr">${c.hub}</div><a class="cc-link" href="${c.exp}/address/${c.hub}" target="_blank">View on Explorer →</a></div>`;
+      html+='<div class="contract-card"><div class="cc-label"><span class="cc-dot live"></span>GameHub · '+netName+'</div><div class="cc-addr">'+c.hub+'</div><a class="cc-link" href="'+c.exp+'/address/'+c.hub+'" target="_blank">View on Explorer →</a></div>';
     }else{
-      html+=`<div class="contract-card" style="opacity:.5"><div class="cc-label"><span class="cc-dot" style="background:var(--dm)"></span>GAMEHUB v3 (${netName})</div><div class="cc-addr" style="opacity:.4">Coming soon</div></div>`;
+      html+='<div class="contract-card" style="opacity:.5"><div class="cc-label"><span class="cc-dot" style="background:var(--text-faint)"></span>GameHub · '+netName+'</div><div class="cc-addr" style="opacity:.4">Coming soon</div></div>';
     }
   }
   g.innerHTML=html;
 }
 
-async function checkProfile(){try{const p=await um.getProfile(ad);if(p.exists){$('onboard').style.display='none';$('gameWrap').style.display='block';$('fBtn').disabled=false;LA();}else{$('onboard').style.display='block';$('gameWrap').style.display='none';}}catch(e){$('onboard').style.display='block';$('gameWrap').style.display='none';}}
+async function checkProfile(){
+  try{
+    const p=await um.getProfile(ad);
+    if(p.exists){
+      $('onboard').style.display='none';
+      $('AP').style.display='block';
+      $('fBtn').disabled=false;
+      LA();
+    }else{
+      $('onboard').style.display='block';
+      $('AP').style.display='none';
+    }
+  }catch(e){
+    $('onboard').style.display='block';
+    $('AP').style.display='none';
+  }
+}
 
 async function OB(){
   const n=$('obN').value.trim(),a=$('obA').value.trim(),b=$('obB').value.trim(),s=$('obS').value.trim();
-  if(!n){$('obSt').textContent='Nickname is required!';$('obSt').className='fs er';return;}
-  const bt=$('obBtn');bt.disabled=true;bt.textContent='CREATING...';$('obSt').textContent='Waiting...';$('obSt').className='fs';
+  if(!n){$('obSt').textContent='A warrior needs a name!';$('obSt').className='fs er';return;}
+  const bt=$('obBtn');bt.disabled=true;bt.textContent='Forging...';$('obSt').textContent='Awaiting signature...';$('obSt').className='fs';
   try{
-    const tx=await um.setProfile(n,a,b,s);bt.textContent='CONFIRMING...';await tx.wait();
-    $('obSt').textContent='Profile created! ✓';
-    // Register referrer if pending in localStorage
+    const tx=await um.setProfile(n,a,b,s);
+    bt.textContent='Confirming...';
+    await tx.wait();
+    $('obSt').textContent='Passport forged ✓';
     try{
       const refBy=localStorage.getItem('refBy');
       if(refBy&&refBy.toLowerCase()!==ad.toLowerCase()&&hb){
-        $('obSt').textContent='Registering referral...';
+        $('obSt').textContent='Binding your fate...';
         const refTx=await hb.registerReferrer(refBy);
         await refTx.wait();
-        $('obSt').textContent='Profile + referral registered ✓';
+        $('obSt').textContent='Fate bound to your patron ✓';
         localStorage.removeItem('refBy');
       }
-    }catch(refErr){console.log('Referral skipped:',refErr.message||refErr);}
-    bt.textContent='CREATE PASSPORT & ENTER';bt.disabled=false;checkProfile();
-  }catch(e){$('obSt').textContent=e.reason||'Failed';$('obSt').className='fs er';bt.textContent='CREATE PASSPORT & ENTER';bt.disabled=false;}
+    }catch(refErr){console.log('Referral skipped');}
+    bt.textContent='Create Passport & Enter';bt.disabled=false;
+    checkProfile();
+  }catch(e){
+    $('obSt').textContent=e.reason||'The forge rejected this';
+    $('obSt').className='fs er';
+    bt.textContent='Create Passport & Enter';bt.disabled=false;
+  }
 }
 
 async function LA(){LP();if(hb){LG();LGM();LR();ST();setupMyRef();}}
 
-async function LP(){try{const p=await um.getProfile(ad);if(p.exists)SH(p);else{$('PLd').style.display='none';$('PE').style.display='block';}}catch(e){$('PLd').style.display='none';$('PE').style.display='block';}}
-function SH(p){$('PLd').style.display='none';$('PC').style.display='block';$('PE').style.display='none';$('FT').innerHTML='◈ Update Identity';$('PN').textContent=p.nickname;$('PA').textContent=ad;$('PB').textContent=p.bio||'No bio';const f=$('AV');if(p.avatarUrl)f.innerHTML='<img src="'+p.avatarUrl+'" onerror="this.parentElement.innerHTML=\'<div class=avp>◈</div>\'">';else f.innerHTML='<div class="avp">'+(p.nickname?p.nickname[0].toUpperCase():'◈')+'</div>';const s=$('PL2');if(p.socialUrl){s.style.display='inline-flex';s.href=p.socialUrl;$('PLT').textContent=p.socialUrl.replace('https://','');}else s.style.display='none';const cr=Number(p.createdAt),up=Number(p.updatedAt);$('PCr').textContent=cr?new Date(cr*1000).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'—';$('PUp').textContent=up?new Date(up*1000).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'—';const age=cr?Math.floor((Date.now()/1000-cr)/86400):0;let rk,rc;if(age>=365){rk='LEGEND';rc='rl';}else if(age>=90){rk='PIONEER';rc='rp';}else if(age>=7){rk='EXPLORER';rc='re';}else{rk='GENESIS';rc='rg';}$('RK').textContent=rk;$('RK').className='rk '+rc;$('PR2').textContent=rk;$('fN').value=p.nickname;$('fA').value=p.avatarUrl;$('fB').value=p.bio;$('fS').value=p.socialUrl;}
-async function SP(){const n=$('fN').value.trim(),a=$('fA').value.trim(),b=$('fB').value.trim(),s=$('fS').value.trim();if(!n){FM('Nickname required',1);return;}const bt=$('fBtn');bt.disabled=true;bt.textContent='SIGNING...';FM('Waiting...',0);try{const tx=await um.setProfile(n,a,b,s);bt.textContent='CONFIRMING...';await tx.wait();FM('Saved ✓',0);bt.textContent='SAVE IDENTITY';bt.disabled=false;LP();}catch(e){FM(e.reason||'Failed',1);bt.textContent='SAVE IDENTITY';bt.disabled=false;}}
-function FM(m,e){$('fSt').textContent=m;$('fSt').className='fs'+(e?' er':'');}
-
-async function LG(){try{
-  const day=Number(await hb.currentDay()),week=Number(await hb.currentWeek());
-  const ri=await hb.getRoundInfo(day);
-  const totalPlayers=Number(ri[0]),dailyPool=ri[2];
-  $('fogTotal').textContent=totalPlayers+' Warrior'+(totalPlayers===1?'':'s');
-  $('pDay').textContent=ethers.formatEther(dailyPool)+' STT';
-
-  const v=await hb.getPlayerView(ad);
-  $('xXP').textContent=v.xp.toString();$('xLv').textContent=v.level.toString();
-  $('xGS').textContent=v.gmStreak.toString();$('xBS').textContent=v.battleStreak.toString();
-  $('xW').textContent=v.battleWins.toString();$('xGl').textContent=v.monthGlory.toString();
-  $('hXP').textContent=v.xp.toString();$('hLv').textContent='Lv '+v.level;$('hGl').textContent=v.monthGlory.toString();
-  $('gXP').textContent=v.xp.toString();
-  if($('gLv'))$('gLv').textContent=v.level.toString();
-  if($('gStrk'))$('gStrk').textContent=v.gmStreak.toString();
-  if($('hGmS'))$('hGmS').textContent=v.gmStreak.toString()+'🔥';
-  $('atkLv').textContent='Warrior Lv '+v.level;$('defLv').textContent='Warrior Lv '+v.level;
-
-  // XP progress bar
-  const xpInLv=Number(v.xp)%100;
-  if($('xpBar'))$('xpBar').style.width=xpInLv+'%';
-  if($('xpProg'))$('xpProg').textContent=xpInLv+'/100';
-
-  // Daily quests
-  if($('qGMi'))$('qGMi').textContent=v.gmToday?'✅':'⬜';
-  if($('qBi'))$('qBi').textContent=v.playedToday?'✅':'⬜';
-  if($('qAi'))$('qAi').textContent=(v.gmToday&&v.playedToday)?'🌟':'⬜';
-  if(v.gmToday&&$('qGM'))$('qGM').style.borderColor='rgba(57,255,20,.3)';
-  if(v.playedToday&&$('qBattle'))$('qBattle').style.borderColor='rgba(57,255,20,.3)';
-  if(v.gmToday&&v.playedToday&&$('qAll'))$('qAll').style.borderColor='rgba(255,215,0,.4)';
-
-  // Top-150 badge
-  const ts=Number(v.top150Streak);const bd=$('badge'),bs=$('badgeSub');
-  if(ts>=7){bd.className='badge-display tier-7';bd.textContent='✨ IMMORTAL — '+ts+' days';bs.textContent='Legendary status · +5% Glory bonus';}
-  else if(ts>=5){bd.className='badge-display tier-5';bd.textContent='⚡ ELITE GUARD — '+ts+' days';bs.textContent='Feared by many · +4% Glory bonus';}
-  else if(ts>=3){bd.className='badge-display tier-3';bd.textContent='🔥 WAR LORD — '+ts+' days';bs.textContent='Battle veteran · +3% Glory bonus';}
-  else if(ts>=1){bd.className='badge-display tier-1';bd.textContent='🎖 VETERAN — '+ts+' days';bs.textContent='Prove yourself · +1% Glory bonus';}
-  else{bd.className='badge-display tier-0';bd.textContent='🎖 NEWCOMER';bs.textContent='Win a battle and reach Top-150 to earn your first badge';}
-
-  const bS=$('btnS'),bP=$('btnP');bS.classList.remove('off');bP.classList.remove('off');bS.disabled=false;bP.disabled=false;$('slA').disabled=false;$('slD').disabled=false;
-  // GM required before battle
-  if(!v.gmToday&&!v.playedToday){bS.disabled=true;bP.disabled=true;bS.classList.add('off');bP.classList.add('off');$('slA').disabled=true;$('slD').disabled=true;$('gmLock').style.display='block';}else{$('gmLock').style.display='none';}
-  if(v.playedToday){bS.disabled=true;bP.disabled=true;bS.classList.add('off');bP.classList.add('off');$('slA').disabled=true;$('slD').disabled=true;if(v.todaySide){bS.textContent='🔥 YOUR PICK';}else{bP.textContent='🛡 YOUR PICK';}$('gSt').textContent='Played today! Come back tomorrow.';$('gmLock').style.display='none';}
-  if(v.gmToday){$('gBtn').disabled=true;$('gSs').textContent='GM done today ✓';}
-
-  // Claim
-  if(day>0){try{
-    const[rew,can,rank,exp]=await hb.getPendingReward(ad,day-1);
-    if(can&&Number(rew)>0){
-      $('clB').style.display='flex';
-      $('clA').textContent=ethers.formatEther(rew)+' STT';
-      $('clRank').textContent='Your rank: #'+rank.toString()+' / Top-150';
-      $('pYou').textContent=ethers.formatEther(rew)+' STT';
-    }else if(exp){$('pYou').textContent='Expired';}
-    else{$('pYou').textContent='—';}
-  }catch(e){console.error('claim:',e);}
-  try{const yi=await hb.getRoundInfo(day-1);if(yi[3]){$('YD').style.display='flex';const yw=yi[4];$('YR').textContent=(yw?'🔥 STEAL':'🛡️ PROTECT')+' WON';$('YR').className='yr '+(yw?'ylo':'yw');
-    // Big yesterday banner
-    const ban=$('ydayBanner');ban.style.display='block';
-    const[rew2,can2,rank2]=await hb.getPendingReward(ad,day-1).catch(()=>[0,false,0,false]);
-    if(can2&&Number(rew2)>0){
-      ban.style.borderColor='rgba(57,255,20,.4)';ban.style.background='linear-gradient(90deg,rgba(57,255,20,.06),transparent)';
-      $('ydBanText').style.color='var(--gn)';$('ydBanText').textContent='🎉 YOU WON! Rank #'+rank2+' — '+ethers.formatEther(rew2)+' STT waiting';
-      $('ydBanSub').textContent='Claim your reward before it expires';$('ydBanSub').style.color='var(--gn)';
-    }else if(yw!==(v.todaySide||false)){
-      ban.style.borderColor='rgba(255,51,68,.3)';ban.style.background='linear-gradient(90deg,rgba(255,51,68,.04),transparent)';
-      $('ydBanText').style.color='var(--rd)';$('ydBanText').textContent=(yw?'🔥 STEAL':'🛡️ PROTECT')+' WON YESTERDAY';
-      $('ydBanSub').textContent='You earned +2 XP for participation';$('ydBanSub').style.color='var(--dm)';
-    }else{
-      ban.style.borderColor='rgba(0,240,255,.3)';ban.style.background='linear-gradient(90deg,rgba(0,240,255,.04),transparent)';
-      $('ydBanText').style.color='var(--cy)';$('ydBanText').textContent=(yw?'🔥 STEAL':'🛡️ PROTECT')+' WON YESTERDAY';
-      $('ydBanSub').textContent='';$('ydBanSub').style.color='var(--dm)';
+async function LP(){
+  try{
+    const p=await um.getProfile(ad);
+    if(p.exists){
+      $('PC').style.display='block';$('FT').textContent='◈ Refine Your Identity';
+      $('PN').textContent=p.nickname;$('PA').textContent=ad;$('PB').textContent=p.bio||'';
+      $('N').value=p.nickname;$('A').value=p.avatarUrl;$('B').value=p.bio||'';$('S').value=p.socialUrl||'';
+      if(p.avatarUrl){$('AV').innerHTML='<img src="'+p.avatarUrl+'" onerror="this.parentElement.innerHTML=\'<div class=avp>◈</div>\'">';}
+      $('PCr').textContent=new Date(Number(p.createdAt)*1000).toLocaleDateString();
+      $('PUp').textContent=new Date(Number(p.updatedAt)*1000).toLocaleDateString();
+      if(p.socialUrl){$('PL2').style.display='inline-flex';$('PL2').href=p.socialUrl;$('PLT').textContent='Visit';}
     }
-  }}catch(e){}}
+  }catch(e){}
+}
 
-  // Leaderboards
-  try{const[xa,xp]=await hb.getXPLeaderboard(week);rL('LBx',xa,xp,'XP');}catch(e){}
-  try{const month=Math.floor(day/30);const[ga,gp]=await hb.getGloryLeaderboard(month);rL('LBg',ga,gp,'GLORY');}catch(e){}
-
-  // Owner panel stats
-  if(isOwnerAccount){
-    try{const pi=await hb.getPoolInfo();$('ownToday').textContent=ethers.formatEther(pi[1])+' STT';$('ownRoll').textContent=ethers.formatEther(pi[2])+' STT';const cd=Number(await hb.currentDay());if($('ownCurDay'))$('ownCurDay').textContent=cd;if($('ownYDay'))$('ownYDay').textContent=cd-1;}catch(e){}
+async function SV(){
+  const n=$('N').value.trim(),a=$('A').value.trim(),b=$('B').value.trim(),s=$('S').value.trim();
+  if(!n){$('St').textContent='Name required!';$('St').className='fs er';return;}
+  const bt=$('fBtn');bt.disabled=true;bt.textContent='Refining...';$('St').textContent='Signing...';$('St').className='fs';
+  try{
+    const tx=await um.setProfile(n,a,b,s);
+    await tx.wait();
+    $('St').textContent='Identity refined ✓';bt.textContent='Save Passport';bt.disabled=false;LP();
+  }catch(e){
+    $('St').textContent=e.reason||'Failed';$('St').className='fs er';
+    bt.textContent='Save Passport';bt.disabled=false;
   }
-}catch(e){console.error('G:',e);}}
+}
 
-function rL(id,addrs,pts,suf){if(!addrs.length){$(id).innerHTML='<div class="lbe">No data yet</div>';return;}const lb=addrs.map((a,i)=>({a,p:Number(pts[i])})).sort((a,b)=>b.p-a.p).slice(0,15);const el=$(id);el.innerHTML=lb.map((e,i)=>{const r=i<3?['g','s','b'][i]:'';const sh=e.a.slice(0,6)+'...'+e.a.slice(-4);const me=e.a.toLowerCase()===ad.toLowerCase()?' (YOU)':'';return '<div class="lbr"><div class="lrk '+r+'">#'+(i+1)+'</div><div class="lnm"><span class="lad">'+sh+me+'</span></div><div class="lpt">'+e.p+' '+suf+'</div></div>';}).join('');lb.forEach(async(e,i)=>{try{const n=await um.getNickname(e.a);if(n){const rows=el.querySelectorAll('.lnm');if(rows[i])rows[i].innerHTML=n+'<br><span class="lad">'+e.a.slice(0,6)+'...'+e.a.slice(-4)+(e.a.toLowerCase()===ad.toLowerCase()?' (YOU)':'')+'</span>';}}catch(er){}});}
+async function LG(){
+  if(!hb)return;
+  try{
+    const day=Number(await hb.currentDay()),week=Number(await hb.currentWeek());
+    const ri=await hb.getRoundInfo(day);
+    const totalPlayers=Number(ri[0]),dailyPool=ri[2];
+    $('fogTotal').textContent=totalPlayers+' Warrior'+(totalPlayers===1?'':'s');
+    $('pDay').innerHTML=ethers.formatEther(dailyPool)+'<span class="unit">STT</span>';
 
-async function PL(steal){
-  const bS=$('btnS'),bP=$('btnP');if(bS.disabled)return;
-  bS.disabled=true;bP.disabled=true;$('slA').disabled=true;$('slD').disabled=true;
-  $('gSt').textContent='Waiting for wallet...';$('gSt').className='bc-st';
-  const boost=parseInt(steal?$('slA').value:$('slD').value);
-  const cost=ethers.parseEther((boost*1).toFixed(0));
-  try{const tx=await hb.play(steal,boost,{value:cost});$('gSt').textContent='Confirming...';await tx.wait();$('gSt').textContent='Choice recorded! ⚔';LG();}
-  catch(e){$('gSt').textContent=e.reason||e.message||'Failed';$('gSt').className='bc-st er';bS.disabled=false;bP.disabled=false;$('slA').disabled=false;$('slD').disabled=false;}
+    const v=await hb.getPlayerView(ad);
+    $('xXP').textContent=v.xp.toString();$('xLv').textContent=v.level.toString();
+    $('xGS').textContent=v.gmStreak.toString();$('xBS').textContent=v.battleStreak.toString();
+    $('xW').textContent=v.battleWins.toString();$('xGl').textContent=v.monthGlory.toString();
+    $('hXP').textContent=v.xp.toString();$('hLv').textContent='Lv '+v.level;$('hGl').textContent=v.monthGlory.toString();
+    $('hGmS').textContent=v.gmStreak.toString()+'🔥';
+    $('gXP').textContent=v.xp.toString();
+    $('gLv').textContent=v.level.toString();
+    $('gStrk').textContent=v.gmStreak.toString();
+    $('atkLv').textContent='Lv '+v.level;$('defLv').textContent='Lv '+v.level;
+
+    const xpInLv=Number(v.xp)%100;
+    $('xpBar').style.width=xpInLv+'%';
+    $('xpProg').textContent=xpInLv+'/100 XP';
+
+    $('qGMi').textContent=v.gmToday?'✅':'⬜';
+    $('qBi').textContent=v.playedToday?'✅':'⬜';
+    $('qAi').textContent=(v.gmToday&&v.playedToday)?'🌟':'⬜';
+    if(v.gmToday)$('qGM').style.borderColor='rgba(125,216,168,.3)';
+    if(v.playedToday)$('qBattle').style.borderColor='rgba(125,216,168,.3)';
+    if(v.gmToday&&v.playedToday)$('qAll').style.borderColor='rgba(255,200,160,.4)';
+
+    const bS=$('btnS'),bP=$('btnP');
+    bS.classList.remove('off');bP.classList.remove('off');bS.disabled=false;bP.disabled=false;
+    $('slA').disabled=false;$('slD').disabled=false;
+    if(!v.gmToday&&!v.playedToday){
+      bS.disabled=true;bP.disabled=true;bS.classList.add('off');bP.classList.add('off');
+      $('slA').disabled=true;$('slD').disabled=true;$('gmLock').style.display='block';
+    }else{$('gmLock').style.display='none';}
+    if(v.playedToday){
+      bS.disabled=true;bP.disabled=true;bS.classList.add('off');bP.classList.add('off');
+      $('slA').disabled=true;$('slD').disabled=true;
+      if(v.todaySide){bS.textContent='🔥 Your Choice';}else{bP.textContent='🛡 Your Choice';}
+      $('gSt').textContent='Your fate is sealed for today';$('gmLock').style.display='none';
+    }
+    if(v.gmToday){$('gBtn').disabled=true;$('gSs').textContent='Ritual complete ✓';}
+
+    if(day>0){
+      try{
+        const[rew,can,rank,exp]=await hb.getPendingReward(ad,day-1);
+        if(can&&Number(rew)>0){
+          $('clB').style.display='flex';
+          $('clA').textContent=ethers.formatEther(rew)+' STT';
+          $('clRank').textContent='Rank #'+rank.toString()+' / Top-150';
+          $('pYou').textContent=ethers.formatEther(rew)+' STT';
+        }else if(exp){$('pYou').textContent='Expired';}
+        else{$('pYou').textContent='—';}
+      }catch(e){}
+      try{
+        const yi=await hb.getRoundInfo(day-1);
+        if(yi[3]){
+          $('YD').style.display='flex';
+          const yw=yi[4];
+          $('YR').textContent=(yw?'🔥 Steal':'🛡️ Protect')+' Prevailed';
+          $('YR').className='yr '+(yw?'ylo':'yw');
+          const ban=$('ydayBanner');ban.style.display='block';
+          const[rew2,can2,rank2]=await hb.getPendingReward(ad,day-1).catch(()=>[0,false,0,false]);
+          if(can2&&Number(rew2)>0){
+            ban.style.borderColor='rgba(125,216,168,.4)';
+            ban.style.background='linear-gradient(90deg,rgba(125,216,168,.08),transparent)';
+            $('ydBanText').style.color='var(--green)';
+            $('ydBanText').textContent='🎉 Victory! Rank #'+rank2+' — '+ethers.formatEther(rew2)+' STT awaits';
+            $('ydBanSub').textContent='Claim your spoils before they return to the vault';
+            $('ydBanSub').style.color='var(--green)';
+          }else{
+            ban.style.borderColor='rgba(255,200,220,.25)';
+            ban.style.background='linear-gradient(90deg,rgba(255,200,220,.04),transparent)';
+            $('ydBanText').style.color='var(--pink-light)';
+            $('ydBanText').textContent=(yw?'🔥 Steal':'🛡️ Protect')+' prevailed yesterday';
+            $('ydBanSub').textContent='';
+          }
+        }
+      }catch(e){}
+    }
+
+    try{const[xa,xp]=await hb.getXPLeaderboard(week);rL('LBx',xa,xp,'XP');}catch(e){}
+    try{const month=Math.floor(day/30);const[ga,gp]=await hb.getGloryLeaderboard(month);rL('LBg',ga,gp,'Glory');}catch(e){}
+
+    if(isOwnerAccount){
+      try{
+        const pi=await hb.getPoolInfo();
+        $('ownToday').textContent=ethers.formatEther(pi[1])+' STT';
+        $('ownRoll').textContent=ethers.formatEther(pi[2])+' STT';
+        const cd=Number(await hb.currentDay());
+        $('ownCurDay').textContent=cd;
+        $('ownYDay').textContent=cd-1;
+      }catch(e){}
+    }
+  }catch(e){console.error('LG:',e);}
+}
+
+async function LR(){
+  if(!hb)return;
+  try{
+    const day=Number(await hb.currentDay());
+    if(day===0)return;
+    const yday=day-1;
+    const ri=await hb.getRoundInfo(yday);
+    const sc=Number(ri[0]),pc=Number(ri[1]),res=ri[3],won=ri[4],fin=ri[6];
+    if(!res||sc===0){
+      $('rwResult').textContent='No battle yesterday';
+      $('rwNone').style.display='block';return;
+    }
+    $('rwResult').textContent=(won?'🔥 Steal Prevailed':'🛡️ Protect Prevailed');
+    $('rwResult').style.color=won?'var(--pink-light)':'var(--purple-light)';
+    $('rwDetail').textContent='Stealers: '+sc+' · Protectors: '+pc+(fin?' · Rankings finalized':' · Awaiting finalization');
+
+    const[rew,can,rank,exp]=await hb.getPendingReward(ad,yday);
+    if(can&&Number(rew)>0){
+      $('rwStatus').style.display='block';$('rwNone').style.display='none';
+      $('rwRank').textContent='Rank #'+rank;
+      $('rwRank').style.color=rank<=3?'var(--gold)':rank<=10?'var(--pink-light)':rank<=30?'var(--purple-light)':'var(--text)';
+      const tier=rank===1?'🏆 Sovereign Champion':rank===2?'🥈 Second of the Bold':rank===3?'🥉 Bronzed Warrior':rank<=10?'⚡ Elite Guard':rank<=30?'💎 Master of Arcane':rank<=70?'🔷 Proven Duelist':'🎖 Chronicled Warrior';
+      $('rwTier').textContent=tier;
+      $('rwTier').style.color=rank<=3?'var(--gold)':'var(--text-dim)';
+      $('rwAmount').textContent=ethers.formatEther(rew)+' STT';
+      $('rwClaimBtn').disabled=false;
+    }else if(exp){
+      $('rwStatus').style.display='block';$('rwNone').style.display='none';
+      $('rwRank').textContent='Expired';$('rwRank').style.color='var(--red)';
+      $('rwTier').textContent='The claim window has closed';
+      $('rwAmount').textContent='0 STT';
+      $('rwClaimBtn').disabled=true;$('rwClaimBtn').textContent='Expired';
+    }else{
+      $('rwStatus').style.display='none';$('rwNone').style.display='block';
+      $('rwNoneText').textContent='You stood with the vanquished (+2 XP) or did not enter';
+    }
+  }catch(e){console.error('LR:',e);}
+}
+
+async function rwClaim(){
+  const btn=$('rwClaimBtn');btn.disabled=true;btn.textContent='Claiming...';
+  $('rwClaimSt').textContent='Signing transaction...';$('rwClaimSt').style.color='var(--green)';
+  try{
+    const day=Number(await hb.currentDay())-1;
+    const tx=await hb.claimReward(day);
+    $('rwClaimSt').textContent='Confirming...';
+    await tx.wait();
+    btn.textContent='✓ Claimed';
+    $('rwClaimSt').textContent='Spoils claimed! Glory is yours 🎉';
+    $('rwAmount').textContent='Claimed ✓';LG();LR();
+  }catch(e){
+    $('rwClaimSt').textContent=e.reason||'Failed';
+    $('rwClaimSt').style.color='var(--red)';
+    btn.disabled=false;btn.textContent='🏆 Claim Your Prize';
+  }
 }
 
 async function CR(){
-  const btn=$('clBtn');btn.disabled=true;btn.textContent='CLAIMING...';
   try{
     const day=Number(await hb.currentDay())-1;
-    // Auto-finalize if not done
-    try{const ri=await hb.getRoundInfo(day);if(!ri[3]){btn.textContent='FINALIZING...';const ftx=await hb.finalizeRankings(day);await ftx.wait();}}catch(e){}
-    btn.textContent='CLAIMING...';
-    const tx=await hb.claimReward(day);await tx.wait();
-    btn.textContent='CLAIMED ✓';$('clA').textContent='Claimed ✓';$('pYou').textContent='Claimed ✓';
-  }catch(e){btn.textContent='CLAIM';btn.disabled=false;alert(e.reason||'Failed');}
-}
-
-function ST(){if(ti)clearInterval(ti);hb.roundTimeLeft().then(l=>{localLeft=Number(l);const u=()=>{if(localLeft<0)localLeft=0;const h=Math.floor(localLeft/3600),m=Math.floor((localLeft%3600)/60),s=localLeft%60;const tm=$('gT');tm.textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');if(localLeft<=300&&localLeft>0){$('snWarn').style.display='block';$('snWarn').textContent='🔒 VOTING LOCKED — Revealing in '+m+':'+String(s).padStart(2,'0');$('snWarn').style.borderColor='rgba(255,51,68,.4)';$('snWarn').style.color='var(--rd)';tm.style.color='var(--rd)';}else if(localLeft<=3600){$('snWarn').style.display='block';$('snWarn').textContent='⚡ LAST HOUR — Choose your side now!';$('snWarn').style.borderColor='rgba(255,215,0,.3)';$('snWarn').style.color='var(--gd)';tm.style.color='var(--gd)';}else{$('snWarn').style.display='none';tm.style.color='var(--cy)';}localLeft--;};u();ti=setInterval(u,1000);});}
-
-// GM
-async function LGM(){try{const rec=await hb.getRecentGMs();const ent=rec[0],cnt=Number(rec[1]);const tgm=await hb.totalGMs();if(!cnt){$('gFd').innerHTML='<div class="lbe">No GMs yet ☀️</div>';return;}const sorted=[];for(let i=0;i<cnt;i++)sorted.push(ent[i]);sorted.sort((a,b)=>Number(b.timestamp)-Number(a.timestamp));const fd=$('gFd');fd.innerHTML=sorted.map(e=>'<div class="ge"><div class="gd2"></div><div class="gc"><div class="gt"><span class="ga">'+e.sender.slice(0,6)+'...'+e.sender.slice(-4)+'</span><span class="gtm">'+TA(Number(e.timestamp))+'</span></div><div class="gms2">'+ES(e.message||'GM ☀️')+'</div></div></div>').join('');sorted.forEach(async(e,i)=>{try{const n=await um.getNickname(e.sender);if(n){const t=fd.querySelectorAll('.gt');if(t[i]){const s=document.createElement('span');s.className='gn2';s.textContent=n;t[i].prepend(s);}}}catch(er){}});}catch(e){console.error('GM:',e);}}
-
-async function GM(){const b=$('gBtn'),m=$('gMsg').value.trim();b.disabled=true;GSt('Sending 1 STT...',0);try{const tx=await hb.sayGM(m,{value:ethers.parseEther('1')});GSt('Confirming...',0);await tx.wait();GSt('GM sent! +XP ☀️ Battle unlocked!',0);$('gMsg').value='';await LGM();await LG();
-  // Switch to battle tab to show unlocked buttons
-  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('a'));document.querySelectorAll('.pnl').forEach(x=>x.classList.remove('a'));document.querySelector('[data-t=game]').classList.add('a');$('t-game').classList.add('a');
-}catch(e){GSt(e.reason||'Failed',1);b.disabled=false;}}
-function GSt(m,e){$('gSs').textContent=m;$('gSs').className='gss'+(e?' er':'');}
-
-// OWNER FUNCTIONS
-async function OWclaimToday(){try{$('ownSt').textContent='Claiming today...';$('ownSt').style.color='var(--gn)';const today=Number(await hb.currentDay());const tx=await hb.claimOwnerFee(today);await tx.wait();$('ownSt').textContent='Today claimed ✓';LG();}catch(e){$('ownSt').textContent=e.reason||'No commission today or not resolved yet';$('ownSt').style.color='var(--rd)';}}
-async function OWclaimYesterday(){try{$('ownSt').textContent='Claiming yesterday...';$('ownSt').style.color='var(--gn)';const today=Number(await hb.currentDay());const tx=await hb.claimOwnerFee(today-1);await tx.wait();$('ownSt').textContent='Yesterday claimed ✓';LG();}catch(e){$('ownSt').textContent=e.reason||'Nothing to claim';$('ownSt').style.color='var(--rd)';}}
-async function OWfinYesterday(){try{$('ownSt').textContent='Finalizing yesterday...';$('ownSt').style.color='var(--gn)';const today=Number(await hb.currentDay());const tx=await hb.finalizeRankings(today-1);await tx.wait();$('ownSt').textContent='Finalized ✓';LG();}catch(e){$('ownSt').textContent=e.reason||'Failed';$('ownSt').style.color='var(--rd)';}}
-async function OWbatch(){try{$('ownSt').textContent='Claiming last 7 days...';$('ownSt').style.color='var(--gn)';const today=Number(await hb.currentDay());for(let i=1;i<=7;i++){try{await(await hb.claimOwnerFee(today-i)).wait();}catch(e){}}$('ownSt').textContent='Batch done ✓';LG();}catch(e){$('ownSt').textContent=e.reason||'Failed';$('ownSt').style.color='var(--rd)';}}
-
-function TA(ts){const d=Math.floor(Date.now()/1000)-ts;if(d<60)return'now';if(d<3600)return Math.floor(d/60)+'m';if(d<86400)return Math.floor(d/3600)+'h';return Math.floor(d/86400)+'d';}
-function ES(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
-function $(id){return document.getElementById(id);}
-
-function shareWin(){const text='I just won in Steal or Protect on @SomniaNetwork! ⚔🔥 Play daily battles, earn XP, and claim rewards.';const url='https://angellsomniac.github.io/Somnia-umi-passport/';window.open('https://x.com/intent/tweet?text='+encodeURIComponent(text)+'&url='+encodeURIComponent(url),'_blank');}
-
-// REWARDS TAB
-async function LR(){try{
-  const day=Number(await hb.currentDay());
-  if(day===0)return;
-  const yday=day-1;
-
-  // Get yesterday's round info (past day = revealed)
-  const ri=await hb.getRoundInfo(yday);
-  const sc=Number(ri[0]),pc=Number(ri[1]),res=ri[3],won=ri[4],fin=ri[6];
-
-  if(!res||sc===0){$('rwResult').textContent='No battle yesterday';$('rwNone').style.display='block';return;}
-
-  $('rwResult').textContent=(won?'🔥 STEAL WON':'🛡️ PROTECT WON');
-  $('rwResult').style.color=won?'var(--rd)':'var(--cy)';
-  $('rwDetail').textContent='Stealers: '+sc+' · Protectors: '+pc+(fin?' · Rankings finalized':' · Waiting for finalization');
-
-  // Check your reward
-  const[rew,can,rank,exp]=await hb.getPendingReward(ad,yday);
-
-  if(can&&Number(rew)>0){
-    $('rwStatus').style.display='block';$('rwNone').style.display='none';
-    $('rwRank').textContent='RANK #'+rank;$('rwRank').style.color=rank<=3?'var(--gd)':rank<=10?'var(--cy)':rank<=30?'var(--mg)':'var(--tx)';
-    const tierName=rank===1?'🏆 CHAMPION':rank===2?'🥈 RUNNER-UP':rank===3?'🥉 THIRD':rank<=10?'⚡ ELITE':rank<=30?'💎 MASTER':rank<=70?'🔷 PRO':'🎖 PARTICIPANT';
-    $('rwTier').textContent=tierName;$('rwTier').style.color=rank<=3?'var(--gd)':'var(--dm)';
-    $('rwAmount').textContent=ethers.formatEther(rew)+' STT';
-    $('rwClaimBtn').disabled=false;$('rwClaimBtn').textContent='🎁 CLAIM YOUR REWARD';
-  }else if(exp){
-    $('rwStatus').style.display='block';$('rwNone').style.display='none';
-    $('rwRank').textContent='EXPIRED';$('rwRank').style.color='var(--rd)';
-    $('rwTier').textContent='Claim window closed';$('rwTier').style.color='var(--rd)';
-    $('rwAmount').textContent='0 STT';
-    $('rwClaimBtn').disabled=true;$('rwClaimBtn').textContent='EXPIRED';
-  }else{
-    $('rwStatus').style.display='none';$('rwNone').style.display='block';
-    // Check if player participated but lost
+    const btn=$('clBtn');btn.disabled=true;btn.textContent='Claiming...';
     try{
-      const v=await hb.getPlayerView(ad);
-      // If we played yesterday check via round info
-      $('rwNoneText').textContent='You were on the losing side (+2 XP) or did not participate';
+      const ri=await hb.getRoundInfo(day);
+      if(!ri[6]){btn.textContent='Finalizing...';const ftx=await hb.finalizeRankings(day);await ftx.wait();}
     }catch(e){}
+    btn.textContent='Claiming...';
+    const tx=await hb.claimReward(day);
+    await tx.wait();
+    btn.textContent='✓ Claimed';
+    $('clB').style.display='none';LG();
+  }catch(e){
+    alert(e.reason||'Claim failed');
+    $('clBtn').disabled=false;$('clBtn').textContent='Claim Reward';
   }
-}catch(e){console.error('LR:',e);}}
+}
 
-async function rwClaim(){const btn=$('rwClaimBtn');btn.disabled=true;btn.textContent='CLAIMING...';$('rwClaimSt').textContent='Signing transaction...';$('rwClaimSt').style.color='var(--gn)';try{const day=Number(await hb.currentDay())-1;const tx=await hb.claimReward(day);$('rwClaimSt').textContent='Confirming...';await tx.wait();btn.textContent='✓ CLAIMED';$('rwClaimSt').textContent='Reward claimed successfully! 🎉';$('rwAmount').textContent='Claimed ✓';LG();LR();}catch(e){$('rwClaimSt').textContent=e.reason||'Failed';$('rwClaimSt').style.color='var(--rd)';btn.disabled=false;btn.textContent='🎁 CLAIM YOUR REWARD';}}
+async function GM(){
+  const b=$('gBtn'),m=$('gMsg').value.trim();
+  b.disabled=true;GSt('Sending offering...',0);
+  try{
+    const tx=await hb.sayGM(m,{value:ethers.parseEther('1')});
+    GSt('Confirming...',0);
+    await tx.wait();
+    GSt('Ritual complete! Battle unlocked ✓',0);
+    $('gMsg').value='';
+    await LGM();await LG();
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('a'));
+    document.querySelectorAll('.pnl').forEach(x=>x.classList.remove('a'));
+    document.querySelector('[data-t=game]').classList.add('a');$('t-game').classList.add('a');
+  }catch(e){GSt(e.reason||'Failed',1);b.disabled=false;}
+}
 
+function GSt(t,e){$('gSs').textContent=t;$('gSs').style.color=e?'var(--red)':'var(--green)';}
+
+async function PL(s){
+  const bS=$('btnS'),bP=$('btnP');if(bS.disabled)return;
+  bS.disabled=true;bP.disabled=true;
+  const boost=parseInt($(s?'slA':'slD').value);
+  const cost=ethers.parseEther((boost*1).toFixed(0));
+  $('gSt').textContent='Entering arena...';$('gSt').style.color='var(--green)';
+  try{
+    const tx=await hb.play(s,boost,{value:cost});
+    await tx.wait();
+    $('gSt').textContent='Your choice is sealed ✓';LG();
+  }catch(e){
+    $('gSt').textContent=e.reason||'Failed';$('gSt').style.color='var(--red)';
+    bS.disabled=false;bP.disabled=false;
+  }
+}
+
+function rL(id,addrs,vals,lbl){
+  const el=$(id);
+  if(!addrs||!addrs.length){el.innerHTML='<div class="lbe">The arena awaits its champions</div>';return;}
+  const rows=addrs.map((a,i)=>({a,v:Number(vals[i])})).sort((x,y)=>y.v-x.v).slice(0,50);
+  el.innerHTML=rows.map((r,i)=>{
+    const cls=i===0?'top1':i===1?'top2':i===2?'top3':'';
+    const emoji=i===0?'🏆':i===1?'🥈':i===2?'🥉':'';
+    return '<div class="lbr '+cls+'"><div class="lbn">'+(emoji||'#'+(i+1))+'</div><div class="lbaddr">'+r.a.slice(0,6)+'...'+r.a.slice(-4)+'</div><div class="lbval">'+r.v+' '+lbl+'</div></div>';
+  }).join('');
+  rows.forEach(async(r,i)=>{
+    try{
+      const n=await um.getNickname(r.a);
+      if(n){
+        const cells=el.querySelectorAll('.lbr .lbaddr');
+        if(cells[i])cells[i].textContent=n;
+      }
+    }catch(e){}
+  });
+}
+
+async function LGM(){
+  try{
+    const rec=await hb.getRecentGMs();
+    const ent=rec[0],cnt=Number(rec[1]);
+    if(!cnt){$('gFd').innerHTML='<div class="lbe">The chronicle begins with you</div>';return;}
+    const sorted=[];
+    for(let i=0;i<cnt;i++)if(ent[i].sender!=='0x0000000000000000000000000000000000000000')sorted.push(ent[i]);
+    sorted.sort((a,b)=>Number(b.timestamp)-Number(a.timestamp));
+    const fd=$('gFd');
+    fd.innerHTML=sorted.map(e=>'<div class="ge"><div class="gd2"></div><div class="gc"><div class="gt"><span class="ga">'+e.sender.slice(0,6)+'...'+e.sender.slice(-4)+'</span><span class="gtm">'+TA(Number(e.timestamp))+'</span></div><div class="gms2">'+ES(e.message||'GM ☀️')+'</div></div></div>').join('');
+    sorted.forEach(async(e,i)=>{
+      try{
+        const n=await um.getNickname(e.sender);
+        if(n){
+          const t=fd.querySelectorAll('.gt');
+          if(t[i]){
+            const s=document.createElement('span');
+            s.className='gn2';s.textContent=n;t[i].prepend(s);
+          }
+        }
+      }catch(er){}
+    });
+  }catch(e){console.error('GM:',e);}
+}
+
+function TA(ts){
+  const d=Date.now()/1000-ts;
+  if(d<60)return 'moments ago';
+  if(d<3600)return Math.floor(d/60)+'m ago';
+  if(d<86400)return Math.floor(d/3600)+'h ago';
+  return Math.floor(d/86400)+'d ago';
+}
+
+function ST(){
+  if(ti)clearInterval(ti);
+  hb.roundTimeLeft().then(l=>{
+    localLeft=Number(l);
+    const u=()=>{
+      if(localLeft<0)localLeft=0;
+      const h=Math.floor(localLeft/3600),m=Math.floor((localLeft%3600)/60),s=localLeft%60;
+      const tm=$('gT');
+      tm.textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+      if(localLeft<=300&&localLeft>0){
+        $('snWarn').style.display='block';
+        $('snWarn').textContent='🔒 Gates closing — '+m+':'+String(s).padStart(2,'0');
+        $('snWarn').style.color='var(--red)';
+        tm.style.color='var(--red)';
+      }else if(localLeft<=3600){
+        $('snWarn').style.display='block';
+        $('snWarn').textContent='⚡ Final hour — Choose now!';
+        $('snWarn').style.color='var(--gold)';
+        tm.style.color='var(--gold)';
+      }else{
+        $('snWarn').style.display='none';
+        tm.style.color='#fff';
+      }
+      localLeft--;
+    };
+    u();ti=setInterval(u,1000);
+  });
+}
+
+async function OWclaimToday(){try{$('ownSt').textContent='Claiming today...';$('ownSt').style.color='var(--green)';const today=Number(await hb.currentDay());const tx=await hb.claimOwnerFee(today);await tx.wait();$('ownSt').textContent='Today claimed ✓';LG();}catch(e){$('ownSt').textContent=e.reason||'No tribute today';$('ownSt').style.color='var(--red)';}}
+async function OWclaimYesterday(){try{$('ownSt').textContent='Claiming yesterday...';$('ownSt').style.color='var(--green)';const today=Number(await hb.currentDay());const tx=await hb.claimOwnerFee(today-1);await tx.wait();$('ownSt').textContent='Yesterday claimed ✓';LG();}catch(e){$('ownSt').textContent=e.reason||'Nothing to claim';$('ownSt').style.color='var(--red)';}}
+async function OWfinYesterday(){try{$('ownSt').textContent='Finalizing...';$('ownSt').style.color='var(--green)';const today=Number(await hb.currentDay());const tx=await hb.finalizeRankings(today-1);await tx.wait();$('ownSt').textContent='Finalized ✓';LG();}catch(e){$('ownSt').textContent=e.reason||'Failed';$('ownSt').style.color='var(--red)';}}
+async function OWbatch(){try{$('ownSt').textContent='Claiming last 7 days...';$('ownSt').style.color='var(--green)';const today=Number(await hb.currentDay());for(let i=1;i<=7;i++){try{await(await hb.claimOwnerFee(today-i)).wait();}catch(e){}}$('ownSt').textContent='Batch done ✓';LG();}catch(e){$('ownSt').textContent=e.reason||'Failed';$('ownSt').style.color='var(--red)';}}
 async function OWtestResolve(){try{
-  $('ownSt').textContent='Step 1/3: Resolving yesterday...';$('ownSt').style.color='var(--mg)';
+  $('ownSt').textContent='Step 1/3: Resolving...';$('ownSt').style.color='var(--purple-light)';
   const today=Number(await hb.currentDay());
-  // Step 1: Resolve
-  try{await(await hb.resolveRound(today-1)).wait();$('ownSt').textContent='Step 1 ✓ Resolved';}catch(e){$('ownSt').textContent='Step 1: Already resolved or no players';}
-  // Step 2: Finalize rankings
-  $('ownSt').textContent='Step 2/3: Finalizing rankings...';
-  try{await(await hb.finalizeRankings(today-1)).wait();$('ownSt').textContent='Step 2 ✓ Rankings finalized';}catch(e){$('ownSt').textContent='Step 2: Already finalized or no players';}
-  // Step 3: Full reload
-  $('ownSt').textContent='Step 3/3: Reloading game...';
+  try{await(await hb.resolveRound(today-1)).wait();$('ownSt').textContent='Step 1 ✓';}catch(e){$('ownSt').textContent='Step 1: Already done';}
+  $('ownSt').textContent='Step 2/3: Finalizing...';
+  try{await(await hb.finalizeRankings(today-1)).wait();$('ownSt').textContent='Step 2 ✓';}catch(e){$('ownSt').textContent='Step 2: Already done';}
+  $('ownSt').textContent='Step 3/3: Reloading...';
   await LG();await LGM();await LR();
-  $('ownSt').textContent='✓ All done! New day active. Yesterday\'s winners can now CLAIM.';$('ownSt').style.color='var(--gn)';
-}catch(e){$('ownSt').textContent=e.reason||'Failed';$('ownSt').style.color='var(--rd)';}}
+  $('ownSt').textContent='✓ Complete! Winners can now claim.';$('ownSt').style.color='var(--green)';
+}catch(e){$('ownSt').textContent=e.reason||'Failed';$('ownSt').style.color='var(--red)';}}
 
-async function mintCard(){/* removed */}
+function ES(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
 
-// REFERRAL SYSTEM
-function initRef(){
-  const url=new URL(window.location.href);
-  const ref=url.searchParams.get('ref');
-  if(ref&&ref.length===42&&ref.startsWith('0x')){
-    try{localStorage.setItem('refBy',ref);}catch(e){}
-  }
+function shareWin(){
+  const text='I just claimed glory in Steal or Protect on @SomniaNetwork! ⚔🔥';
+  const url='https://angellsomniac.github.io/Somnia-umi-passport/';
+  window.open('https://x.com/intent/tweet?text='+encodeURIComponent(text)+'&url='+encodeURIComponent(url),'_blank');
 }
-function setupMyRef(){
-  if(!ad)return;
-  const base=window.location.origin+window.location.pathname;
-  const link=base+'?ref='+ad;
-  if($('refLink'))$('refLink').value=link;
-  // Load on-chain referral count
-  if(hb){hb.getPlayerView(ad).then(v=>{
-    if($('refCount'))$('refCount').textContent=v.referralCount.toString();
-    if($('refGlory'))$('refGlory').textContent=(Number(v.referralCount)*20).toString();
-  }).catch(()=>{});}
+
+if(window.ethereum){
+  window.ethereum.on('accountsChanged',()=>location.reload());
+  window.ethereum.on('chainChanged',()=>location.reload());
 }
-function copyRef(){
-  const input=$('refLink');if(!input)return;
-  input.select();input.setSelectionRange(0,999);
-  try{navigator.clipboard.writeText(input.value);$('refSt').textContent='✓ Copied! Share with friends.';$('refSt').style.color='var(--gn)';}
-  catch(e){$('refSt').textContent='Link selected — press Ctrl+C';$('refSt').style.color='var(--cy)';}
-}
+
 initRef();
-
-if(window.ethereum){window.ethereum.on('accountsChanged',()=>location.reload());window.ethereum.on('chainChanged',()=>location.reload());}
-
-// NFT countdown
-function startNftCountdown(){const now=new Date();const y=now.getUTCFullYear(),m=now.getUTCMonth();const endOfMonth=new Date(Date.UTC(y,m+1,1,0,0,0));const upd=()=>{const diff=Math.max(0,Math.floor((endOfMonth-Date.now())/1000));const d=Math.floor(diff/86400),h=Math.floor((diff%86400)/3600),mi=Math.floor((diff%3600)/60),s=diff%60;if($('nftD'))$('nftD').textContent=String(d).padStart(2,'0');if($('nftH'))$('nftH').textContent=String(h).padStart(2,'0');if($('nftM'))$('nftM').textContent=String(mi).padStart(2,'0');if($('nftS'))$('nftS').textContent=String(s).padStart(2,'0');};upd();setInterval(upd,1000);}
-startNftCountdown();
 </script>
 </body>
 </html>

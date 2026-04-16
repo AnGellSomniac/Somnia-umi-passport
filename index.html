@@ -431,16 +431,16 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 <!-- GM -->
 <div class="pnl" id="t-gm">
   <div class="gmr">
-    <div class="crd"><div class="ch" style="color:var(--gn)">☀ Say GM · 0.01 STT</div>
+    <div class="crd"><div class="ch" style="color:var(--gn)">☀ Say GM · 1 STT</div>
       <div class="gma">
         <input class="gmi" id="gMsg" placeholder="Optional message" maxlength="140">
         <button class="gmb" id="gBtn" onclick="GM()">GM ☀</button>
-        <div class="gm-cost">0.01 STT → 90% to pool · 10% to owner</div>
+        <div class="gm-cost">1 STT → 90% to pool · 10% to owner</div>
         <div class="gss" id="gSs"></div>
-        <div style="display:flex;gap:14px;margin-top:6px">
-          <div class="si"><div class="sv" style="color:var(--gd)" id="gLv">1</div><div class="sl">LEVEL</div></div>
-          <div class="si"><div class="sv" style="color:var(--gn)" id="gStrk">0</div><div class="sl">GM STREAK 🔥</div></div>
-          <div class="si"><div class="sv" style="color:var(--mg)" id="gXP">0</div><div class="sl">XP</div></div>
+        <div style="display:flex;gap:24px;margin-top:14px;justify-content:center;flex-wrap:wrap">
+          <div style="text-align:center;min-width:80px"><div style="font-family:'Orbitron';font-size:26px;font-weight:900;color:var(--gd);text-shadow:0 0 15px rgba(255,215,0,.2)" id="gLv">1</div><div style="font-family:'Share Tech Mono';font-size:10px;color:var(--dm);letter-spacing:2px;margin-top:4px">LEVEL</div></div>
+          <div style="text-align:center;min-width:80px"><div style="font-family:'Orbitron';font-size:26px;font-weight:900;color:var(--gn);text-shadow:0 0 15px rgba(57,255,20,.2)" id="gStrk">0</div><div style="font-family:'Share Tech Mono';font-size:10px;color:var(--dm);letter-spacing:2px;margin-top:4px">STREAK 🔥</div></div>
+          <div style="text-align:center;min-width:80px"><div style="font-family:'Orbitron';font-size:26px;font-weight:900;color:var(--mg);text-shadow:0 0 15px rgba(255,0,229,.2)" id="gXP">0</div><div style="font-family:'Share Tech Mono';font-size:10px;color:var(--dm);letter-spacing:2px;margin-top:4px">TOTAL XP</div></div>
         </div>
       </div>
     </div>
@@ -467,13 +467,19 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   </div>
 
   <!-- MINT WARRIOR CARD -->
+  <!-- REFERRAL -->
   <div class="crd" style="margin-top:14px">
-    <div class="ch" style="color:var(--mg)">🗡 Warrior Card</div>
+    <div class="ch" style="color:var(--mg)">🔗 Your Referral Link</div>
     <div style="padding:20px;text-align:center">
-      <div style="font-family:'Orbitron';font-size:14px;font-weight:700;color:var(--tx);margin-bottom:6px">Mint Your Warrior Card</div>
-      <div style="font-family:'Share Tech Mono';font-size:10px;color:var(--dm);margin-bottom:16px;max-width:400px;margin-left:auto;margin-right:auto;line-height:1.5">Confirm your presence on-chain. Costs 0.01 STT (same as GM). Earns XP + Glory + records your warrior identity. One mint per day.</div>
-      <button class="b-btn steal" id="mintCardBtn" onclick="mintCard()" style="display:inline-block;flex:none;padding:12px 32px;font-size:12px">🗡 MINT WARRIOR CARD — 0.01 STT</button>
-      <div style="font-family:'Share Tech Mono';font-size:10px;margin-top:8px;min-height:14px;color:var(--gn)" id="mintSt"></div>
+      <div style="font-family:'Share Tech Mono';font-size:11px;color:var(--dm);margin-bottom:12px;line-height:1.5">Share your link. For every friend who creates a profile, you earn <strong style="color:var(--gd)">+20 Glory</strong> per month.</div>
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;align-items:center;margin-bottom:12px">
+        <input id="refLink" readonly style="font-family:'Share Tech Mono';font-size:10px;padding:10px 14px;background:rgba(0,0,0,.4);border:1px solid rgba(255,0,229,.2);color:var(--cy);outline:none;min-width:280px;max-width:100%">
+        <button class="owner-btn" onclick="copyRef()" style="border-color:var(--mg);color:var(--mg);padding:10px 20px">📋 COPY</button>
+      </div>
+      <div style="font-family:'Share Tech Mono';font-size:10px;color:var(--dm);margin-top:6px">
+        Your referrals: <span style="color:var(--gd)" id="refCount">0</span> · Glory earned: <span style="color:var(--gd)" id="refGlory">0</span>
+      </div>
+      <div id="refSt" style="font-family:'Share Tech Mono';font-size:10px;margin-top:8px;color:var(--gn);min-height:14px"></div>
     </div>
   </div>
 </div>
@@ -512,12 +518,12 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         <div style="border:1px solid var(--bd);padding:16px;text-align:center">
           <div style="font-size:28px;margin-bottom:8px">☀</div>
           <div style="font-family:'Orbitron';font-size:12px;font-weight:700;color:var(--gn);margin-bottom:6px">STEP 1 — SAY GM</div>
-          <div style="font-size:12px;color:var(--dm);line-height:1.5">Pay 0.01 STT daily. Earn XP. Build streaks for bonus XP. This fills the prize pool.</div>
+          <div style="font-size:12px;color:var(--dm);line-height:1.5">Pay 1 STT daily. Earn XP. Build streaks for bonus XP. This fills the prize pool.</div>
         </div>
         <div style="border:1px solid var(--bd);padding:16px;text-align:center">
           <div style="font-size:28px;margin-bottom:8px">⚔</div>
           <div style="font-family:'Orbitron';font-size:12px;font-weight:700;color:var(--rd);margin-bottom:6px">STEP 2 — CHOOSE SIDE</div>
-          <div style="font-size:12px;color:var(--dm);line-height:1.5">Pick STEAL or PROTECT. Optionally boost (+0.02 STT) for double weight. Sides are hidden until resolve.</div>
+          <div style="font-size:12px;color:var(--dm);line-height:1.5">Pick STEAL or PROTECT. Optionally boost (+1 STT) for double weight. Sides are hidden until resolve.</div>
         </div>
         <div style="border:1px solid var(--bd);padding:16px;text-align:center">
           <div style="font-size:28px;margin-bottom:8px">🏆</div>
@@ -535,7 +541,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         <div style="border:1px solid rgba(0,240,255,.2);padding:14px 20px;text-align:center;min-width:100px"><div style="font-family:'Orbitron';font-size:20px;font-weight:800;color:var(--cy)">90%</div><div style="font-family:'Share Tech Mono';font-size:9px;color:var(--dm);margin-top:4px">TO PLAYERS</div></div>
         <div style="border:1px solid rgba(255,215,0,.2);padding:14px 20px;text-align:center;min-width:100px"><div style="font-family:'Orbitron';font-size:20px;font-weight:800;color:var(--gd)">10%</div><div style="font-family:'Share Tech Mono';font-size:9px;color:var(--dm);margin-top:4px">PLATFORM FEE</div></div>
       </div>
-      <div style="font-size:12px;color:var(--dm);text-align:center;line-height:1.6">Every GM (0.01 STT) and every Boost (0.02 STT) feeds the daily prize pool.<br>90% distributed to winners by rank. 10% platform commission.</div>
+      <div style="font-size:12px;color:var(--dm);text-align:center;line-height:1.6">Every GM (1 STT) and every Boost (1 STT) feeds the daily prize pool.<br>90% distributed to winners by rank. 10% platform commission.</div>
     </div>
   </div>
 
@@ -702,7 +708,7 @@ const AH=['function sayGM(string) payable','function play(bool,uint256) payable'
 let pv,sg,um,hb,ad,ch,ti,localLeft=0,isOwnerAccount=false;
 
 document.querySelectorAll('.tab').forEach(t=>t.onclick=function(){document.querySelectorAll('.tab').forEach(x=>x.classList.remove('a'));document.querySelectorAll('.pnl').forEach(x=>x.classList.remove('a'));this.classList.add('a');$('t-'+this.dataset.t).classList.add('a');});
-function uB(s){const v=$(s==='A'?'slA':'slD').value;$('bv'+s).textContent=v==='0'?'Normal':'Boosted';$('bc'+s).textContent=v==='0'?'FREE':'0.02 STT';}
+function uB(s){const v=$(s==='A'?'slA':'slD').value;$('bv'+s).textContent=v==='0'?'Normal':'Boosted';$('bc'+s).textContent=v==='0'?'FREE':'1 STT';}
 
 async function W(){if(!window.ethereum){alert('Install MetaMask');return;}try{
   pv=new ethers.BrowserProvider(window.ethereum);await pv.send('eth_requestAccounts',[]);
@@ -745,7 +751,7 @@ async function OB(){
   catch(e){$('obSt').textContent=e.reason||'Failed';$('obSt').className='fs er';bt.textContent='CREATE PASSPORT & ENTER';bt.disabled=false;}
 }
 
-async function LA(){LP();if(hb){LG();LGM();LR();ST();}}
+async function LA(){LP();if(hb){LG();LGM();LR();ST();setupMyRef();}}
 
 async function LP(){try{const p=await um.getProfile(ad);if(p.exists)SH(p);else{$('PLd').style.display='none';$('PE').style.display='block';}}catch(e){$('PLd').style.display='none';$('PE').style.display='block';}}
 function SH(p){$('PLd').style.display='none';$('PC').style.display='block';$('PE').style.display='none';$('FT').innerHTML='◈ Update Identity';$('PN').textContent=p.nickname;$('PA').textContent=ad;$('PB').textContent=p.bio||'No bio';const f=$('AV');if(p.avatarUrl)f.innerHTML='<img src="'+p.avatarUrl+'" onerror="this.parentElement.innerHTML=\'<div class=avp>◈</div>\'">';else f.innerHTML='<div class="avp">'+(p.nickname?p.nickname[0].toUpperCase():'◈')+'</div>';const s=$('PL2');if(p.socialUrl){s.style.display='inline-flex';s.href=p.socialUrl;$('PLT').textContent=p.socialUrl.replace('https://','');}else s.style.display='none';const cr=Number(p.createdAt),up=Number(p.updatedAt);$('PCr').textContent=cr?new Date(cr*1000).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'—';$('PUp').textContent=up?new Date(up*1000).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'—';const age=cr?Math.floor((Date.now()/1000-cr)/86400):0;let rk,rc;if(age>=365){rk='LEGEND';rc='rl';}else if(age>=90){rk='PIONEER';rc='rp';}else if(age>=7){rk='EXPLORER';rc='re';}else{rk='GENESIS';rc='rg';}$('RK').textContent=rk;$('RK').className='rk '+rc;$('PR2').textContent=rk;$('fN').value=p.nickname;$('fA').value=p.avatarUrl;$('fB').value=p.bio;$('fS').value=p.socialUrl;}
@@ -795,7 +801,7 @@ async function LG(){try{
   // GM required before battle
   if(!v.gmToday&&!v.playedToday){bS.disabled=true;bP.disabled=true;bS.classList.add('off');bP.classList.add('off');$('slA').disabled=true;$('slD').disabled=true;$('gmLock').style.display='block';}else{$('gmLock').style.display='none';}
   if(v.playedToday){bS.disabled=true;bP.disabled=true;bS.classList.add('off');bP.classList.add('off');$('slA').disabled=true;$('slD').disabled=true;if(v.todaySide){bS.textContent='🔥 YOUR PICK';}else{bP.textContent='🛡 YOUR PICK';}$('gSt').textContent='Played today! Come back tomorrow.';$('gmLock').style.display='none';}
-  if(v.gmToday){$('gBtn').disabled=true;$('gSs').textContent='GM done today ✓';if($('mintCardBtn')){$('mintCardBtn').disabled=true;$('mintCardBtn').textContent='🗡 MINTED TODAY ✓';}}
+  if(v.gmToday){$('gBtn').disabled=true;$('gSs').textContent='GM done today ✓';}
 
   // Claim
   if(day>0){try{
@@ -844,7 +850,7 @@ async function PL(steal){
   bS.disabled=true;bP.disabled=true;$('slA').disabled=true;$('slD').disabled=true;
   $('gSt').textContent='Waiting for wallet...';$('gSt').className='bc-st';
   const boost=parseInt(steal?$('slA').value:$('slD').value);
-  const cost=ethers.parseEther((boost*0.02).toFixed(2));
+  const cost=ethers.parseEther((boost*1).toFixed(0));
   try{const tx=await hb.play(steal,boost,{value:cost});$('gSt').textContent='Confirming...';await tx.wait();$('gSt').textContent='Choice recorded! ⚔';LG();}
   catch(e){$('gSt').textContent=e.reason||e.message||'Failed';$('gSt').className='bc-st er';bS.disabled=false;bP.disabled=false;$('slA').disabled=false;$('slD').disabled=false;}
 }
@@ -866,7 +872,7 @@ function ST(){if(ti)clearInterval(ti);hb.roundTimeLeft().then(l=>{localLeft=Numb
 // GM
 async function LGM(){try{const rec=await hb.getRecentGMs();const ent=rec[0],cnt=Number(rec[1]);const tgm=await hb.totalGMs();if(!cnt){$('gFd').innerHTML='<div class="lbe">No GMs yet ☀️</div>';return;}const sorted=[];for(let i=0;i<cnt;i++)sorted.push(ent[i]);sorted.sort((a,b)=>Number(b.timestamp)-Number(a.timestamp));const fd=$('gFd');fd.innerHTML=sorted.map(e=>'<div class="ge"><div class="gd2"></div><div class="gc"><div class="gt"><span class="ga">'+e.sender.slice(0,6)+'...'+e.sender.slice(-4)+'</span><span class="gtm">'+TA(Number(e.timestamp))+'</span></div><div class="gms2">'+ES(e.message||'GM ☀️')+'</div></div></div>').join('');sorted.forEach(async(e,i)=>{try{const n=await um.getNickname(e.sender);if(n){const t=fd.querySelectorAll('.gt');if(t[i]){const s=document.createElement('span');s.className='gn2';s.textContent=n;t[i].prepend(s);}}}catch(er){}});}catch(e){console.error('GM:',e);}}
 
-async function GM(){const b=$('gBtn'),m=$('gMsg').value.trim();b.disabled=true;GSt('Sending 0.01 STT...',0);try{const tx=await hb.sayGM(m,{value:ethers.parseEther('0.01')});GSt('Confirming...',0);await tx.wait();GSt('GM sent! +XP ☀️ Battle unlocked!',0);$('gMsg').value='';await LGM();await LG();
+async function GM(){const b=$('gBtn'),m=$('gMsg').value.trim();b.disabled=true;GSt('Sending 1 STT...',0);try{const tx=await hb.sayGM(m,{value:ethers.parseEther('1')});GSt('Confirming...',0);await tx.wait();GSt('GM sent! +XP ☀️ Battle unlocked!',0);$('gMsg').value='';await LGM();await LG();
   // Switch to battle tab to show unlocked buttons
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('a'));document.querySelectorAll('.pnl').forEach(x=>x.classList.remove('a'));document.querySelector('[data-t=game]').classList.add('a');$('t-game').classList.add('a');
 }catch(e){GSt(e.reason||'Failed',1);b.disabled=false;}}
@@ -943,7 +949,36 @@ async function OWtestResolve(){try{
   $('ownSt').textContent='✓ All done! New day active. Yesterday\'s winners can now CLAIM.';$('ownSt').style.color='var(--gn)';
 }catch(e){$('ownSt').textContent=e.reason||'Failed';$('ownSt').style.color='var(--rd)';}}
 
-async function mintCard(){const btn=$('mintCardBtn');btn.disabled=true;$('mintSt').textContent='Minting warrior card...';$('mintSt').style.color='var(--gn)';try{const tx=await hb.sayGM('🗡 Warrior Card Minted!',{value:ethers.parseEther('0.01')});await tx.wait();$('mintSt').textContent='Warrior Card minted ✓ +XP +Glory earned!';btn.textContent='🗡 MINTED ✓';LG();LGM();}catch(e){$('mintSt').textContent=e.reason||'Failed — you may have already said GM today';$('mintSt').style.color='var(--rd)';btn.disabled=false;}}
+async function mintCard(){/* removed */}
+
+// REFERRAL SYSTEM
+function initRef(){
+  const url=new URL(window.location.href);
+  const ref=url.searchParams.get('ref');
+  if(ref&&ref.length===42&&ref.startsWith('0x')){
+    try{localStorage.setItem('refBy',ref);}catch(e){}
+  }
+}
+function setupMyRef(){
+  if(!ad)return;
+  const base=window.location.origin+window.location.pathname;
+  const link=base+'?ref='+ad;
+  if($('refLink'))$('refLink').value=link;
+  // Load referral stats from localStorage (stats are tracked locally + social proof)
+  try{
+    const key='refStats_'+ad.toLowerCase();
+    const stats=JSON.parse(localStorage.getItem(key)||'{"count":0,"glory":0}');
+    if($('refCount'))$('refCount').textContent=stats.count;
+    if($('refGlory'))$('refGlory').textContent=stats.glory;
+  }catch(e){}
+}
+function copyRef(){
+  const input=$('refLink');if(!input)return;
+  input.select();input.setSelectionRange(0,999);
+  try{navigator.clipboard.writeText(input.value);$('refSt').textContent='✓ Copied! Share with friends.';$('refSt').style.color='var(--gn)';}
+  catch(e){$('refSt').textContent='Link selected — press Ctrl+C';$('refSt').style.color='var(--cy)';}
+}
+initRef();
 
 if(window.ethereum){window.ethereum.on('accountsChanged',()=>location.reload());window.ethereum.on('chainChanged',()=>location.reload());}
 

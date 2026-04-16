@@ -408,6 +408,7 @@ body::after{
 }
 .b-btn.protect:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 28px rgba(178,98,217,.55)}
 .b-btn.off,.b-btn:disabled{opacity:.5;cursor:not-allowed}
+.w-fight-btn{width:100%;margin-top:14px;padding:16px 20px;font-size:14px;letter-spacing:4px}
 .gm-lock{
   display:none;
   font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;
@@ -770,8 +771,8 @@ body::after{
 <!-- Header -->
 <header class="hdr">
   <div class="brand">
-    <div class="emblem">
-      <svg viewBox="0 0 32 32" fill="none">
+    <div class="emblem" id="brandLogo">
+      <svg viewBox="0 0 32 32" fill="none" id="brandLogoSvg">
         <path d="M16 2L5 7v10c0 6 4.5 11.5 11 13 6.5-1.5 11-7 11-13V7l-11-5z" stroke="#ffc8a0" stroke-width="1.5" stroke-linejoin="round"/>
         <circle cx="16" cy="14" r="4" stroke="#ffc8a0" stroke-width="1.5"/>
       </svg>
@@ -844,6 +845,7 @@ body::after{
 <div class="tabs">
   <div class="tab a" data-t="game">⚔ Arena</div>
   <div class="tab" data-t="gm">☀ Rituals</div>
+  <div class="tab" data-t="chronicles">📜 Chronicles</div>
   <div class="tab" data-t="profile">◈ Passport</div>
   <div class="tab" data-t="about">📖 Lore</div>
   <div class="tab" data-t="rewards">🏆 Spoils</div>
@@ -897,6 +899,7 @@ body::after{
           <input type="range" class="w-slider atk-s" id="slA" min="0" max="1" value="0" oninput="uB('A')">
           <div class="w-boost-row"><span class="w-bv" id="bvA">Normal</span><span class="w-bc" id="bcA">Free</span></div>
         </div>
+        <button class="b-btn steal w-fight-btn" id="btnS" onclick="PL(true)">🔥 Strike to Steal</button>
       </div>
 
       <div class="bc">
@@ -909,10 +912,6 @@ body::after{
           <div class="fog-title">The mists conceal</div>
           <div class="fog-total" id="fogTotal">0 Warriors</div>
           <div class="fog-msg">Both houses hidden · Choose wisely</div>
-        </div>
-        <div class="bc-btns">
-          <button class="b-btn steal" id="btnS" onclick="PL(true)">🔥 Steal</button>
-          <button class="b-btn protect" id="btnP" onclick="PL(false)">🛡 Protect</button>
         </div>
         <div class="gm-lock" id="gmLock">☀ Perform the morning ritual first</div>
         <div class="bc-st" id="gSt"></div>
@@ -930,6 +929,7 @@ body::after{
           <input type="range" class="w-slider def-s" id="slD" min="0" max="1" value="0" oninput="uB('D')">
           <div class="w-boost-row"><span class="w-bv" id="bvD">Normal</span><span class="w-bc" id="bcD">Free</span></div>
         </div>
+        <button class="b-btn protect w-fight-btn" id="btnP" onclick="PL(false)">🛡 Stand & Protect</button>
       </div>
     </div>
 
@@ -1040,6 +1040,154 @@ body::after{
   </div>
 </div>
 
+<!-- CHRONICLES -->
+<div class="pnl" id="t-chronicles">
+  <div class="hero-wrap" style="padding:40px 0 20px">
+    <div class="chapter">The beginning of everything</div>
+    <h1 class="hero-title" style="font-size:44px">The <em>Chronicles</em> of Somnia</h1>
+    <p class="hero-sub">A saga in seven chapters · Add your own illustrations</p>
+    <div class="hero-divider"></div>
+  </div>
+
+  <div class="crd" style="margin-bottom:24px">
+    <div style="display:grid;grid-template-columns:1fr 1.2fr;gap:0;align-items:stretch;min-height:380px">
+      <div style="padding:40px;display:flex;flex-direction:column;justify-content:center">
+        <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:4px;color:var(--gold);margin-bottom:12px">CHAPTER I</div>
+        <div style="font-family:'Cinzel',serif;font-size:32px;font-weight:700;color:#fff;margin-bottom:18px;line-height:1.1">The Fracture</div>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;color:var(--text);font-style:italic">In the beginning, there was only Somnia — a realm where dreams took form and every sleeping mind wove threads of the tapestry. All souls belonged to one house. There was no theft, no defense, only creation.</p>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;color:var(--text-dim);margin-top:12px">Then came the Fracture. A shard of waking consciousness pierced the dream, and from its edges bloomed two desires: <strong style="color:var(--pink-light)">to take</strong>, and <strong style="color:var(--purple-light)">to keep</strong>.</p>
+      </div>
+      <div style="background:linear-gradient(135deg,rgba(232,90,142,.15),rgba(178,98,217,.15));display:flex;align-items:center;justify-content:center;padding:20px;border-left:1px solid var(--border)">
+        <img src="chapter1.png" alt="Chapter 1" style="max-width:100%;max-height:380px;border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,.4);display:block" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div style="display:none;flex-direction:column;align-items:center;justify-content:center;color:var(--text-faint);font-family:'Cormorant Garamond',serif;font-style:italic;text-align:center;padding:40px;border:2px dashed rgba(255,200,220,.2);border-radius:16px;width:100%;min-height:300px">
+          <div style="font-size:40px;opacity:.4;margin-bottom:12px">🎨</div>
+          <div style="font-size:15px">Your illustration here</div>
+          <div style="font-size:11px;margin-top:6px;letter-spacing:1px">chapter1.png</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="crd" style="margin-bottom:24px">
+    <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:0;align-items:stretch;min-height:380px">
+      <div style="background:linear-gradient(135deg,rgba(232,90,142,.2),rgba(120,30,80,.15));display:flex;align-items:center;justify-content:center;padding:20px;border-right:1px solid var(--border)">
+        <img src="chapter2.png" alt="Chapter 2" style="max-width:100%;max-height:380px;border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,.4);display:block" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div style="display:none;flex-direction:column;align-items:center;justify-content:center;color:var(--text-faint);font-family:'Cormorant Garamond',serif;font-style:italic;text-align:center;padding:40px;border:2px dashed rgba(232,90,142,.3);border-radius:16px;width:100%;min-height:300px">
+          <div style="font-size:40px;opacity:.4;margin-bottom:12px">⚔</div>
+          <div style="font-size:15px">Your illustration here</div>
+          <div style="font-size:11px;margin-top:6px;letter-spacing:1px">chapter2.png</div>
+        </div>
+      </div>
+      <div style="padding:40px;display:flex;flex-direction:column;justify-content:center">
+        <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:4px;color:var(--pink-light);margin-bottom:12px">CHAPTER II</div>
+        <div style="font-family:'Cinzel',serif;font-size:32px;font-weight:700;color:#fff;margin-bottom:18px;line-height:1.1">The House of Attack</div>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;color:var(--text);font-style:italic">From the fracture rose the Bold — warriors who believed the world was meant to be seized, not inherited. They forged blades from lightning and wore crimson for the blood of conquest.</p>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;color:var(--text-dim);margin-top:12px">"What is given can be taken," their first champion declared. "What is taken, is <strong style="color:var(--pink-light)">earned</strong>."</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="crd" style="margin-bottom:24px">
+    <div style="display:grid;grid-template-columns:1fr 1.2fr;gap:0;align-items:stretch;min-height:380px">
+      <div style="padding:40px;display:flex;flex-direction:column;justify-content:center">
+        <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:4px;color:var(--purple-light);margin-bottom:12px">CHAPTER III</div>
+        <div style="font-family:'Cinzel',serif;font-size:32px;font-weight:700;color:#fff;margin-bottom:18px;line-height:1.1">The House of Protect</div>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;color:var(--text);font-style:italic">In the shadow of the Bold, another house awakened. The Guardian. They wove shields from moonlight and wore violet for the depth of patience. They did not create. They did not take. They held.</p>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;color:var(--text-dim);margin-top:12px">"The tide recedes, but the shore remains," whispered their eldest. "We are the shore."</p>
+      </div>
+      <div style="background:linear-gradient(135deg,rgba(130,100,220,.2),rgba(80,50,180,.15));display:flex;align-items:center;justify-content:center;padding:20px;border-left:1px solid var(--border)">
+        <img src="chapter3.png" alt="Chapter 3" style="max-width:100%;max-height:380px;border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,.4);display:block" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div style="display:none;flex-direction:column;align-items:center;justify-content:center;color:var(--text-faint);font-family:'Cormorant Garamond',serif;font-style:italic;text-align:center;padding:40px;border:2px dashed rgba(178,98,217,.3);border-radius:16px;width:100%;min-height:300px">
+          <div style="font-size:40px;opacity:.4;margin-bottom:12px">🛡</div>
+          <div style="font-size:15px">Your illustration here</div>
+          <div style="font-size:11px;margin-top:6px;letter-spacing:1px">chapter3.png</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="crd" style="margin-bottom:24px">
+    <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:0;align-items:stretch;min-height:380px">
+      <div style="background:linear-gradient(135deg,rgba(255,200,160,.15),rgba(120,80,40,.15));display:flex;align-items:center;justify-content:center;padding:20px;border-right:1px solid var(--border)">
+        <img src="chapter4.png" alt="Chapter 4" style="max-width:100%;max-height:380px;border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,.4);display:block" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div style="display:none;flex-direction:column;align-items:center;justify-content:center;color:var(--text-faint);font-family:'Cormorant Garamond',serif;font-style:italic;text-align:center;padding:40px;border:2px dashed rgba(255,200,160,.3);border-radius:16px;width:100%;min-height:300px">
+          <div style="font-size:40px;opacity:.4;margin-bottom:12px">⏳</div>
+          <div style="font-size:15px">Your illustration here</div>
+          <div style="font-size:11px;margin-top:6px;letter-spacing:1px">chapter4.png</div>
+        </div>
+      </div>
+      <div style="padding:40px;display:flex;flex-direction:column;justify-content:center">
+        <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:4px;color:var(--gold);margin-bottom:12px">CHAPTER IV</div>
+        <div style="font-family:'Cinzel',serif;font-size:32px;font-weight:700;color:#fff;margin-bottom:18px;line-height:1.1">The Eternal Hourglass</div>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;color:var(--text);font-style:italic">The first war between the houses lasted a thousand years. When neither side could triumph, the ancients forged the Hourglass — a sacred vessel that rules each day.</p>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;color:var(--text-dim);margin-top:12px">When the sands empty, the victors are chosen. When the sands refill, <strong style="color:var(--gold)">the battle begins anew</strong>. This is the Law of the Arena.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="crd" style="margin-bottom:24px">
+    <div style="display:grid;grid-template-columns:1fr 1.2fr;gap:0;align-items:stretch;min-height:380px">
+      <div style="padding:40px;display:flex;flex-direction:column;justify-content:center">
+        <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:4px;color:var(--pink);margin-bottom:12px">CHAPTER V</div>
+        <div style="font-family:'Cinzel',serif;font-size:32px;font-weight:700;color:#fff;margin-bottom:18px;line-height:1.1">The Passport of Souls</div>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;color:var(--text);font-style:italic">Every warrior who enters the Chronicles must first forge their Passport — a binding of identity to the dream-realm. No passport, no battle. No battle, no glory.</p>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;color:var(--text-dim);margin-top:12px">Your name becomes eternal. Your victories, chronicled. Your defeats, <strong style="color:var(--pink)">remembered</strong>.</p>
+      </div>
+      <div style="background:linear-gradient(135deg,rgba(255,150,200,.15),rgba(180,130,255,.15));display:flex;align-items:center;justify-content:center;padding:20px;border-left:1px solid var(--border)">
+        <img src="chapter5.png" alt="Chapter 5" style="max-width:100%;max-height:380px;border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,.4);display:block" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div style="display:none;flex-direction:column;align-items:center;justify-content:center;color:var(--text-faint);font-family:'Cormorant Garamond',serif;font-style:italic;text-align:center;padding:40px;border:2px dashed rgba(255,150,200,.3);border-radius:16px;width:100%;min-height:300px">
+          <div style="font-size:40px;opacity:.4;margin-bottom:12px">◈</div>
+          <div style="font-size:15px">Your illustration here</div>
+          <div style="font-size:11px;margin-top:6px;letter-spacing:1px">chapter5.png</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="crd" style="margin-bottom:24px">
+    <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:0;align-items:stretch;min-height:380px">
+      <div style="background:linear-gradient(135deg,rgba(125,216,168,.15),rgba(60,120,90,.15));display:flex;align-items:center;justify-content:center;padding:20px;border-right:1px solid var(--border)">
+        <img src="chapter6.png" alt="Chapter 6" style="max-width:100%;max-height:380px;border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,.4);display:block" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div style="display:none;flex-direction:column;align-items:center;justify-content:center;color:var(--text-faint);font-family:'Cormorant Garamond',serif;font-style:italic;text-align:center;padding:40px;border:2px dashed rgba(125,216,168,.3);border-radius:16px;width:100%;min-height:300px">
+          <div style="font-size:40px;opacity:.4;margin-bottom:12px">☀</div>
+          <div style="font-size:15px">Your illustration here</div>
+          <div style="font-size:11px;margin-top:6px;letter-spacing:1px">chapter6.png</div>
+        </div>
+      </div>
+      <div style="padding:40px;display:flex;flex-direction:column;justify-content:center">
+        <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:4px;color:var(--green);margin-bottom:12px">CHAPTER VI</div>
+        <div style="font-family:'Cinzel',serif;font-size:32px;font-weight:700;color:#fff;margin-bottom:18px;line-height:1.1">The Morning Ritual</div>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;color:var(--text);font-style:italic">Before any warrior may step into the Arena, they must perform the Morning Ritual — a sacred offering to the Treasury that binds them to this day's battle.</p>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;color:var(--text-dim);margin-top:12px">Those who ritual seven days without fail earn the ancient <strong style="color:var(--green)">streak blessing</strong> — more experience, more glory, greater destiny.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="crd">
+    <div style="display:grid;grid-template-columns:1fr 1.2fr;gap:0;align-items:stretch;min-height:380px">
+      <div style="padding:40px;display:flex;flex-direction:column;justify-content:center">
+        <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:4px;color:var(--gold);margin-bottom:12px">CHAPTER VII</div>
+        <div style="font-family:'Cinzel',serif;font-size:32px;font-weight:700;color:#fff;margin-bottom:18px;line-height:1.1">Your Chapter Begins</div>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;color:var(--text);font-style:italic">The old chapters are written in stone. The next one is written in dreams. In blood. In glory.</p>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;color:var(--text-dim);margin-top:12px">The hourglass empties at midnight. The arena awaits its next champion.</p>
+        <p style="font-family:'Cinzel',serif;font-size:18px;font-weight:600;color:var(--gold);margin-top:20px;letter-spacing:2px">Will it be <strong style="color:#fff">you?</strong></p>
+      </div>
+      <div style="background:linear-gradient(135deg,rgba(255,200,160,.2),rgba(232,90,142,.15),rgba(178,98,217,.15));display:flex;align-items:center;justify-content:center;padding:20px;border-left:1px solid var(--border);position:relative;overflow:hidden">
+        <img src="chapter7.png" alt="Chapter 7" style="max-width:100%;max-height:380px;border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,.4);display:block;position:relative;z-index:2" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div style="display:none;flex-direction:column;align-items:center;justify-content:center;color:var(--text-faint);font-family:'Cormorant Garamond',serif;font-style:italic;text-align:center;padding:40px;border:2px dashed rgba(255,200,160,.4);border-radius:16px;width:100%;min-height:300px;position:relative;z-index:2">
+          <div style="font-size:40px;opacity:.4;margin-bottom:12px">👑</div>
+          <div style="font-size:15px">Your illustration here</div>
+          <div style="font-size:11px;margin-top:6px;letter-spacing:1px">chapter7.png</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center;padding:40px 20px;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--text-faint);letter-spacing:1px">
+    — End of Volume I —
+  </div>
+</div>
+
 <!-- PROFILE / PASSPORT -->
 <div class="pnl" id="t-profile">
   <div class="crd" id="PC" style="display:none">
@@ -1128,6 +1276,47 @@ body::after{
       </div>
     </div>
   </div>
+  <div class="crd">
+    <div class="ch" style="color:var(--green)">🛡 Trust & Security</div>
+    <div style="padding:28px">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:20px">
+        <div style="padding:20px;background:rgba(13,8,24,.5);border:1px solid rgba(125,216,168,.25);border-radius:14px">
+          <div style="font-size:24px;margin-bottom:8px">🔒</div>
+          <div style="font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--green);margin-bottom:6px;letter-spacing:1.5px">Verified Contract</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:13px;color:var(--text-dim);line-height:1.5">Source code is public and verified on Somnia blockchain explorer. Anyone can audit it.</div>
+        </div>
+        <div style="padding:20px;background:rgba(13,8,24,.5);border:1px solid rgba(125,216,168,.25);border-radius:14px">
+          <div style="font-size:24px;margin-bottom:8px">🔐</div>
+          <div style="font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--green);margin-bottom:6px;letter-spacing:1.5px">Non-Custodial</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:13px;color:var(--text-dim);line-height:1.5">We never hold your tokens. Every payment, every reward — goes directly to the smart contract.</div>
+        </div>
+        <div style="padding:20px;background:rgba(13,8,24,.5);border:1px solid rgba(125,216,168,.25);border-radius:14px">
+          <div style="font-size:24px;margin-bottom:8px">⚙</div>
+          <div style="font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--green);margin-bottom:6px;letter-spacing:1.5px">Immutable Rules</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:13px;color:var(--text-dim);line-height:1.5">Contract cannot be changed. Owner cannot drain the prize pool. Rules are forever.</div>
+        </div>
+        <div style="padding:20px;background:rgba(13,8,24,.5);border:1px solid rgba(125,216,168,.25);border-radius:14px">
+          <div style="font-size:24px;margin-bottom:8px">🛡</div>
+          <div style="font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--green);margin-bottom:6px;letter-spacing:1.5px">Reentrancy Guard</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:13px;color:var(--text-dim);line-height:1.5">All claim functions protected against common smart contract attacks. No double-spending.</div>
+        </div>
+        <div style="padding:20px;background:rgba(13,8,24,.5);border:1px solid rgba(125,216,168,.25);border-radius:14px">
+          <div style="font-size:24px;margin-bottom:8px">👁</div>
+          <div style="font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--green);margin-bottom:6px;letter-spacing:1.5px">Fair Resolution</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:13px;color:var(--text-dim);line-height:1.5">Anti-snipe 5-min lock. Fog of war hides sides until resolve. No frontrunning, no manipulation.</div>
+        </div>
+        <div style="padding:20px;background:rgba(13,8,24,.5);border:1px solid rgba(125,216,168,.25);border-radius:14px">
+          <div style="font-size:24px;margin-bottom:8px">📊</div>
+          <div style="font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--green);margin-bottom:6px;letter-spacing:1.5px">On-Chain Proof</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:13px;color:var(--text-dim);line-height:1.5">Every battle, every payment, every reward — permanently recorded. Check the explorer yourself.</div>
+        </div>
+      </div>
+      <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--text-dim);text-align:center;padding:16px;border:1px dashed rgba(255,200,160,.2);border-radius:14px;line-height:1.6">
+        <strong style="color:var(--gold);font-family:'Cinzel',serif;font-style:normal;font-size:12px;letter-spacing:2px;text-transform:uppercase">⚠ Honest Disclosure</strong><br>
+        This is an early-stage project on Somnia testnet. Contract is not professionally audited yet. Only play with amounts you can afford to lose. All rules are in the open-source code — verify before you play.
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- REWARDS / SPOILS -->
@@ -1144,6 +1333,7 @@ body::after{
         <div class="rw-tier" id="rwTier"></div>
         <div class="rw-amount" id="rwAmount"></div>
         <button class="claim-btn" id="rwClaimBtn" onclick="rwClaim()" style="font-size:14px;padding:16px 40px">🏆 Claim Your Prize</button>
+        <button class="claim-btn" onclick="shareWin()" style="font-size:13px;padding:14px 32px;margin-left:10px;background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff">📢 Share Victory on X</button>
         <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:12px;margin-top:12px;min-height:16px" id="rwClaimSt"></div>
       </div>
 
@@ -1422,7 +1612,8 @@ async function LG(){
     if(v.playedToday){
       bS.disabled=true;bP.disabled=true;bS.classList.add('off');bP.classList.add('off');
       $('slA').disabled=true;$('slD').disabled=true;
-      if(v.todaySide){bS.textContent='🔥 Your Choice';}else{bP.textContent='🛡 Your Choice';}
+      if(v.todaySide){bS.textContent='🔥 Your Choice — Attack';bP.textContent='🛡 Stand & Protect';}
+      else{bS.textContent='🔥 Strike to Steal';bP.textContent='🛡 Your Choice — Protect';}
       $('gSt').textContent='Your fate is sealed for today';$('gmLock').style.display='none';
     }
     if(v.gmToday){$('gBtn').disabled=true;$('gSs').textContent='Ritual complete ✓';}
@@ -1690,10 +1881,31 @@ async function OWtestResolve(){try{
 
 function ES(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
 
-function shareWin(){
-  const text='I just claimed glory in Steal or Protect on @SomniaNetwork! ⚔🔥';
-  const url='https://angellsomniac.github.io/Somnia-umi-passport/';
-  window.open('https://x.com/intent/tweet?text='+encodeURIComponent(text)+'&url='+encodeURIComponent(url),'_blank');
+async function shareWin(){
+  try{
+    const day=Number(await hb.currentDay())-1;
+    const v=await hb.getPlayerView(ad);
+    const[rew,can,rank,exp]=await hb.getPendingReward(ad,day).catch(()=>[0,false,0,false]);
+    const streak=Number(v.gmStreak);
+    let text='';
+    if(can&&Number(rew)>0){
+      const amount=ethers.formatEther(rew);
+      const tierEmoji=rank===1?'🏆':rank===2?'🥈':rank===3?'🥉':rank<=10?'⚡':rank<=30?'💎':'🎖';
+      text='⚔ Victory in Steal or Protect! '+tierEmoji+' Ranked #'+rank+' and claimed '+amount+' STT on @SomniaNetwork daily battlefield! Who will dare face me tomorrow?';
+    }else if(streak>=7){
+      text='🔥 '+streak+'-day streak in Steal or Protect on @SomniaNetwork. The morning ritual never breaks. Daily blockchain battles, real prizes.';
+    }else if(v.battleWins>0){
+      text='⚔ '+v.battleWins+' battles won in Steal or Protect on @SomniaNetwork. Choose: Steal or Protect. Every sunrise, new glory.';
+    }else{
+      text='⚔ Entered the arena of Steal or Protect on @SomniaNetwork. Daily blockchain battles, Top-150 share the treasury. Join the Chronicles!';
+    }
+    const url='https://angellsomniac.github.io/Somnia-umi-passport/';
+    window.open('https://x.com/intent/tweet?text='+encodeURIComponent(text)+'&url='+encodeURIComponent(url),'_blank');
+  }catch(e){
+    const text='⚔ Playing Steal or Protect on @SomniaNetwork daily battlefield!';
+    const url='https://angellsomniac.github.io/Somnia-umi-passport/';
+    window.open('https://x.com/intent/tweet?text='+encodeURIComponent(text)+'&url='+encodeURIComponent(url),'_blank');
+  }
 }
 
 if(window.ethereum){
@@ -1702,6 +1914,17 @@ if(window.ethereum){
 }
 
 initRef();
+
+// Try to load custom logo.png if it exists
+(function(){
+  const img=new Image();
+  img.onload=function(){
+    const brand=document.getElementById('brandLogo');
+    if(brand){brand.innerHTML='<img src="logo.png" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';}
+  };
+  img.onerror=function(){};
+  img.src='logo.png';
+})();
 </script>
 </body>
 </html>

@@ -697,13 +697,13 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 <script>
 // ═══════ CONFIG — UPDATE AFTER DEPLOY ═══════
 const CFG={
-  50312:{umi:'0x91Ee1c6C191dc6440B8058d99d2Fa94B8691adff',hub:'0x41ebBb28A5EF45793E223f49e21447b29341d1Fe',exp:'https://shannon-explorer.somnia.network'},
+  50312:{umi:'0x91Ee1c6C191dc6440B8058d99d2Fa94B8691adff',hub:'0xc7Bd21FB6aB13f9C12CE86C826293E14D0Ae9e9c',exp:'https://shannon-explorer.somnia.network'},
   5031:{umi:'0xfa9c15D8B508968fCDbdB9F495C8A493C19d7351',hub:'0x0000000000000000000000000000000000000000',exp:'https://explorer.somnia.network'}
 };
 
 const AU=['function setProfile(string,string,string,string)','function getProfile(address) view returns (tuple(string nickname,string avatarUrl,string bio,string socialUrl,uint256 createdAt,uint256 updatedAt,bool exists))','function hasProfile(address) view returns (bool)','function getNickname(address) view returns (string)'];
 
-const AH=['function sayGM(string) payable','function play(bool,uint256) payable','function claimReward(uint256)','function claimOwnerFee(uint256)','function claimOwnerFeeBatch(uint256[])','function resolveRound(uint256)','function finalizeRankings(uint256)','function expireUnclaimed(uint256)','function currentDay() view returns (uint256)','function currentWeek() view returns (uint256)','function roundTimeLeft() view returns (uint256)','function totalGMs() view returns (uint256)','function owner() view returns (address)','function isOwner(address) view returns (bool)','function getRoundInfo(uint256) view returns (uint256,uint256,bool,bool,bool,uint256,uint256)','function getRevealedRound(uint256) view returns (uint256,uint256,uint256,uint256)','function getPlayerView(address) view returns (tuple(uint256 xp,uint256 level,uint256 gmStreak,uint256 battleStreak,uint256 battleWins,uint256 battleGames,uint256 top150Streak,bool gmToday,bool playedToday,bool todaySide,uint128 todayWeight,uint256 weekXPVal,uint256 monthGlory))','function getPendingReward(address,uint256) view returns (uint256,bool,uint256,bool)','function getXPLeaderboard(uint256) view returns (address[],uint256[])','function getGloryLeaderboard(uint256) view returns (address[],uint256[])','function getRecentGMs() view returns (tuple(address sender,uint256 timestamp,string message)[],uint256)','function getPoolInfo() view returns (uint256,uint256,uint256)'];
+const AH=['function sayGM(string) payable','function play(bool,uint256) payable','function claimReward(uint256)','function claimOwnerFee(uint256)','function claimOwnerFeeBatch(uint256[])','function resolveRound(uint256)','function finalizeRankings(uint256)','function expireUnclaimed(uint256)','function registerReferrer(address)','function currentDay() view returns (uint256)','function currentWeek() view returns (uint256)','function roundTimeLeft() view returns (uint256)','function totalGMs() view returns (uint256)','function totalReferrals() view returns (uint256)','function owner() view returns (address)','function getRoundInfo(uint256) view returns (uint256,uint256,uint256,bool,bool,uint256,bool)','function getPlayerView(address) view returns (tuple(uint256 xp,uint256 level,uint256 gmStreak,uint256 battleStreak,uint256 battleWins,uint256 battleGames,bool gmToday,bool playedToday,bool todaySide,uint128 todayWeight,uint128 todayBP,uint16 todayRank,uint256 weekXPVal,uint256 weekBattleVal,uint256 monthGlory,uint256 top150Streak,uint256 referralCount,address referredBy))','function getPendingReward(address,uint256) view returns (uint256,bool,uint16,bool)','function getXPLeaderboard(uint256) view returns (address[],uint256[])','function getBattleLeaderboard(uint256) view returns (address[],uint256[])','function getGloryLeaderboard(uint256) view returns (address[],uint256[])','function getRecentGMs() view returns (tuple(address sender,uint256 timestamp,string message)[],uint256)','function getPoolInfo() view returns (uint256,uint256,uint256)','function getOwnerPending(uint256,uint256) view returns (uint256)'];
 
 let pv,sg,um,hb,ad,ch,ti,localLeft=0,isOwnerAccount=false;
 
@@ -747,8 +747,22 @@ async function OB(){
   const n=$('obN').value.trim(),a=$('obA').value.trim(),b=$('obB').value.trim(),s=$('obS').value.trim();
   if(!n){$('obSt').textContent='Nickname is required!';$('obSt').className='fs er';return;}
   const bt=$('obBtn');bt.disabled=true;bt.textContent='CREATING...';$('obSt').textContent='Waiting...';$('obSt').className='fs';
-  try{const tx=await um.setProfile(n,a,b,s);bt.textContent='CONFIRMING...';await tx.wait();$('obSt').textContent='Profile created! ✓';bt.textContent='CREATE PASSPORT & ENTER';bt.disabled=false;checkProfile();}
-  catch(e){$('obSt').textContent=e.reason||'Failed';$('obSt').className='fs er';bt.textContent='CREATE PASSPORT & ENTER';bt.disabled=false;}
+  try{
+    const tx=await um.setProfile(n,a,b,s);bt.textContent='CONFIRMING...';await tx.wait();
+    $('obSt').textContent='Profile created! ✓';
+    // Register referrer if pending in localStorage
+    try{
+      const refBy=localStorage.getItem('refBy');
+      if(refBy&&refBy.toLowerCase()!==ad.toLowerCase()&&hb){
+        $('obSt').textContent='Registering referral...';
+        const refTx=await hb.registerReferrer(refBy);
+        await refTx.wait();
+        $('obSt').textContent='Profile + referral registered ✓';
+        localStorage.removeItem('refBy');
+      }
+    }catch(refErr){console.log('Referral skipped:',refErr.message||refErr);}
+    bt.textContent='CREATE PASSPORT & ENTER';bt.disabled=false;checkProfile();
+  }catch(e){$('obSt').textContent=e.reason||'Failed';$('obSt').className='fs er';bt.textContent='CREATE PASSPORT & ENTER';bt.disabled=false;}
 }
 
 async function LA(){LP();if(hb){LG();LGM();LR();ST();setupMyRef();}}
@@ -761,7 +775,7 @@ function FM(m,e){$('fSt').textContent=m;$('fSt').className='fs'+(e?' er':'');}
 async function LG(){try{
   const day=Number(await hb.currentDay()),week=Number(await hb.currentWeek());
   const ri=await hb.getRoundInfo(day);
-  const totalPlayers=Number(ri[0]),dailyPool=ri[1];
+  const totalPlayers=Number(ri[0]),dailyPool=ri[2];
   $('fogTotal').textContent=totalPlayers+' Warrior'+(totalPlayers===1?'':'s');
   $('pDay').textContent=ethers.formatEther(dailyPool)+' STT';
 
@@ -898,7 +912,7 @@ async function LR(){try{
 
   // Get yesterday's round info (past day = revealed)
   const ri=await hb.getRoundInfo(yday);
-  const sc=Number(ri[0]),pc=Number(ri[1]),res=ri[2],won=ri[3],fin=ri[4];
+  const sc=Number(ri[0]),pc=Number(ri[1]),res=ri[3],won=ri[4],fin=ri[6];
 
   if(!res||sc===0){$('rwResult').textContent='No battle yesterday';$('rwNone').style.display='block';return;}
 
@@ -964,13 +978,11 @@ function setupMyRef(){
   const base=window.location.origin+window.location.pathname;
   const link=base+'?ref='+ad;
   if($('refLink'))$('refLink').value=link;
-  // Load referral stats from localStorage (stats are tracked locally + social proof)
-  try{
-    const key='refStats_'+ad.toLowerCase();
-    const stats=JSON.parse(localStorage.getItem(key)||'{"count":0,"glory":0}');
-    if($('refCount'))$('refCount').textContent=stats.count;
-    if($('refGlory'))$('refGlory').textContent=stats.glory;
-  }catch(e){}
+  // Load on-chain referral count
+  if(hb){hb.getPlayerView(ad).then(v=>{
+    if($('refCount'))$('refCount').textContent=v.referralCount.toString();
+    if($('refGlory'))$('refGlory').textContent=(Number(v.referralCount)*20).toString();
+  }).catch(()=>{});}
 }
 function copyRef(){
   const input=$('refLink');if(!input)return;

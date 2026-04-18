@@ -184,14 +184,37 @@ body::after{
   border:1px solid var(--border);
   border-radius:20px;
   padding:22px 24px;
-  position:relative;overflow:hidden;
-  transition:border-color .3s;
+  position:relative;overflow:hidden;isolation:isolate;
+  transition:border-color .35s ease,transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .4s ease;
 }
-.pool:hover{border-color:var(--border-bright)}
+.pool:hover{
+  border-color:var(--border-bright);
+  transform:translateY(-2px);
+  box-shadow:0 14px 38px -18px rgba(255,200,160,.35),0 0 0 1px rgba(255,200,160,.08) inset;
+}
 .pool::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;z-index:1;
   background:linear-gradient(90deg,transparent,var(--pink),var(--purple),transparent);
 }
+/* Gold dust drifting across the pool */
+.pool::after{
+  content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(1.5px 1.5px at 12% 28%, rgba(255,220,180,.55), transparent 60%),
+    radial-gradient(1.5px 1.5px at 78% 18%, rgba(255,200,160,.45), transparent 60%),
+    radial-gradient(1.5px 1.5px at 32% 72%, rgba(255,210,170,.4), transparent 60%),
+    radial-gradient(1.5px 1.5px at 88% 64%, rgba(255,225,190,.35), transparent 60%),
+    radial-gradient(1px 1px at 56% 44%, rgba(255,200,160,.3), transparent 60%);
+  opacity:.5;mix-blend-mode:screen;
+  transition:opacity .45s ease;
+  animation:poolDust 12s ease-in-out infinite;
+}
+.pool:hover::after{opacity:.95}
+@keyframes poolDust{
+  0%,100%{transform:translate3d(0,0,0)}
+  50%{transform:translate3d(2px,-3px,0)}
+}
+.pool > *{position:relative;z-index:1}
 .pool-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 .pool-label{font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;color:var(--text-dim);text-transform:uppercase}
 .pool-icon{
@@ -199,18 +222,44 @@ body::after{
   background:linear-gradient(135deg,rgba(255,200,160,.2),rgba(232,90,142,.15));
   border:1px solid rgba(255,200,220,.25);
   display:flex;align-items:center;justify-content:center;
+  transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s ease,border-color .35s ease;
 }
-.pool-icon svg{width:18px;height:18px}
+.pool:hover .pool-icon{transform:rotate(-6deg) scale(1.08);box-shadow:0 0 18px rgba(255,200,160,.35);border-color:rgba(255,200,160,.55)}
+.pool-icon svg{width:18px;height:18px;transition:transform .35s ease}
+.pool:hover .pool-icon svg{transform:scale(1.05)}
 .pool-value{
   font-family:'Cinzel',serif;font-size:32px;font-weight:700;
   color:#fff;letter-spacing:-.5px;line-height:1;
   text-shadow:0 0 30px rgba(255,180,220,.25);
+  transition:text-shadow .4s ease,transform .35s cubic-bezier(.2,.7,.2,1);
 }
+.pool:hover .pool-value{text-shadow:0 0 18px rgba(255,200,160,.55),0 0 36px rgba(232,90,142,.25)}
 .pool-value .unit{
   font-family:'Cormorant Garamond',serif;font-style:italic;
   font-size:18px;color:var(--gold);margin-left:6px;font-weight:500;
 }
 .pool-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--text-faint);margin-top:4px}
+
+/* Reward-active pool — gentle gold pulse + ribbon glow */
+.pool.has-reward{
+  border-color:rgba(255,200,160,.55);
+  animation:poolReward 2.8s ease-in-out infinite;
+}
+.pool.has-reward::before{
+  background:linear-gradient(90deg,transparent,var(--gold),#fff3d6,var(--gold),transparent);
+  height:3px;
+  filter:drop-shadow(0 0 6px rgba(255,200,160,.6));
+}
+.pool.has-reward .pool-value{color:#fff7e6;text-shadow:0 0 22px rgba(255,200,160,.7),0 0 44px rgba(255,160,120,.35)}
+.pool.has-reward .pool-icon{border-color:rgba(255,200,160,.8);box-shadow:0 0 18px rgba(255,200,160,.45)}
+@keyframes poolReward{
+  0%,100%{box-shadow:0 0 0 1px rgba(255,200,160,.0) inset,0 8px 28px -16px rgba(255,200,160,.3)}
+  50%{box-shadow:0 0 0 1px rgba(255,200,160,.25) inset,0 14px 38px -14px rgba(255,200,160,.55)}
+}
+@media(prefers-reduced-motion:reduce){
+  .pool::after,.pool.has-reward{animation:none}
+  .pool:hover{transform:none}
+}
 
 /* Cards */
 .crd{
@@ -666,19 +715,54 @@ body::after{
   display:none;margin-bottom:18px;padding:18px 24px;
   text-align:center;border:1px solid;
   border-radius:18px;position:relative;overflow:hidden;
+  isolation:isolate;
 }
-.yd-text{font-family:'Cinzel',serif;font-size:15px;font-weight:700;letter-spacing:2px}
-.yd-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;margin-top:4px}
+.yday-banner.yb-shown{
+  animation:ybanEntry .7s cubic-bezier(.2,.7,.2,1) both;
+}
+.yday-banner::before{
+  content:'';position:absolute;top:0;left:-30%;right:-30%;height:1px;z-index:1;
+  background:linear-gradient(90deg,transparent,currentColor,transparent);
+  opacity:.55;
+  animation:ybanShimmer 5s linear infinite;
+}
+.yd-text{font-family:'Cinzel',serif;font-size:15px;font-weight:700;letter-spacing:2px;position:relative;z-index:1}
+.yd-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;margin-top:4px;position:relative;z-index:1}
+@keyframes ybanEntry{
+  0%{opacity:0;transform:translateY(-8px) scale(.985)}
+  60%{opacity:1}
+  100%{opacity:1;transform:translateY(0) scale(1)}
+}
+@keyframes ybanShimmer{
+  0%{transform:translateX(-30%)}
+  100%{transform:translateX(30%)}
+}
 
 /* Claim bar */
 .claim-bar{
-  display:none;padding:16px 24px;margin-top:16px;
+  display:none;padding:16px 24px;margin-top:16px;position:relative;overflow:hidden;
   background:linear-gradient(90deg,rgba(255,200,160,.06),transparent);
   border-top:1px solid rgba(255,200,160,.15);
   align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
+  border-radius:0 0 18px 18px;
+  transition:background .35s ease;
+}
+.claim-bar.cb-active{
+  background:linear-gradient(90deg,rgba(255,200,160,.14),rgba(255,160,120,.05) 70%,transparent);
+  border-top-color:rgba(255,200,160,.55);
+  animation:claimPulse 2.6s ease-in-out infinite;
+}
+.claim-bar.cb-active::before{
+  content:'';position:absolute;left:0;right:0;top:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),#fff3d6,var(--gold),transparent);
+  filter:drop-shadow(0 0 6px rgba(255,200,160,.6));
+}
+@keyframes claimPulse{
+  0%,100%{box-shadow:inset 0 1px 0 rgba(255,200,160,.0)}
+  50%{box-shadow:inset 0 1px 0 rgba(255,200,160,.35),0 0 26px -8px rgba(255,200,160,.45)}
 }
 .claim-info{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--text-dim)}
-.claim-amt{font-family:'Cinzel',serif;font-size:22px;font-weight:700;color:var(--gold);margin:0 10px}
+.claim-amt{font-family:'Cinzel',serif;font-size:22px;font-weight:700;color:var(--gold);margin:0 10px;font-variant-numeric:tabular-nums;text-shadow:0 0 14px rgba(255,200,160,.35)}
 .claim-rank{font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;color:var(--text-dim)}
 .claim-btn{
   font-family:'Cinzel',serif;font-size:12px;font-weight:700;letter-spacing:2px;
@@ -686,8 +770,123 @@ body::after{
   border:none;border-radius:22px;color:#2a0818;cursor:pointer;
   text-transform:uppercase;
   box-shadow:0 4px 16px rgba(255,200,160,.4);transition:all .3s;
+  position:relative;
 }
 .claim-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,200,160,.55)}
+.claim-btn:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.claim-bar.cb-active .claim-btn{animation:claimBtnGlow 2.6s ease-in-out infinite}
+@keyframes claimBtnGlow{
+  0%,100%{box-shadow:0 4px 16px rgba(255,200,160,.4)}
+  50%{box-shadow:0 6px 28px rgba(255,200,160,.7),0 0 0 1px rgba(255,255,255,.35) inset}
+}
+@media(prefers-reduced-motion:reduce){
+  .yday-banner.yb-shown{animation:none}
+  .yday-banner::before,.claim-bar.cb-active,.claim-bar.cb-active .claim-btn{animation:none}
+}
+
+/* NFT Trophy — sovereign ritual */
+.nft-trophy-wrap{padding:32px}
+.nft-title-row{text-align:center;margin-bottom:20px}
+.nft-title{font-family:'Cinzel',serif;font-size:22px;font-weight:700;color:#fff;letter-spacing:3px;margin-bottom:8px}
+.nft-lore{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--text-dim);max-width:560px;margin:0 auto;line-height:1.6}
+.nft-stage{display:flex;justify-content:center;margin:24px auto;position:relative;isolation:isolate}
+.nft-halo-wrap{position:relative;max-width:440px;width:100%}
+.nft-halo-wrap::before{
+  content:'';position:absolute;inset:-22px;border-radius:32px;z-index:0;
+  background:conic-gradient(from 0deg,
+    rgba(255,200,160,.0) 0deg,
+    rgba(255,200,160,.55) 60deg,
+    rgba(232,90,142,.45) 140deg,
+    rgba(178,98,217,.45) 220deg,
+    rgba(255,200,160,.55) 300deg,
+    rgba(255,200,160,.0) 360deg);
+  filter:blur(24px);opacity:.55;pointer-events:none;
+  animation:nftHalo 22s linear infinite;
+}
+.nft-halo-wrap::after{
+  content:'';position:absolute;inset:-2px;border-radius:24px;z-index:0;pointer-events:none;
+  background:conic-gradient(from 220deg,transparent 0deg,rgba(255,200,160,.5) 30deg,transparent 80deg,transparent 270deg,rgba(178,98,217,.4) 320deg,transparent 360deg);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  padding:1px;
+  animation:nftHalo 14s linear infinite reverse;
+  opacity:.85;
+}
+@keyframes nftHalo{to{transform:rotate(360deg)}}
+.nft-frame{
+  position:relative;z-index:1;border-radius:22px;overflow:hidden;
+  border:2px solid rgba(255,200,160,.28);
+  box-shadow:0 22px 60px rgba(255,200,160,.18),0 0 50px rgba(232,90,142,.14);
+}
+.nft-img{width:100%;display:block;filter:blur(12px) brightness(.7);transition:filter .5s ease,transform 1.2s ease}
+.nft-halo-wrap:hover .nft-img{filter:blur(9px) brightness(.78);transform:scale(1.02)}
+.nft-img-fb{
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  color:var(--text-faint);font-family:'Cormorant Garamond',serif;font-style:italic;
+  text-align:center;padding:60px;min-height:400px;
+  background:linear-gradient(135deg,rgba(255,200,160,.08),rgba(232,90,142,.06));
+}
+.nft-img-fb-emblem{width:64px;height:64px;opacity:.4;margin-bottom:12px;color:var(--gold)}
+.nft-img-fb-emblem svg{width:100%;height:100%}
+.nft-img-fb-name{font-size:16px}
+.nft-img-fb-file{font-size:11px;margin-top:6px;letter-spacing:1px;font-family:'Cinzel',serif}
+
+.nft-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5;pointer-events:none;text-align:center;padding:0 24px}
+.nft-claiming-soon{
+  font-family:'Cinzel',serif;font-size:28px;font-weight:800;letter-spacing:6px;text-transform:uppercase;
+  background:linear-gradient(90deg,#fff3d6 0%,#ffc8a0 25%,#fff7e6 50%,#ffc8a0 75%,#fff3d6 100%);
+  background-size:200% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  text-shadow:0 4px 20px rgba(0,0,0,.6);
+  animation:nftShimmer 4.5s linear infinite;
+  filter:drop-shadow(0 0 18px rgba(255,200,160,.35));
+}
+@keyframes nftShimmer{
+  0%{background-position:100% 0}
+  100%{background-position:-100% 0}
+}
+.nft-divider{width:120px;height:2px;margin:12px 0;background:linear-gradient(90deg,transparent,var(--gold),transparent);position:relative}
+.nft-divider::before,.nft-divider::after{
+  content:'';position:absolute;top:50%;width:5px;height:5px;border-radius:50%;
+  background:var(--gold);transform:translateY(-50%);box-shadow:0 0 8px rgba(255,200,160,.7);
+}
+.nft-divider::before{left:-3px}.nft-divider::after{right:-3px}
+.nft-overlay-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:rgba(255,200,160,.85);text-shadow:0 2px 10px rgba(0,0,0,.6)}
+
+/* Corner ornaments — sovereign frame */
+.nft-corner{position:absolute;width:32px;height:32px;color:var(--gold);z-index:2;pointer-events:none;opacity:.85;filter:drop-shadow(0 0 6px rgba(255,200,160,.5))}
+.nft-corner svg{width:100%;height:100%}
+.nft-corner.tl{top:-8px;left:-8px}
+.nft-corner.tr{top:-8px;right:-8px;transform:scaleX(-1)}
+.nft-corner.bl{bottom:-8px;left:-8px;transform:scaleY(-1)}
+.nft-corner.br{bottom:-8px;right:-8px;transform:scale(-1,-1)}
+
+/* Countdown grid */
+.nft-cd-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;max-width:560px;margin:24px auto 0;text-align:center}
+.nft-cd-cell{
+  padding:14px;background:rgba(13,8,24,.5);
+  border:1px solid rgba(255,200,160,.2);border-radius:14px;
+  position:relative;overflow:hidden;
+  transition:border-color .3s ease,transform .3s cubic-bezier(.2,.7,.2,1);
+}
+.nft-cd-cell:hover{border-color:rgba(255,200,160,.5);transform:translateY(-2px)}
+.nft-cd-cell::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,200,160,.5),transparent);
+}
+.nft-cd-num{font-family:'Cinzel',serif;font-size:26px;font-weight:800;color:var(--gold);font-variant-numeric:tabular-nums;text-shadow:0 0 14px rgba(255,200,160,.35)}
+.nft-cd-lbl{font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--text-dim);margin-top:4px;text-transform:uppercase}
+.nft-cd-caption{text-align:center;margin-top:14px;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--text-dim)}
+
+@media(prefers-reduced-motion:reduce){
+  .nft-halo-wrap::before,.nft-halo-wrap::after,.nft-claiming-soon{animation:none}
+  .nft-claiming-soon{color:var(--gold);background:none;-webkit-text-fill-color:var(--gold)}
+}
+@media(max-width:600px){
+  .nft-cd-grid{grid-template-columns:repeat(2,1fr)}
+  .nft-claiming-soon{font-size:22px;letter-spacing:4px}
+  .nft-corner{width:24px;height:24px}
+}
 
 .yday{display:none;justify-content:center;gap:10px;align-items:center;padding:12px;margin-top:12px;border-top:1px solid var(--border)}
 .yl{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--text-dim)}
@@ -1289,45 +1488,78 @@ body::after{
   <!-- NFT TROPHY on ARENA -->
   <div class="crd">
     <div class="ch" style="color:var(--gold)">👑 The Sovereign's Trophy · Monthly NFT</div>
-    <div style="padding:32px">
-      <div style="text-align:center;margin-bottom:20px">
-        <div style="font-family:'Cinzel',serif;font-size:22px;font-weight:700;color:#fff;letter-spacing:3px;margin-bottom:8px">The Eternal Crown</div>
-        <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--text-dim);max-width:560px;margin:0 auto;line-height:1.6">The warrior with the highest Glory at month's end receives a legendary NFT — forged once, owned forever. Only one champion per moon cycle.</div>
+    <div class="nft-trophy-wrap">
+      <div class="nft-title-row">
+        <div class="nft-title">The Eternal Crown</div>
+        <div class="nft-lore">The warrior with the highest Glory at month's end receives a legendary NFT — forged once, owned forever. Only one champion per moon cycle.</div>
       </div>
-      <div style="display:flex;justify-content:center;margin:24px auto;position:relative">
-        <div style="max-width:440px;width:100%;border-radius:22px;overflow:hidden;border:2px solid rgba(255,200,160,.25);box-shadow:0 20px 60px rgba(255,200,160,.15),0 0 50px rgba(232,90,142,.12);position:relative">
-          <img src="nft-trophy.png" alt="Monthly NFT Trophy" style="width:100%;display:block;filter:blur(12px) brightness(.7);transition:filter .3s" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-          <div style="display:none;flex-direction:column;align-items:center;justify-content:center;color:var(--text-faint);font-family:'Cormorant Garamond',serif;font-style:italic;text-align:center;padding:60px;background:linear-gradient(135deg,rgba(255,200,160,.08),rgba(232,90,142,.06));min-height:400px;filter:blur(0)">
-            <div style="font-size:60px;opacity:.3;margin-bottom:16px">👑</div>
-            <div style="font-size:16px">NFT trophy preview</div>
-            <div style="font-size:11px;margin-top:6px;letter-spacing:1px">nft-trophy.png</div>
+      <div class="nft-stage">
+        <div class="nft-halo-wrap">
+          <!-- Corner ornaments: arc + dot motif, mirrored -->
+          <span class="nft-corner tl" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none">
+              <path d="M2 14 Q2 2 14 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              <circle cx="2" cy="2" r="1.6" fill="currentColor"/>
+              <circle cx="14" cy="2" r="1.1" fill="currentColor" opacity=".7"/>
+              <circle cx="2" cy="14" r="1.1" fill="currentColor" opacity=".7"/>
+              <path d="M8 2 L8 6 M2 8 L6 8" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity=".6"/>
+            </svg>
+          </span>
+          <span class="nft-corner tr" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none">
+              <path d="M2 14 Q2 2 14 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              <circle cx="2" cy="2" r="1.6" fill="currentColor"/>
+              <circle cx="14" cy="2" r="1.1" fill="currentColor" opacity=".7"/>
+              <circle cx="2" cy="14" r="1.1" fill="currentColor" opacity=".7"/>
+              <path d="M8 2 L8 6 M2 8 L6 8" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity=".6"/>
+            </svg>
+          </span>
+          <span class="nft-corner bl" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none">
+              <path d="M2 14 Q2 2 14 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              <circle cx="2" cy="2" r="1.6" fill="currentColor"/>
+              <circle cx="14" cy="2" r="1.1" fill="currentColor" opacity=".7"/>
+              <circle cx="2" cy="14" r="1.1" fill="currentColor" opacity=".7"/>
+              <path d="M8 2 L8 6 M2 8 L6 8" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity=".6"/>
+            </svg>
+          </span>
+          <span class="nft-corner br" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none">
+              <path d="M2 14 Q2 2 14 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              <circle cx="2" cy="2" r="1.6" fill="currentColor"/>
+              <circle cx="14" cy="2" r="1.1" fill="currentColor" opacity=".7"/>
+              <circle cx="2" cy="14" r="1.1" fill="currentColor" opacity=".7"/>
+              <path d="M8 2 L8 6 M2 8 L6 8" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity=".6"/>
+            </svg>
+          </span>
+
+          <div class="nft-frame">
+            <img class="nft-img" src="nft-trophy.png" alt="Monthly NFT Trophy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="nft-img-fb">
+              <div class="nft-img-fb-emblem" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none">
+                  <path d="M4 22 L7 10 L12 16 L16 6 L20 16 L25 10 L28 22 Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="currentColor" fill-opacity=".15"/>
+                  <circle cx="16" cy="26" r="1.5" fill="currentColor"/>
+                </svg>
+              </div>
+              <div class="nft-img-fb-name">NFT trophy preview</div>
+              <div class="nft-img-fb-file">nft-trophy.png</div>
+            </div>
+            <div class="nft-overlay">
+              <div class="nft-claiming-soon">Claiming Soon</div>
+              <div class="nft-divider" aria-hidden="true"></div>
+              <div class="nft-overlay-sub">The crown reveals itself to the worthy</div>
+            </div>
           </div>
-          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5;pointer-events:none">
-            <div style="font-family:'Cinzel',serif;font-size:28px;font-weight:800;color:var(--gold);letter-spacing:6px;text-transform:uppercase;text-shadow:0 4px 20px rgba(0,0,0,.8),0 0 40px rgba(255,200,160,.4)">Claiming Soon</div>
-            <div style="width:120px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:12px 0"></div>
-            <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:rgba(255,200,160,.8);text-shadow:0 2px 10px rgba(0,0,0,.6)">The crown reveals itself to the worthy</div>
-          </div>
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;max-width:560px;margin:24px auto 0;text-align:center">
-        <div style="padding:14px;background:rgba(13,8,24,.5);border:1px solid rgba(255,200,160,.2);border-radius:14px">
-          <div style="font-family:'Cinzel',serif;font-size:26px;font-weight:800;color:var(--gold)" id="nftD">--</div>
-          <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--text-dim);margin-top:4px">DAYS</div>
-        </div>
-        <div style="padding:14px;background:rgba(13,8,24,.5);border:1px solid rgba(255,200,160,.2);border-radius:14px">
-          <div style="font-family:'Cinzel',serif;font-size:26px;font-weight:800;color:var(--gold)" id="nftH">--</div>
-          <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--text-dim);margin-top:4px">HOURS</div>
-        </div>
-        <div style="padding:14px;background:rgba(13,8,24,.5);border:1px solid rgba(255,200,160,.2);border-radius:14px">
-          <div style="font-family:'Cinzel',serif;font-size:26px;font-weight:800;color:var(--gold)" id="nftM">--</div>
-          <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--text-dim);margin-top:4px">MINUTES</div>
-        </div>
-        <div style="padding:14px;background:rgba(13,8,24,.5);border:1px solid rgba(255,200,160,.2);border-radius:14px">
-          <div style="font-family:'Cinzel',serif;font-size:26px;font-weight:800;color:var(--gold)" id="nftS">--</div>
-          <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--text-dim);margin-top:4px">SECONDS</div>
-        </div>
+      <div class="nft-cd-grid">
+        <div class="nft-cd-cell"><div class="nft-cd-num" id="nftD">--</div><div class="nft-cd-lbl">Days</div></div>
+        <div class="nft-cd-cell"><div class="nft-cd-num" id="nftH">--</div><div class="nft-cd-lbl">Hours</div></div>
+        <div class="nft-cd-cell"><div class="nft-cd-num" id="nftM">--</div><div class="nft-cd-lbl">Minutes</div></div>
+        <div class="nft-cd-cell"><div class="nft-cd-num" id="nftS">--</div><div class="nft-cd-lbl">Seconds</div></div>
       </div>
-      <div style="text-align:center;margin-top:14px;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--text-dim)">Until the Crown is forged</div>
+      <div class="nft-cd-caption">Until the Crown is forged</div>
     </div>
   </div>
 </div>
@@ -2075,11 +2307,13 @@ async function LG(){
         const[rew,can,rank,exp]=await hb.getPendingReward(ad,day-1);
         if(can&&Number(rew)>0){
           $('clB').style.display='flex';
+          $('clB').classList.add('cb-active');
           $('clA').textContent=ethers.formatEther(rew)+' STT';
           $('clRank').textContent='Rank #'+rank.toString()+' / Top-150';
           $('pYou').textContent=ethers.formatEther(rew)+' STT';
-        }else if(exp){$('pYou').textContent='Expired';}
-        else{$('pYou').textContent='—';}
+          $('pYou').closest('.pool').classList.add('has-reward');
+        }else if(exp){$('pYou').textContent='Expired';$('pYou').closest('.pool').classList.remove('has-reward');}
+        else{$('pYou').textContent='—';$('pYou').closest('.pool').classList.remove('has-reward');}
       }catch(e){}
       try{
         const yi=await hb.getRoundInfo(day-1);
@@ -2089,6 +2323,7 @@ async function LG(){
           $('YR').textContent=(yw?'🔥 Steal':'🛡️ Protect')+' Prevailed';
           $('YR').className='yr '+(yw?'ylo':'yw');
           const ban=$('ydayBanner');ban.style.display='block';
+          ban.classList.remove('yb-shown');void ban.offsetWidth;ban.classList.add('yb-shown');
           const[rew2,can2,rank2]=await hb.getPendingReward(ad,day-1).catch(()=>[0,false,0,false]);
           if(can2&&Number(rew2)>0){
             ban.style.borderColor='rgba(125,216,168,.4)';

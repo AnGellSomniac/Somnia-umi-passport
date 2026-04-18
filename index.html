@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src fonts.gstatic.com; img-src 'self' https: data:; connect-src *">
 <title>Steal or Protect — Chronicles of Somnia</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.4/ethers.umd.min.js"></script>
+<script src="ethers.min.js" onerror="this.src='https://cdnjs.cloudflare.com/ajax/libs/ethers/6.15.0/ethers.umd.min.js'"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -1701,10 +1702,10 @@ async function LP(){
       $('PC').style.display='block';$('FT').textContent='◈ Refine Your Identity';
       $('PN').textContent=p.nickname;$('PA').textContent=ad;$('PB').textContent=p.bio||'';
       $('N').value=p.nickname;$('A').value=p.avatarUrl;$('B').value=p.bio||'';$('S').value=p.socialUrl||'';
-      if(p.avatarUrl){$('AV').innerHTML='<img src="'+p.avatarUrl+'" onerror="this.parentElement.innerHTML=\'<div class=avp>◈</div>\'">';}
+      if(p.avatarUrl&&(p.avatarUrl.startsWith('https://')||p.avatarUrl.startsWith('http://'))){$('AV').innerHTML='<img src="'+p.avatarUrl.replace(/"/g,'&quot;')+'" onerror="this.parentElement.innerHTML=\'<div class=avp>◈</div>\'">';}
       $('PCr').textContent=new Date(Number(p.createdAt)*1000).toLocaleDateString();
       $('PUp').textContent=new Date(Number(p.updatedAt)*1000).toLocaleDateString();
-      if(p.socialUrl){$('PL2').style.display='inline-flex';$('PL2').href=p.socialUrl;$('PLT').textContent='Visit';}
+      if(p.socialUrl&&(p.socialUrl.startsWith('https://')||p.socialUrl.startsWith('http://'))){$('PL2').style.display='inline-flex';$('PL2').href=p.socialUrl;$('PLT').textContent='Visit';}
     }
   }catch(e){}
 }

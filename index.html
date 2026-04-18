@@ -249,18 +249,87 @@ body::after{
   position:relative;overflow:hidden;
   min-height:480px;
   display:flex;flex-direction:column;
-  transition:all .3s;
+  isolation:isolate;
+  transition:transform .4s cubic-bezier(.2,.8,.2,1),
+             box-shadow .4s ease,
+             border-color .3s ease;
 }
+/* Cinematic top-down spotlight beam */
+.warrior::before{
+  content:'';position:absolute;
+  top:-30px;left:50%;
+  width:90%;height:75%;
+  transform:translateX(-50%);
+  background:radial-gradient(ellipse 65% 70% at 50% 0%, var(--beam-color), transparent 70%);
+  pointer-events:none;z-index:0;
+  opacity:.55;
+  animation:beamPulse 7s ease-in-out infinite;
+}
+@keyframes beamPulse{
+  0%,100%{opacity:.4;transform:translateX(-50%) scale(1)}
+  50%{opacity:.75;transform:translateX(-50%) scale(1.06)}
+}
+/* Atmospheric mist rising from base */
+.warrior::after{
+  content:'';position:absolute;
+  bottom:-40px;left:-12%;right:-12%;height:180px;
+  background:radial-gradient(ellipse 70% 100% at 50% 100%, var(--mist-color), transparent 72%);
+  pointer-events:none;z-index:0;
+  filter:blur(10px);
+}
+/* Keep all card content above the atmospheric layers */
+.warrior > *{position:relative;z-index:1}
+
 .warrior.atk{
   background:linear-gradient(180deg,rgba(232,90,142,.15),rgba(120,30,80,.2));
   border:1px solid rgba(232,90,142,.3);
+  --beam-color:rgba(255,180,210,.22);
+  --mist-color:rgba(232,90,142,.20);
 }
-.warrior.atk:hover{border-color:rgba(232,90,142,.6);box-shadow:0 16px 48px rgba(232,90,142,.25),inset 0 0 40px rgba(232,90,142,.08)}
+.warrior.atk:hover{
+  border-color:rgba(232,90,142,.65);
+  transform:translateY(-4px);
+  box-shadow:0 24px 60px rgba(232,90,142,.32),inset 0 0 60px rgba(232,90,142,.1);
+}
+.warrior.atk:hover::before{animation-duration:3.5s}
 .warrior.def{
   background:linear-gradient(180deg,rgba(130,100,220,.15),rgba(80,50,180,.2));
   border:1px solid rgba(130,100,220,.3);
+  --beam-color:rgba(220,180,255,.22);
+  --mist-color:rgba(178,98,217,.20);
 }
-.warrior.def:hover{border-color:rgba(160,130,255,.6);box-shadow:0 16px 48px rgba(130,100,220,.25),inset 0 0 40px rgba(130,100,220,.08)}
+.warrior.def:hover{
+  border-color:rgba(160,130,255,.65);
+  transform:translateY(-4px);
+  box-shadow:0 24px 60px rgba(130,100,220,.32),inset 0 0 60px rgba(130,100,220,.1);
+}
+.warrior.def:hover::before{animation-duration:3.5s}
+
+/* Heraldic corner runes (decorative SVG) */
+.w-rune{
+  position:absolute;width:42px;height:42px;
+  pointer-events:none;z-index:2;
+  opacity:.35;
+  transition:opacity .5s ease, filter .5s ease;
+}
+.w-rune.tl{top:10px;left:10px}
+.w-rune.tr{top:10px;right:10px;transform:scaleX(-1)}
+.warrior:hover .w-rune{opacity:.8}
+.warrior.atk .w-rune{color:#ffb3c8;filter:drop-shadow(0 0 4px rgba(232,90,142,.5))}
+.warrior.def .w-rune{color:#cfbdff;filter:drop-shadow(0 0 4px rgba(178,98,217,.5))}
+.warrior.atk:hover .w-rune{filter:drop-shadow(0 0 8px rgba(232,90,142,.85))}
+.warrior.def:hover .w-rune{filter:drop-shadow(0 0 8px rgba(178,98,217,.85))}
+
+/* Image gets subtle spotlight wash from top + faction tint at base */
+.w-img.atk{box-shadow:0 10px 30px rgba(0,0,0,.4),inset 0 30px 60px rgba(255,200,160,.08),inset 0 -40px 80px rgba(232,90,142,.18)}
+.w-img.def{box-shadow:0 10px 30px rgba(0,0,0,.4),inset 0 30px 60px rgba(255,200,160,.08),inset 0 -40px 80px rgba(130,100,220,.18)}
+
+/* Respect user motion preference (DESIGN_BRIEF §7) */
+@media(prefers-reduced-motion:reduce){
+  .warrior::before{animation:none;opacity:.5}
+  .warrior:hover{transform:none}
+  .w-rune{transition:none}
+}
 .w-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .w-label{
   font-family:'Cinzel',serif;font-size:22px;font-weight:800;
@@ -904,6 +973,22 @@ body::after{
     <div class="ch" style="color:var(--pink-light)">⚔ Today's Battlefield</div>
     <div class="arena">
       <div class="warrior atk">
+        <svg class="w-rune tl" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <path d="M4 4 L4 20 Q4 28 12 28 L22 28" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+          <circle cx="12" cy="14" r="3" stroke="currentColor" stroke-width="1.2"/>
+          <circle cx="12" cy="14" r="1" fill="currentColor"/>
+          <circle cx="22" cy="6" r="1.2" fill="currentColor"/>
+          <circle cx="6" cy="22" r="1.2" fill="currentColor"/>
+          <path d="M18 14 L26 22 L18 22 Z" stroke="currentColor" stroke-width="1" opacity=".7"/>
+        </svg>
+        <svg class="w-rune tr" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <path d="M4 4 L4 20 Q4 28 12 28 L22 28" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+          <circle cx="12" cy="14" r="3" stroke="currentColor" stroke-width="1.2"/>
+          <circle cx="12" cy="14" r="1" fill="currentColor"/>
+          <circle cx="22" cy="6" r="1.2" fill="currentColor"/>
+          <circle cx="6" cy="22" r="1.2" fill="currentColor"/>
+          <path d="M18 14 L26 22 L18 22 Z" stroke="currentColor" stroke-width="1" opacity=".7"/>
+        </svg>
         <div class="w-top">
           <div class="w-label atk">Attack</div>
           <div class="w-level atk" id="atkLv">Lv 1</div>
@@ -934,6 +1019,22 @@ body::after{
       </div>
 
       <div class="warrior def">
+        <svg class="w-rune tl" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <path d="M4 4 L4 20 Q4 28 12 28 L22 28" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+          <circle cx="12" cy="14" r="3" stroke="currentColor" stroke-width="1.2"/>
+          <circle cx="12" cy="14" r="1" fill="currentColor"/>
+          <circle cx="22" cy="6" r="1.2" fill="currentColor"/>
+          <circle cx="6" cy="22" r="1.2" fill="currentColor"/>
+          <path d="M18 14 L26 22 L18 22 Z" stroke="currentColor" stroke-width="1" opacity=".7"/>
+        </svg>
+        <svg class="w-rune tr" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <path d="M4 4 L4 20 Q4 28 12 28 L22 28" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+          <circle cx="12" cy="14" r="3" stroke="currentColor" stroke-width="1.2"/>
+          <circle cx="12" cy="14" r="1" fill="currentColor"/>
+          <circle cx="22" cy="6" r="1.2" fill="currentColor"/>
+          <circle cx="6" cy="22" r="1.2" fill="currentColor"/>
+          <path d="M18 14 L26 22 L18 22 Z" stroke="currentColor" stroke-width="1" opacity=".7"/>
+        </svg>
         <div class="w-top">
           <div class="w-label def">Protect</div>
           <div class="w-level def" id="defLv">Lv 1</div>

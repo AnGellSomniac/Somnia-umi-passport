@@ -732,6 +732,36 @@ if(window.ethereum){
 
 initRef();
 
+/* Event delegation for [data-action] buttons (replaces inline onclick) */
+document.addEventListener('click',(e)=>{
+  const el=e.target.closest('[data-action]');
+  if(!el)return;
+  const a=el.dataset.action,arg=el.dataset.arg;
+  switch(a){
+    case 'wm-close':wmClose();break;
+    case 'wm-step':wmStep(parseInt(arg,10));break;
+    case 'wallet':W();break;
+    case 'onboard':OB();break;
+    case 'play':PL(arg==='atk');break;
+    case 'claim-reward':CR();break;
+    case 'share':shareWin();break;
+    case 'ritual':GM();break;
+    case 'copy-ref':copyRef();break;
+    case 'copy-ref2':copyRef2();break;
+    case 'save-profile':SV();break;
+    case 'rw-claim':rwClaim();break;
+    case 'ow-today':OWclaimToday();break;
+    case 'ow-yesterday':OWclaimYesterday();break;
+    case 'ow-batch':OWbatch();break;
+    case 'ow-finalize':OWfinYesterday();break;
+    case 'ow-resolve':OWtestResolve();break;
+  }
+});
+
+/* Boost sliders (replaces inline oninput) */
+const _slA=$('slA');if(_slA)_slA.addEventListener('input',()=>uB('A'));
+const _slD=$('slD');if(_slD)_slD.addEventListener('input',()=>uB('D'));
+
 function startNftCountdown(){
   const upd=()=>{
     const now=new Date();

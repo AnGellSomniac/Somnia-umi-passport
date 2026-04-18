@@ -573,20 +573,79 @@ body::after{
   font-family:'Cinzel',serif;font-size:13px;font-weight:700;letter-spacing:3px;
   padding:14px 20px;border:none;border-radius:24px;
   cursor:pointer;text-transform:uppercase;color:#fff;
-  transition:all .3s;
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  position:relative;overflow:hidden;
+  transition:transform .25s ease, box-shadow .35s ease, filter .3s ease;
 }
+.b-btn .bf-lbl{position:relative;z-index:1}
+.b-btn svg{
+  width:18px;height:18px;flex-shrink:0;
+  position:relative;z-index:1;
+  transition:transform .35s cubic-bezier(.3,.7,.3,1.4), filter .3s ease;
+  filter:drop-shadow(0 0 4px rgba(255,255,255,.5));
+}
+/* Blade-sheen sweep across on hover (a sword catching light) */
+.b-btn::before{
+  content:'';position:absolute;
+  top:0;left:-120%;width:80%;height:100%;
+  background:linear-gradient(100deg,
+    transparent 10%,
+    rgba(255,255,255,.28) 50%,
+    transparent 90%);
+  pointer-events:none;
+  transition:left .7s cubic-bezier(.4,0,.2,1);
+}
+.b-btn:hover:not(:disabled)::before{left:130%}
+
 .b-btn.steal{
   background:linear-gradient(135deg,#ff3c70,var(--pink));
   box-shadow:0 6px 20px rgba(232,90,142,.4),inset 0 1px 0 rgba(255,220,230,.4);
 }
-.b-btn.steal:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 28px rgba(232,90,142,.55)}
+.b-btn.steal:hover:not(:disabled){
+  transform:translateY(-2px);
+  box-shadow:0 12px 32px rgba(232,90,142,.6),inset 0 1px 0 rgba(255,220,230,.5);
+}
+.b-btn.steal:hover:not(:disabled) svg{
+  transform:translateX(2px) rotate(-12deg);
+  filter:drop-shadow(0 0 8px rgba(255,255,255,.9));
+}
 .b-btn.protect{
   background:linear-gradient(135deg,#7040e0,var(--purple));
   box-shadow:0 6px 20px rgba(178,98,217,.4),inset 0 1px 0 rgba(220,200,255,.4);
 }
-.b-btn.protect:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 28px rgba(178,98,217,.55)}
-.b-btn.off,.b-btn:disabled{opacity:.5;cursor:not-allowed}
+.b-btn.protect:hover:not(:disabled){
+  transform:translateY(-2px);
+  box-shadow:0 12px 32px rgba(178,98,217,.6),inset 0 1px 0 rgba(220,200,255,.5);
+}
+.b-btn.protect:hover:not(:disabled) svg{
+  transform:scale(1.15);
+  filter:drop-shadow(0 0 8px rgba(255,255,255,.9));
+}
+
+/* Physical "strike" on press — button drops into the action */
+.b-btn:active:not(:disabled){
+  transform:translateY(1px) scale(.98);
+  box-shadow:0 3px 10px rgba(0,0,0,.3),inset 0 2px 8px rgba(0,0,0,.25);
+  transition-duration:.08s;
+}
+/* Keyboard focus ring (accessibility — fixes DESIGN_BRIEF §7) */
+.b-btn:focus-visible{
+  outline:2px solid var(--gold);
+  outline-offset:3px;
+}
+
+.b-btn.off,.b-btn:disabled{
+  opacity:.5;cursor:not-allowed;
+  filter:grayscale(.4);
+}
+.b-btn:disabled::before{display:none}
 .w-fight-btn{width:100%;margin-top:14px;padding:16px 20px;font-size:14px;letter-spacing:4px}
+
+@media(prefers-reduced-motion:reduce){
+  .b-btn,.b-btn svg,.b-btn::before{transition:none}
+  .b-btn:hover:not(:disabled),.b-btn:active:not(:disabled){transform:none}
+  .b-btn:hover:not(:disabled)::before{left:-120%}
+}
 .silver-text{
   background:linear-gradient(135deg,#c8c8d8,#e8e8f0,#9098a8,#e8e8f0,#c8c8d8);
   background-size:200% auto;
@@ -1099,7 +1158,15 @@ body::after{
           <input type="range" class="w-slider atk-s" id="slA" min="0" max="1" value="0" oninput="uB('A')">
           <div class="w-boost-row"><span class="w-bv" id="bvA">Normal</span><span class="w-bc" id="bcA">Free</span></div>
         </div>
-        <button class="b-btn steal w-fight-btn" id="btnS" onclick="PL(true)">🔥 Strike to Steal</button>
+        <button class="b-btn steal w-fight-btn" id="btnS" onclick="PL(true)" aria-label="Strike with the House of Attack">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M19 3 L21 5 L11 15 L9 13 Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="currentColor" fill-opacity=".18"/>
+            <path d="M8 12 L12 16 M6 14 L10 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M3 21 L7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="3" cy="21" r="1.3" fill="currentColor"/>
+          </svg>
+          <span class="bf-lbl">Strike to Steal</span>
+        </button>
       </div>
 
       <div class="bc">
@@ -1170,7 +1237,13 @@ body::after{
           <input type="range" class="w-slider def-s" id="slD" min="0" max="1" value="0" oninput="uB('D')">
           <div class="w-boost-row"><span class="w-bv" id="bvD">Normal</span><span class="w-bc" id="bcD">Free</span></div>
         </div>
-        <button class="b-btn protect w-fight-btn" id="btnP" onclick="PL(false)">🛡 Stand & Protect</button>
+        <button class="b-btn protect w-fight-btn" id="btnP" onclick="PL(false)" aria-label="Stand with the House of Protect">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 2 L4 5 V11 C4 16.5 7 20 12 22 C17 20 20 16.5 20 11 V5 Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="currentColor" fill-opacity=".18"/>
+            <path d="M8 11 L11 14 L16 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="bf-lbl">Stand &amp; Protect</span>
+        </button>
       </div>
     </div>
 
@@ -1990,8 +2063,9 @@ async function LG(){
     if(v.playedToday){
       bS.disabled=true;bP.disabled=true;bS.classList.add('off');bP.classList.add('off');
       $('slA').disabled=true;$('slD').disabled=true;
-      if(v.todaySide){bS.textContent='🔥 Your Choice — Attack';bP.textContent='🛡 Stand & Protect';}
-      else{bS.textContent='🔥 Strike to Steal';bP.textContent='🛡 Your Choice — Protect';}
+      const bSlbl=bS.querySelector('.bf-lbl'),bPlbl=bP.querySelector('.bf-lbl');
+      if(v.todaySide){bSlbl.textContent='Your Choice — Attack';bPlbl.textContent='Stand & Protect';}
+      else{bSlbl.textContent='Strike to Steal';bPlbl.textContent='Your Choice — Protect';}
       $('gSt').textContent='Your fate is sealed for today';$('gmLock').style.display='none';
     }
     if(v.gmToday){$('gBtn').disabled=true;$('gSs').textContent='Ritual complete ✓';}

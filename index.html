@@ -1673,7 +1673,7 @@ body::after{
 <!-- Welcome / Onboarding Modal -->
 <div class="wm-backdrop" id="wmBackdrop" role="dialog" aria-modal="true" aria-labelledby="wmStepTitle" aria-describedby="wmStepLore" hidden>
   <div class="wm-modal" id="wmModal">
-    <button class="wm-close" type="button" onclick="wmClose()" aria-label="Close welcome"><span aria-hidden="true">×</span></button>
+    <button class="wm-close" type="button" data-action="wm-close" aria-label="Close welcome"><span aria-hidden="true">×</span></button>
     <div class="wm-dots" aria-hidden="true">
       <span class="wm-dot a" data-step="0"></span>
       <span class="wm-dot" data-step="1"></span>
@@ -1681,9 +1681,9 @@ body::after{
     </div>
     <div class="wm-hero" id="wmHero"></div>
     <div class="wm-nav">
-      <button class="wm-prev" id="wmPrev" type="button" onclick="wmStep(-1)">Back</button>
-      <button class="wm-skip" type="button" onclick="wmClose()">Skip</button>
-      <button class="wm-next" id="wmNext" type="button" onclick="wmStep(1)">Next</button>
+      <button class="wm-prev" id="wmPrev" type="button" data-action="wm-step" data-arg="-1">Back</button>
+      <button class="wm-skip" type="button" data-action="wm-close">Skip</button>
+      <button class="wm-next" id="wmNext" type="button" data-action="wm-step" data-arg="1">Next</button>
     </div>
   </div>
 </div>
@@ -1783,7 +1783,7 @@ body::after{
     <div class="si"><div class="sl">GM Streak</div><div class="sv" style="color:var(--green)" id="hGmS">—</div></div>
     <div class="si"><div class="sl">Glory</div><div class="sv" style="color:var(--gold)" id="hGl">—</div></div>
     <div class="si"><div class="sl">Realm</div><div class="sv" style="font-size:11px;color:var(--purple-light)" id="hN">—</div></div>
-    <button class="cb" id="cB" onclick="W()">Enter Realm</button>
+    <button class="cb" id="cB" data-action="wallet">Enter Realm</button>
   </div>
 </header>
 
@@ -1800,7 +1800,7 @@ body::after{
     </div>
     <h1 class="cn-title">Two houses await</h1>
     <p class="cn-sub">"Every sunrise, warriors choose. Every sunset, glory is claimed by the bold. Connect your wallet and write your name into the chronicles."</p>
-    <button class="cb" onclick="W()" style="font-size:13px;padding:14px 32px">Connect Wallet</button>
+    <button class="cb" data-action="wallet" style="font-size:13px;padding:14px 32px">Connect Wallet</button>
   </div>
 </div>
 
@@ -1820,7 +1820,7 @@ body::after{
       <div class="ff" style="grid-column:1/-1"><label class="fl" for="obS">Twitter / Social (optional)</label><input class="fi" id="obS" type="url" placeholder="https://x.com/..." autocomplete="url"></div>
     </div>
     <div class="fa">
-      <button class="fb" id="obBtn" onclick="OB()">Create Passport & Enter</button>
+      <button class="fb" id="obBtn" data-action="onboard">Create Passport & Enter</button>
       <span class="fs" id="obSt" role="status" aria-live="polite"></span>
     </div>
   </div>
@@ -1907,10 +1907,10 @@ body::after{
         <div class="w-quote">"Fortune favors those who strike first."</div>
         <div class="w-boost">
           <div class="w-boost-lbl">Boost Attack Power</div>
-          <input type="range" class="w-slider atk-s" id="slA" min="0" max="1" value="0" oninput="uB('A')" aria-label="Attack boost: off or +1 STT">
+          <input type="range" class="w-slider atk-s" id="slA" min="0" max="1" value="0" aria-label="Attack boost: off or +1 STT">
           <div class="w-boost-row"><span class="w-bv" id="bvA">Normal</span><span class="w-bc" id="bcA">Free</span></div>
         </div>
-        <button class="b-btn steal w-fight-btn" id="btnS" onclick="PL(true)" aria-label="Strike with the House of Attack">
+        <button class="b-btn steal w-fight-btn" id="btnS" data-action="play" data-arg="atk" aria-label="Strike with the House of Attack">
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M19 3 L21 5 L11 15 L9 13 Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="currentColor" fill-opacity=".18"/>
             <path d="M8 12 L12 16 M6 14 L10 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
@@ -1986,10 +1986,10 @@ body::after{
         <div class="w-quote">"Stand firm when others falter."</div>
         <div class="w-boost">
           <div class="w-boost-lbl">Boost Defense Power</div>
-          <input type="range" class="w-slider def-s" id="slD" min="0" max="1" value="0" oninput="uB('D')" aria-label="Protect boost: off or +1 STT">
+          <input type="range" class="w-slider def-s" id="slD" min="0" max="1" value="0" aria-label="Protect boost: off or +1 STT">
           <div class="w-boost-row"><span class="w-bv" id="bvD">Normal</span><span class="w-bc" id="bcD">Free</span></div>
         </div>
-        <button class="b-btn protect w-fight-btn" id="btnP" onclick="PL(false)" aria-label="Stand with the House of Protect">
+        <button class="b-btn protect w-fight-btn" id="btnP" data-action="play" data-arg="def" aria-label="Stand with the House of Protect">
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M12 2 L4 5 V11 C4 16.5 7 20 12 22 C17 20 20 16.5 20 11 V5 Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="currentColor" fill-opacity=".18"/>
             <path d="M8 11 L11 14 L16 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -2006,8 +2006,8 @@ body::after{
         <span class="claim-rank" id="clRank"></span>
       </div>
       <div style="display:flex;gap:10px">
-        <button class="claim-btn" id="clBtn" onclick="CR()">Claim Reward</button>
-        <button class="claim-btn" style="background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff" onclick="shareWin()">Share Victory</button>
+        <button class="claim-btn" id="clBtn" data-action="claim-reward">Claim Reward</button>
+        <button class="claim-btn" style="background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff" data-action="share">Share Victory</button>
       </div>
     </div>
     <div class="yday" id="YD"><span class="yl">Yesterday:</span><span class="yr" id="YR"></span></div>
@@ -2124,7 +2124,7 @@ body::after{
       <div class="ch" style="color:var(--gold)">☀ Morning Ritual · 1 STT</div>
       <div class="gma">
         <label class="sr-only" for="gMsg">Ritual message (optional)</label><input class="gmi" id="gMsg" placeholder="Whisper to the arena (optional)" maxlength="140">
-        <button class="gmb" id="gBtn" onclick="GM()">Perform Ritual ☀</button>
+        <button class="gmb" id="gBtn" data-action="ritual">Perform Ritual ☀</button>
         <div class="gm-cost">1 STT · 90% to treasury · 10% to sovereign</div>
         <div class="gss" id="gSs" role="status" aria-live="polite"></div>
         <div style="display:flex;gap:22px;margin-top:20px;justify-content:center;flex-wrap:wrap">
@@ -2174,7 +2174,7 @@ body::after{
       <div class="ref-sub">For every warrior you bring, earn <strong style="color:var(--gold)">+20 Glory</strong> per their ritual. Your name echoes through their journey.</div>
       <div class="ref-row">
         <input id="refLink" class="ref-input" readonly aria-label="Your referral link">
-        <button class="ref-copy" onclick="copyRef()">📋 Copy Link</button>
+        <button class="ref-copy" data-action="copy-ref">📋 Copy Link</button>
       </div>
       <div class="ref-stats">
         Souls summoned: <strong id="refCount">0</strong> · Glory earned: <strong id="refGlory">0</strong>
@@ -2364,7 +2364,7 @@ body::after{
       <div class="ff" style="grid-column:1/-1"><label class="fl" for="S">Social Link</label><input class="fi" id="S" type="url" autocomplete="url"></div>
     </div>
     <div class="fa">
-      <button class="fb" id="fBtn" onclick="SV()" disabled>Save Passport</button>
+      <button class="fb" id="fBtn" data-action="save-profile" disabled>Save Passport</button>
       <span class="fs" id="St" role="status" aria-live="polite"></span>
     </div>
   </div>
@@ -2377,7 +2377,7 @@ body::after{
       <div class="ref-sub">For every warrior you bring, earn <strong style="color:var(--gold)">+20 Glory</strong> per their ritual. Your name echoes through their journey.</div>
       <div class="ref-row">
         <input id="refLink2" class="ref-input" readonly aria-label="Your referral link">
-        <button class="ref-copy" onclick="copyRef2()">📋 Copy Link</button>
+        <button class="ref-copy" data-action="copy-ref2">📋 Copy Link</button>
       </div>
       <div class="ref-stats">
         Souls summoned: <strong id="refCount2">0</strong> · Glory earned: <strong id="refGlory2">0</strong>
@@ -2549,8 +2549,8 @@ body::after{
         <div class="rw-rank" id="rwRank"></div>
         <div class="rw-tier" id="rwTier"></div>
         <div class="rw-amount" id="rwAmount"></div>
-        <button class="claim-btn" id="rwClaimBtn" onclick="rwClaim()" style="font-size:14px;padding:16px 40px">🏆 Claim Your Prize</button>
-        <button class="claim-btn" onclick="shareWin()" style="font-size:13px;padding:14px 32px;margin-left:10px;background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff">📢 Share Victory on X</button>
+        <button class="claim-btn" id="rwClaimBtn" data-action="rw-claim" style="font-size:14px;padding:16px 40px">🏆 Claim Your Prize</button>
+        <button class="claim-btn" data-action="share" style="font-size:13px;padding:14px 32px;margin-left:10px;background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff">📢 Share Victory on X</button>
         <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:12px;margin-top:12px;min-height:16px" id="rwClaimSt"></div>
       </div>
 
@@ -2576,16 +2576,16 @@ body::after{
 
       <div style="font-family:'Cinzel',serif;font-size:10px;color:var(--text-dim);text-align:center;margin-bottom:12px;letter-spacing:2px">Claim Your 10% Tribute</div>
       <div class="owner-actions">
-        <button class="owner-btn" onclick="OWclaimToday()">💰 Today</button>
-        <button class="owner-btn" onclick="OWclaimYesterday()">💰 Yesterday</button>
-        <button class="owner-btn" onclick="OWbatch()" style="border-color:rgba(125,216,168,.4);color:var(--green)">💰 Last 7 Days</button>
+        <button class="owner-btn" data-action="ow-today">💰 Today</button>
+        <button class="owner-btn" data-action="ow-yesterday">💰 Yesterday</button>
+        <button class="owner-btn" data-action="ow-batch" style="border-color:rgba(125,216,168,.4);color:var(--green)">💰 Last 7 Days</button>
       </div>
 
       <div style="margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,200,160,.15)">
         <div style="font-family:'Cinzel',serif;font-size:10px;color:var(--text-dim);text-align:center;margin-bottom:12px;letter-spacing:2px">Arena Management</div>
         <div class="owner-actions">
-          <button class="owner-btn" onclick="OWfinYesterday()">📊 Finalize Yesterday</button>
-          <button class="owner-btn" onclick="OWtestResolve()" style="border-color:rgba(178,98,217,.4);color:var(--purple-light)">🧪 Resolve + Finalize</button>
+          <button class="owner-btn" data-action="ow-finalize">📊 Finalize Yesterday</button>
+          <button class="owner-btn" data-action="ow-resolve" style="border-color:rgba(178,98,217,.4);color:var(--purple-light)">🧪 Resolve + Finalize</button>
         </div>
       </div>
 

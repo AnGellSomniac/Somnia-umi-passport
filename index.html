@@ -140,7 +140,11 @@ body::after{
 }
 .hero-sub{
   font-family:'Cormorant Garamond',serif;font-style:italic;font-size:18px;
-  color:var(--text-dim);letter-spacing:.5px;
+  letter-spacing:.5px;
+  background:linear-gradient(135deg,#d0d0e0,#f0f0f8,#a8b0c0,#f0f0f8,#d0d0e0);
+  background-size:200% auto;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  animation:silverShine 6s ease-in-out infinite;
 }
 .hero-divider{width:240px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:24px auto 0}
 
@@ -270,8 +274,8 @@ body::after{
 .w-level.atk{background:rgba(232,90,142,.15);border:1px solid rgba(232,90,142,.35);color:#ffb3c8}
 .w-level.def{background:rgba(130,100,220,.15);border:1px solid rgba(130,100,220,.35);color:#cfbdff}
 .w-img{
-  width:100%;max-width:280px;margin:10px auto;
-  aspect-ratio:1;border-radius:18px;overflow:hidden;
+  width:100%;max-width:380px;margin:10px auto;
+  aspect-ratio:4/5;border-radius:18px;overflow:hidden;
   position:relative;
   background:linear-gradient(135deg,rgba(20,10,30,.8),rgba(10,6,18,.9));
   box-shadow:0 10px 30px rgba(0,0,0,.4),inset 0 0 20px rgba(255,200,220,.05);
@@ -286,9 +290,14 @@ body::after{
 }
 .w-quote{
   font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;
-  text-align:center;color:var(--text-dim);margin:8px 0 16px;line-height:1.5;
+  text-align:center;margin:8px 0 16px;line-height:1.5;
   padding:0 10px;
+  background:linear-gradient(135deg,#c8c8d8,#e8e8f0,#9098a8,#e8e8f0,#c8c8d8);
+  background-size:200% auto;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  animation:silverShine 4s ease-in-out infinite;
 }
+@keyframes silverShine{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
 .w-boost{
   border-top:1px solid rgba(255,255,255,.06);
   padding-top:16px;margin-top:auto;
@@ -409,6 +418,12 @@ body::after{
 .b-btn.protect:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 28px rgba(178,98,217,.55)}
 .b-btn.off,.b-btn:disabled{opacity:.5;cursor:not-allowed}
 .w-fight-btn{width:100%;margin-top:14px;padding:16px 20px;font-size:14px;letter-spacing:4px}
+.silver-text{
+  background:linear-gradient(135deg,#c8c8d8,#e8e8f0,#9098a8,#e8e8f0,#c8c8d8);
+  background-size:200% auto;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  animation:silverShine 6s ease-in-out infinite;
+}
 .gm-lock{
   display:none;
   font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;
@@ -1054,7 +1069,7 @@ body::after{
       <div style="padding:40px;display:flex;flex-direction:column;justify-content:center">
         <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:4px;color:var(--gold);margin-bottom:12px">CHAPTER I</div>
         <div style="font-family:'Cinzel',serif;font-size:32px;font-weight:700;color:#fff;margin-bottom:18px;line-height:1.1">The Fracture</div>
-        <p style="font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;color:var(--text);font-style:italic">In the beginning, there was only Somnia — a realm where dreams took form and every sleeping mind wove threads of the tapestry. All souls belonged to one house. There was no theft, no defense, only creation.</p>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;font-style:italic;background:linear-gradient(135deg,#d0d0e0,#f0f0f8,#a8b0c0,#f0f0f8,#d0d0e0);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:silverShine 8s ease-in-out infinite">In the beginning, there was only Somnia — a realm where dreams took form and every sleeping mind wove threads of the tapestry. All souls belonged to one house. There was no theft, no defense, only creation.</p>
         <p style="font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;color:var(--text-dim);margin-top:12px">Then came the Fracture. A shard of waking consciousness pierced the dream, and from its edges bloomed two desires: <strong style="color:var(--pink-light)">to take</strong>, and <strong style="color:var(--purple-light)">to keep</strong>.</p>
       </div>
       <div style="background:linear-gradient(135deg,rgba(232,90,142,.15),rgba(178,98,217,.15));display:flex;align-items:center;justify-content:center;padding:20px;border-left:1px solid var(--border)">
@@ -1081,7 +1096,7 @@ body::after{
       <div style="padding:40px;display:flex;flex-direction:column;justify-content:center">
         <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:4px;color:var(--pink-light);margin-bottom:12px">CHAPTER II</div>
         <div style="font-family:'Cinzel',serif;font-size:32px;font-weight:700;color:#fff;margin-bottom:18px;line-height:1.1">The House of Attack</div>
-        <p style="font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;color:var(--text);font-style:italic">From the fracture rose the Bold — warriors who believed the world was meant to be seized, not inherited. They forged blades from lightning and wore crimson for the blood of conquest.</p>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;font-style:italic;background:linear-gradient(135deg,#d0d0e0,#f0f0f8,#a8b0c0,#f0f0f8,#d0d0e0);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:silverShine 8s ease-in-out infinite">From the fracture rose the Bold — warriors who believed the world was meant to be seized, not inherited. They forged blades from lightning and wore crimson for the blood of conquest.</p>
         <p style="font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;color:var(--text-dim);margin-top:12px">"What is given can be taken," their first champion declared. "What is taken, is <strong style="color:var(--pink-light)">earned</strong>."</p>
       </div>
     </div>
@@ -1092,7 +1107,7 @@ body::after{
       <div style="padding:40px;display:flex;flex-direction:column;justify-content:center">
         <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:4px;color:var(--purple-light);margin-bottom:12px">CHAPTER III</div>
         <div style="font-family:'Cinzel',serif;font-size:32px;font-weight:700;color:#fff;margin-bottom:18px;line-height:1.1">The House of Protect</div>
-        <p style="font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;color:var(--text);font-style:italic">In the shadow of the Bold, another house awakened. The Guardian. They wove shields from moonlight and wore violet for the depth of patience. They did not create. They did not take. They held.</p>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;font-style:italic;background:linear-gradient(135deg,#d0d0e0,#f0f0f8,#a8b0c0,#f0f0f8,#d0d0e0);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:silverShine 8s ease-in-out infinite">In the shadow of the Bold, another house awakened. The Guardian. They wove shields from moonlight and wore violet for the depth of patience. They did not create. They did not take. They held.</p>
         <p style="font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;color:var(--text-dim);margin-top:12px">"The tide recedes, but the shore remains," whispered their eldest. "We are the shore."</p>
       </div>
       <div style="background:linear-gradient(135deg,rgba(130,100,220,.2),rgba(80,50,180,.15));display:flex;align-items:center;justify-content:center;padding:20px;border-left:1px solid var(--border)">
@@ -1119,7 +1134,7 @@ body::after{
       <div style="padding:40px;display:flex;flex-direction:column;justify-content:center">
         <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:4px;color:var(--gold);margin-bottom:12px">CHAPTER IV</div>
         <div style="font-family:'Cinzel',serif;font-size:32px;font-weight:700;color:#fff;margin-bottom:18px;line-height:1.1">The Eternal Hourglass</div>
-        <p style="font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;color:var(--text);font-style:italic">The first war between the houses lasted a thousand years. When neither side could triumph, the ancients forged the Hourglass — a sacred vessel that rules each day.</p>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;font-style:italic;background:linear-gradient(135deg,#d0d0e0,#f0f0f8,#a8b0c0,#f0f0f8,#d0d0e0);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:silverShine 8s ease-in-out infinite">The first war between the houses lasted a thousand years. When neither side could triumph, the ancients forged the Hourglass — a sacred vessel that rules each day.</p>
         <p style="font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;color:var(--text-dim);margin-top:12px">When the sands empty, the victors are chosen. When the sands refill, <strong style="color:var(--gold)">the battle begins anew</strong>. This is the Law of the Arena.</p>
       </div>
     </div>
@@ -1130,7 +1145,7 @@ body::after{
       <div style="padding:40px;display:flex;flex-direction:column;justify-content:center">
         <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:4px;color:var(--pink);margin-bottom:12px">CHAPTER V</div>
         <div style="font-family:'Cinzel',serif;font-size:32px;font-weight:700;color:#fff;margin-bottom:18px;line-height:1.1">The Passport of Souls</div>
-        <p style="font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;color:var(--text);font-style:italic">Every warrior who enters the Chronicles must first forge their Passport — a binding of identity to the dream-realm. No passport, no battle. No battle, no glory.</p>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;font-style:italic;background:linear-gradient(135deg,#d0d0e0,#f0f0f8,#a8b0c0,#f0f0f8,#d0d0e0);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:silverShine 8s ease-in-out infinite">Every warrior who enters the Chronicles must first forge their Passport — a binding of identity to the dream-realm. No passport, no battle. No battle, no glory.</p>
         <p style="font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;color:var(--text-dim);margin-top:12px">Your name becomes eternal. Your victories, chronicled. Your defeats, <strong style="color:var(--pink)">remembered</strong>.</p>
       </div>
       <div style="background:linear-gradient(135deg,rgba(255,150,200,.15),rgba(180,130,255,.15));display:flex;align-items:center;justify-content:center;padding:20px;border-left:1px solid var(--border)">
@@ -1157,7 +1172,7 @@ body::after{
       <div style="padding:40px;display:flex;flex-direction:column;justify-content:center">
         <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:4px;color:var(--green);margin-bottom:12px">CHAPTER VI</div>
         <div style="font-family:'Cinzel',serif;font-size:32px;font-weight:700;color:#fff;margin-bottom:18px;line-height:1.1">The Morning Ritual</div>
-        <p style="font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;color:var(--text);font-style:italic">Before any warrior may step into the Arena, they must perform the Morning Ritual — a sacred offering to the Treasury that binds them to this day's battle.</p>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;font-style:italic;background:linear-gradient(135deg,#d0d0e0,#f0f0f8,#a8b0c0,#f0f0f8,#d0d0e0);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:silverShine 8s ease-in-out infinite">Before any warrior may step into the Arena, they must perform the Morning Ritual — a sacred offering to the Treasury that binds them to this day's battle.</p>
         <p style="font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;color:var(--text-dim);margin-top:12px">Those who ritual seven days without fail earn the ancient <strong style="color:var(--green)">streak blessing</strong> — more experience, more glory, greater destiny.</p>
       </div>
     </div>
@@ -1168,7 +1183,7 @@ body::after{
       <div style="padding:40px;display:flex;flex-direction:column;justify-content:center">
         <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:4px;color:var(--gold);margin-bottom:12px">CHAPTER VII</div>
         <div style="font-family:'Cinzel',serif;font-size:32px;font-weight:700;color:#fff;margin-bottom:18px;line-height:1.1">Your Chapter Begins</div>
-        <p style="font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;color:var(--text);font-style:italic">The old chapters are written in stone. The next one is written in dreams. In blood. In glory.</p>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;font-style:italic;background:linear-gradient(135deg,#d0d0e0,#f0f0f8,#a8b0c0,#f0f0f8,#d0d0e0);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:silverShine 8s ease-in-out infinite">The old chapters are written in stone. The next one is written in dreams. In blood. In glory.</p>
         <p style="font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;color:var(--text-dim);margin-top:12px">The hourglass empties at midnight. The arena awaits its next champion.</p>
         <p style="font-family:'Cinzel',serif;font-size:18px;font-weight:600;color:var(--gold);margin-top:20px;letter-spacing:2px">Will it be <strong style="color:#fff">you?</strong></p>
       </div>
@@ -1224,6 +1239,66 @@ body::after{
       <span class="fs" id="St"></span>
     </div>
   </div>
+
+  <!-- REFERRAL IN PASSPORT -->
+  <div class="crd">
+    <div class="ch" style="color:var(--pink-light)">🔗 Bring a Soul to the Realm</div>
+    <div class="ref-box">
+      <div class="ref-title">Your Invitation Link</div>
+      <div class="ref-sub">For every warrior you bring, earn <strong style="color:var(--gold)">+20 Glory</strong> per their ritual. Your name echoes through their journey.</div>
+      <div class="ref-row">
+        <input id="refLink2" class="ref-input" readonly>
+        <button class="ref-copy" onclick="copyRef2()">📋 Copy Link</button>
+      </div>
+      <div class="ref-stats">
+        Souls summoned: <strong id="refCount2">0</strong> · Glory earned: <strong id="refGlory2">0</strong>
+      </div>
+      <div class="ref-st" id="refSt2"></div>
+    </div>
+  </div>
+
+  <!-- TRUST & SECURITY IN PASSPORT -->
+  <div class="crd">
+    <div class="ch" style="color:var(--green)">🛡 Trust & Security</div>
+    <div style="padding:28px">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:20px">
+        <div style="padding:20px;background:rgba(13,8,24,.5);border:1px solid rgba(125,216,168,.25);border-radius:14px">
+          <div style="font-size:24px;margin-bottom:8px">🔒</div>
+          <div style="font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--green);margin-bottom:6px;letter-spacing:1.5px">Verified Contract</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:13px;color:var(--text-dim);line-height:1.5">Source code is public and verified on Somnia blockchain explorer. Anyone can audit it.</div>
+        </div>
+        <div style="padding:20px;background:rgba(13,8,24,.5);border:1px solid rgba(125,216,168,.25);border-radius:14px">
+          <div style="font-size:24px;margin-bottom:8px">🔐</div>
+          <div style="font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--green);margin-bottom:6px;letter-spacing:1.5px">Non-Custodial</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:13px;color:var(--text-dim);line-height:1.5">We never hold your tokens. Every payment, every reward — goes directly to the smart contract.</div>
+        </div>
+        <div style="padding:20px;background:rgba(13,8,24,.5);border:1px solid rgba(125,216,168,.25);border-radius:14px">
+          <div style="font-size:24px;margin-bottom:8px">⚙</div>
+          <div style="font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--green);margin-bottom:6px;letter-spacing:1.5px">Immutable Rules</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:13px;color:var(--text-dim);line-height:1.5">Contract cannot be changed. Owner cannot drain the prize pool. Rules are forever.</div>
+        </div>
+        <div style="padding:20px;background:rgba(13,8,24,.5);border:1px solid rgba(125,216,168,.25);border-radius:14px">
+          <div style="font-size:24px;margin-bottom:8px">🛡</div>
+          <div style="font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--green);margin-bottom:6px;letter-spacing:1.5px">Reentrancy Guard</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:13px;color:var(--text-dim);line-height:1.5">All claim functions protected against common smart contract attacks. No double-spending.</div>
+        </div>
+        <div style="padding:20px;background:rgba(13,8,24,.5);border:1px solid rgba(125,216,168,.25);border-radius:14px">
+          <div style="font-size:24px;margin-bottom:8px">👁</div>
+          <div style="font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--green);margin-bottom:6px;letter-spacing:1.5px">Fair Resolution</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:13px;color:var(--text-dim);line-height:1.5">Anti-snipe 5-min lock. Fog of war hides sides until resolve. No frontrunning, no manipulation.</div>
+        </div>
+        <div style="padding:20px;background:rgba(13,8,24,.5);border:1px solid rgba(125,216,168,.25);border-radius:14px">
+          <div style="font-size:24px;margin-bottom:8px">📊</div>
+          <div style="font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--green);margin-bottom:6px;letter-spacing:1.5px">On-Chain Proof</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:13px;color:var(--text-dim);line-height:1.5">Every battle, every payment, every reward — permanently recorded. Check the explorer yourself.</div>
+        </div>
+      </div>
+      <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--text-dim);text-align:center;padding:16px;border:1px dashed rgba(255,200,160,.2);border-radius:14px;line-height:1.6">
+        <strong style="color:var(--gold);font-family:'Cinzel',serif;font-style:normal;font-size:12px;letter-spacing:2px;text-transform:uppercase">⚠ Honest Disclosure</strong><br>
+        This is an early-stage project on Somnia testnet. Contract is not professionally audited yet. Only play with amounts you can afford to lose. All rules are in the open-source code — verify before you play.
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ABOUT / LORE -->
@@ -1276,51 +1351,52 @@ body::after{
       </div>
     </div>
   </div>
-  <div class="crd">
-    <div class="ch" style="color:var(--green)">🛡 Trust & Security</div>
-    <div style="padding:28px">
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:20px">
-        <div style="padding:20px;background:rgba(13,8,24,.5);border:1px solid rgba(125,216,168,.25);border-radius:14px">
-          <div style="font-size:24px;margin-bottom:8px">🔒</div>
-          <div style="font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--green);margin-bottom:6px;letter-spacing:1.5px">Verified Contract</div>
-          <div style="font-family:'Cormorant Garamond',serif;font-size:13px;color:var(--text-dim);line-height:1.5">Source code is public and verified on Somnia blockchain explorer. Anyone can audit it.</div>
-        </div>
-        <div style="padding:20px;background:rgba(13,8,24,.5);border:1px solid rgba(125,216,168,.25);border-radius:14px">
-          <div style="font-size:24px;margin-bottom:8px">🔐</div>
-          <div style="font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--green);margin-bottom:6px;letter-spacing:1.5px">Non-Custodial</div>
-          <div style="font-family:'Cormorant Garamond',serif;font-size:13px;color:var(--text-dim);line-height:1.5">We never hold your tokens. Every payment, every reward — goes directly to the smart contract.</div>
-        </div>
-        <div style="padding:20px;background:rgba(13,8,24,.5);border:1px solid rgba(125,216,168,.25);border-radius:14px">
-          <div style="font-size:24px;margin-bottom:8px">⚙</div>
-          <div style="font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--green);margin-bottom:6px;letter-spacing:1.5px">Immutable Rules</div>
-          <div style="font-family:'Cormorant Garamond',serif;font-size:13px;color:var(--text-dim);line-height:1.5">Contract cannot be changed. Owner cannot drain the prize pool. Rules are forever.</div>
-        </div>
-        <div style="padding:20px;background:rgba(13,8,24,.5);border:1px solid rgba(125,216,168,.25);border-radius:14px">
-          <div style="font-size:24px;margin-bottom:8px">🛡</div>
-          <div style="font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--green);margin-bottom:6px;letter-spacing:1.5px">Reentrancy Guard</div>
-          <div style="font-family:'Cormorant Garamond',serif;font-size:13px;color:var(--text-dim);line-height:1.5">All claim functions protected against common smart contract attacks. No double-spending.</div>
-        </div>
-        <div style="padding:20px;background:rgba(13,8,24,.5);border:1px solid rgba(125,216,168,.25);border-radius:14px">
-          <div style="font-size:24px;margin-bottom:8px">👁</div>
-          <div style="font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--green);margin-bottom:6px;letter-spacing:1.5px">Fair Resolution</div>
-          <div style="font-family:'Cormorant Garamond',serif;font-size:13px;color:var(--text-dim);line-height:1.5">Anti-snipe 5-min lock. Fog of war hides sides until resolve. No frontrunning, no manipulation.</div>
-        </div>
-        <div style="padding:20px;background:rgba(13,8,24,.5);border:1px solid rgba(125,216,168,.25);border-radius:14px">
-          <div style="font-size:24px;margin-bottom:8px">📊</div>
-          <div style="font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--green);margin-bottom:6px;letter-spacing:1.5px">On-Chain Proof</div>
-          <div style="font-family:'Cormorant Garamond',serif;font-size:13px;color:var(--text-dim);line-height:1.5">Every battle, every payment, every reward — permanently recorded. Check the explorer yourself.</div>
-        </div>
-      </div>
-      <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--text-dim);text-align:center;padding:16px;border:1px dashed rgba(255,200,160,.2);border-radius:14px;line-height:1.6">
-        <strong style="color:var(--gold);font-family:'Cinzel',serif;font-style:normal;font-size:12px;letter-spacing:2px;text-transform:uppercase">⚠ Honest Disclosure</strong><br>
-        This is an early-stage project on Somnia testnet. Contract is not professionally audited yet. Only play with amounts you can afford to lose. All rules are in the open-source code — verify before you play.
-      </div>
-    </div>
-  </div>
 </div>
 
 <!-- REWARDS / SPOILS -->
 <div class="pnl" id="t-rewards">
+
+  <!-- NFT TROPHY -->
+  <div class="crd">
+    <div class="ch" style="color:var(--gold)">👑 The Sovereign's Trophy · Monthly NFT</div>
+    <div style="padding:28px">
+      <div style="text-align:center;margin-bottom:20px">
+        <div style="font-family:'Cinzel',serif;font-size:20px;font-weight:700;color:#fff;letter-spacing:2px;margin-bottom:6px">The Eternal Crown</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--text-dim);max-width:560px;margin:0 auto;line-height:1.6">At month's end, the warrior with the highest Glory is chosen by the ancients. They receive the legendary Eternal Crown — a one-of-a-kind NFT forged on the Somnia chain. Only one per month. Yours forever.</div>
+      </div>
+      <div style="display:flex;justify-content:center;margin:20px auto">
+        <div style="max-width:420px;width:100%;border-radius:20px;overflow:hidden;border:2px solid rgba(255,200,160,.3);box-shadow:0 20px 60px rgba(255,200,160,.2),0 0 40px rgba(232,90,142,.15);position:relative">
+          <img src="nft-trophy.png" alt="Monthly NFT Trophy" style="width:100%;display:block" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div style="display:none;flex-direction:column;align-items:center;justify-content:center;color:var(--text-faint);font-family:'Cormorant Garamond',serif;font-style:italic;text-align:center;padding:60px;background:linear-gradient(135deg,rgba(255,200,160,.1),rgba(232,90,142,.08));min-height:400px">
+            <div style="font-size:60px;opacity:.4;margin-bottom:16px">👑</div>
+            <div style="font-size:16px">NFT trophy preview</div>
+            <div style="font-size:11px;margin-top:6px;letter-spacing:1px">nft-trophy.png</div>
+          </div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:14px;max-width:560px;margin:20px auto 0;text-align:center">
+        <div style="padding:14px;background:rgba(13,8,24,.5);border:1px solid rgba(255,200,160,.2);border-radius:14px">
+          <div style="font-family:'Cinzel',serif;font-size:26px;font-weight:800;color:var(--gold)" id="nftD">--</div>
+          <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--text-dim);margin-top:4px">DAYS</div>
+        </div>
+        <div style="padding:14px;background:rgba(13,8,24,.5);border:1px solid rgba(255,200,160,.2);border-radius:14px">
+          <div style="font-family:'Cinzel',serif;font-size:26px;font-weight:800;color:var(--gold)" id="nftH">--</div>
+          <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--text-dim);margin-top:4px">HOURS</div>
+        </div>
+        <div style="padding:14px;background:rgba(13,8,24,.5);border:1px solid rgba(255,200,160,.2);border-radius:14px">
+          <div style="font-family:'Cinzel',serif;font-size:26px;font-weight:800;color:var(--gold)" id="nftM">--</div>
+          <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--text-dim);margin-top:4px">MINUTES</div>
+        </div>
+        <div style="padding:14px;background:rgba(13,8,24,.5);border:1px solid rgba(255,200,160,.2);border-radius:14px">
+          <div style="font-family:'Cinzel',serif;font-size:26px;font-weight:800;color:var(--gold)" id="nftS">--</div>
+          <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--text-dim);margin-top:4px">SECONDS</div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:14px;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--text-dim)">Until the Crown is forged</div>
+    </div>
+  </div>
+
+  <!-- DAILY CLAIM (tokens) -->
   <div class="crd">
     <div class="ch" style="color:var(--gold)">🏆 Yesterday's Resolution</div>
     <div class="rw-status">
@@ -1429,12 +1505,31 @@ function initRef(){
 function setupMyRef(){
   if(!ad)return;
   const base=window.location.origin+window.location.pathname;
-  $('refLink').value=base+'?ref='+ad;
+  const link=base+'?ref='+ad;
+  if($('refLink'))$('refLink').value=link;
+  if($('refLink2'))$('refLink2').value=link;
   if(hb){
     hb.getPlayerView(ad).then(v=>{
-      $('refCount').textContent=v.referralCount.toString();
-      $('refGlory').textContent=(Number(v.referralCount)*20).toString();
+      const cnt=v.referralCount.toString();
+      const gl=(Number(v.referralCount)*20).toString();
+      if($('refCount'))$('refCount').textContent=cnt;
+      if($('refGlory'))$('refGlory').textContent=gl;
+      if($('refCount2'))$('refCount2').textContent=cnt;
+      if($('refGlory2'))$('refGlory2').textContent=gl;
     }).catch(()=>{});
+  }
+}
+
+function copyRef2(){
+  const input=$('refLink2');
+  input.select();input.setSelectionRange(0,999);
+  try{
+    navigator.clipboard.writeText(input.value);
+    $('refSt2').textContent='✓ Copied! Share with warriors.';
+    $('refSt2').style.color='var(--green)';
+  }catch(e){
+    $('refSt2').textContent='Link selected — press Ctrl+C';
+    $('refSt2').style.color='var(--pink-light)';
   }
 }
 
@@ -1914,6 +2009,22 @@ if(window.ethereum){
 }
 
 initRef();
+
+function startNftCountdown(){
+  const upd=()=>{
+    const now=new Date();
+    const y=now.getUTCFullYear(),m=now.getUTCMonth();
+    const endOfMonth=new Date(Date.UTC(y,m+1,1,0,0,0));
+    const diff=Math.max(0,Math.floor((endOfMonth-Date.now())/1000));
+    const d=Math.floor(diff/86400),h=Math.floor((diff%86400)/3600),mi=Math.floor((diff%3600)/60),s=diff%60;
+    if($('nftD'))$('nftD').textContent=String(d).padStart(2,'0');
+    if($('nftH'))$('nftH').textContent=String(h).padStart(2,'0');
+    if($('nftM'))$('nftM').textContent=String(mi).padStart(2,'0');
+    if($('nftS'))$('nftS').textContent=String(s).padStart(2,'0');
+  };
+  upd();setInterval(upd,1000);
+}
+startNftCountdown();
 
 // Try to load custom logo.png if it exists
 (function(){

@@ -65,11 +65,29 @@ body::before{
   position:fixed;
   inset:0;
   background:
-    radial-gradient(ellipse 70% 50% at 30% 20%,rgba(255,120,180,.18),transparent 55%),
-    radial-gradient(ellipse 60% 50% at 75% 75%,rgba(130,90,255,.15),transparent 55%),
-    radial-gradient(ellipse 50% 40% at 50% 50%,rgba(255,180,100,.06),transparent 60%);
+    radial-gradient(ellipse 70% 50%, rgba(255,120,180,.26), transparent 55%),
+    radial-gradient(ellipse 60% 50%, rgba(130,90,255,.22), transparent 55%),
+    radial-gradient(ellipse 50% 40%, rgba(255,180,100,.12), transparent 60%);
+  background-size:150% 150%, 140% 140%, 160% 160%;
+  background-position:15% 20%, 85% 75%, 50% 50%;
+  background-repeat:no-repeat;
   z-index:-2;
   pointer-events:none;
+  animation:pageAuraFlow 36s ease-in-out infinite alternate;
+}
+@keyframes pageAuraFlow{
+  0%{
+    background-position:10% 15%, 85% 75%, 50% 40%;
+  }
+  50%{
+    background-position:55% 50%, 40% 45%, 35% 65%;
+  }
+  100%{
+    background-position:80% 70%, 15% 25%, 60% 50%;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  body::before{animation:none}
 }
 body::after{
   content:'';
@@ -212,13 +230,27 @@ body::after{
 /* Pools */
 .pools{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:24px}
 .pool{
-  background:linear-gradient(180deg,rgba(42,20,64,.7),rgba(26,16,38,.7));
+  background:
+    radial-gradient(ellipse 80% 55% at 50% 0%, rgba(232,90,142,.14), transparent 60%),
+    radial-gradient(ellipse 65% 50% at 100% 100%, rgba(178,98,217,.14), transparent 55%),
+    radial-gradient(ellipse 55% 45% at 0% 100%, rgba(255,180,100,.08), transparent 55%),
+    linear-gradient(180deg,rgba(42,20,64,.7),rgba(26,16,38,.7));
+  background-size:160% 160%, 150% 150%, 150% 150%, 100% 100%;
+  background-position:50% 0%, 100% 100%, 0% 100%, 0 0;
   backdrop-filter:blur(10px);
   border:1px solid var(--border);
   border-radius:20px;
   padding:22px 24px;
   position:relative;overflow:hidden;isolation:isolate;
   transition:border-color .35s ease,transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .4s ease;
+  animation:poolDrift 22s ease-in-out infinite alternate;
+}
+@keyframes poolDrift{
+  0%{background-position:40% 0%, 100% 100%, 0% 100%, 0 0}
+  100%{background-position:60% 10%, 90% 90%, 10% 90%, 0 0}
+}
+@media(prefers-reduced-motion:reduce){
+  .pool{animation:none}
 }
 .pool:hover{
   border-color:var(--border-bright);
@@ -365,14 +397,14 @@ body::after{
 .warrior.atk{
   background:
     /* Drifting paint blobs (animated) */
-    radial-gradient(ellipse 60% 50% at 50% 50%, rgba(255,225,240,.12), transparent 65%),
-    radial-gradient(ellipse 55% 45% at 50% 50%, rgba(255,180,210,.11), transparent 62%),
-    radial-gradient(ellipse 50% 55% at 50% 50%, rgba(232,120,170,.12), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 50% 50%, rgba(255,225,240,.22), transparent 65%),
+    radial-gradient(ellipse 55% 45% at 50% 50%, rgba(255,180,210,.22), transparent 62%),
+    radial-gradient(ellipse 50% 55% at 50% 50%, rgba(232,120,170,.26), transparent 60%),
     /* Static base layers */
-    radial-gradient(ellipse 85% 60% at 50% 8%, rgba(255,180,210,.14), transparent 62%),
-    radial-gradient(circle at 18% 105%, rgba(232,90,142,.22), transparent 55%),
-    radial-gradient(circle at 85% 90%, rgba(255,150,180,.10), transparent 48%),
-    linear-gradient(165deg, rgba(232,90,142,.16) 0%, rgba(160,60,110,.22) 50%, rgba(70,20,55,.30) 100%);
+    radial-gradient(ellipse 85% 60% at 50% 8%, rgba(255,180,210,.20), transparent 62%),
+    radial-gradient(circle at 18% 105%, rgba(232,90,142,.30), transparent 55%),
+    radial-gradient(circle at 85% 90%, rgba(255,150,180,.16), transparent 48%),
+    linear-gradient(165deg, rgba(232,90,142,.22) 0%, rgba(160,60,110,.28) 50%, rgba(70,20,55,.34) 100%);
   background-size:
     250% 250%, 200% 200%, 220% 220%,
     100% 100%, 100% 100%, 100% 100%, 100% 100%;
@@ -380,10 +412,11 @@ body::after{
   background-position:
     10% 20%, 90% 70%, 50% 10%,
     0 0, 0 0, 0 0, 0 0;
-  animation:atkPaintFlow 18s ease-in-out infinite alternate;
-  border:1px solid rgba(232,90,142,.3);
-  --beam-color:rgba(255,185,215,.28);
-  --mist-color:rgba(232,90,142,.26);
+  animation:atkPaintFlow 10s ease-in-out infinite alternate;
+  border:1px solid rgba(232,90,142,.45);
+  box-shadow:0 0 24px rgba(232,90,142,.15), inset 0 0 40px rgba(232,90,142,.05);
+  --beam-color:rgba(255,185,215,.34);
+  --mist-color:rgba(232,90,142,.32);
 }
 @keyframes atkPaintFlow{
   0%{

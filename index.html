@@ -7,6 +7,7 @@
 <title>Steal or Protect — Chronicles of Somnia</title>
 <script src="ethers.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="hover1.png">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 /* A11y baseline — focus rings + global reduced-motion guard */
@@ -362,10 +363,52 @@ body::after{
 .warrior > *{position:relative;z-index:1}
 
 .warrior.atk{
-  background:linear-gradient(180deg,rgba(232,90,142,.15),rgba(120,30,80,.2));
+  background:
+    /* Drifting paint blobs (animated) */
+    radial-gradient(ellipse 60% 50% at 50% 50%, rgba(255,225,240,.12), transparent 65%),
+    radial-gradient(ellipse 55% 45% at 50% 50%, rgba(255,180,210,.11), transparent 62%),
+    radial-gradient(ellipse 50% 55% at 50% 50%, rgba(232,120,170,.12), transparent 60%),
+    /* Static base layers */
+    radial-gradient(ellipse 85% 60% at 50% 8%, rgba(255,180,210,.14), transparent 62%),
+    radial-gradient(circle at 18% 105%, rgba(232,90,142,.22), transparent 55%),
+    radial-gradient(circle at 85% 90%, rgba(255,150,180,.10), transparent 48%),
+    linear-gradient(165deg, rgba(232,90,142,.16) 0%, rgba(160,60,110,.22) 50%, rgba(70,20,55,.30) 100%);
+  background-size:
+    250% 250%, 200% 200%, 220% 220%,
+    100% 100%, 100% 100%, 100% 100%, 100% 100%;
+  background-repeat:no-repeat;
+  background-position:
+    10% 20%, 90% 70%, 50% 10%,
+    0 0, 0 0, 0 0, 0 0;
+  animation:atkPaintFlow 18s ease-in-out infinite alternate;
   border:1px solid rgba(232,90,142,.3);
-  --beam-color:rgba(255,180,210,.22);
-  --mist-color:rgba(232,90,142,.20);
+  --beam-color:rgba(255,185,215,.28);
+  --mist-color:rgba(232,90,142,.26);
+}
+@keyframes atkPaintFlow{
+  0%{
+    background-position:
+      10% 20%, 90% 70%, 50% 10%,
+      0 0, 0 0, 0 0, 0 0;
+  }
+  33%{
+    background-position:
+      60% 40%, 40% 50%, 30% 60%,
+      0 0, 0 0, 0 0, 0 0;
+  }
+  66%{
+    background-position:
+      90% 70%, 20% 30%, 70% 20%,
+      0 0, 0 0, 0 0, 0 0;
+  }
+  100%{
+    background-position:
+      40% 90%, 70% 10%, 10% 80%,
+      0 0, 0 0, 0 0, 0 0;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .warrior.atk{animation:none}
 }
 .warrior.atk:hover{
   border-color:rgba(232,90,142,.65);
@@ -483,6 +526,15 @@ body::after{
 }
 .w-bv{color:var(--text-dim);font-weight:500}
 .w-bc{color:var(--gold);font-weight:600}
+
+/* Attack-side boost panel: gradient divider + soft faction tint */
+.warrior.atk .w-boost{
+  border-top:1px solid transparent;
+  background:
+    linear-gradient(to right, transparent 0%, rgba(232,90,142,.5) 50%, transparent 100%) top/100% 1px no-repeat,
+    linear-gradient(180deg, rgba(232,90,142,.06), transparent 70%);
+  border-radius:0 0 10px 10px;
+}
 
 /* Battlecenter */
 .bc{
@@ -1255,6 +1307,42 @@ body::after{
 @keyframes wRimBreathe{0%,100%{opacity:.42;transform:scale(.98)}50%{opacity:.7;transform:scale(1.02)}}
 @media(prefers-reduced-motion:reduce){.w-img::before{animation:none;opacity:.5}}
 
+/* ===== Living warrior: crossfade + tilt + glow (w-img-live) ===== */
+.w-img-live{
+  transform-style:preserve-3d;
+  transition:transform 120ms ease-out, box-shadow 280ms ease-out, filter 280ms ease-out;
+}
+.w-img-live .w-hover{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  opacity:0;pointer-events:none;
+  transition:opacity .18s ease-in, transform .5s;
+}
+.w-img-live:hover .w-hover{
+  opacity:1;
+  transition:opacity .28s ease-out, transform .5s;
+}
+.w-img-live:hover{filter:saturate(1.15) brightness(1.06)}
+.w-img-live.atk:hover{
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.4),
+    inset 0 30px 60px rgba(255,200,160,.08),
+    inset 0 -40px 80px rgba(232,90,142,.28),
+    0 0 60px rgba(232,90,142,.32);
+}
+.w-img-live.def:hover{
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.4),
+    inset 0 30px 60px rgba(255,200,160,.08),
+    inset 0 -40px 80px rgba(178,98,217,.28),
+    0 0 60px rgba(178,98,217,.32);
+}
+/* scale of hover img matches base img on hover (inherits .w-img:hover img rule) */
+@media(prefers-reduced-motion:reduce){
+  .w-img-live{transition:none!important;transform:none!important}
+  .w-img-live .w-hover{transition:opacity .01s!important}
+  .w-img-live:hover{filter:none}
+}
+
 /* ===== Cinema: arcane ring urgency states ===== */
 .bc-timer-ring.mode-warn .r-outer{animation-duration:22s}
 .bc-timer-ring.mode-warn .r-inner{animation-duration:15s}
@@ -1903,7 +1991,7 @@ body::after{
           <div class="w-label atk">Attack</div>
           <div class="w-level atk" id="atkLv">Lv 1</div>
         </div>
-        <div class="w-img atk"><img src="attack.png" alt="Attack"></div>
+        <div class="w-img atk w-img-live"><img src="attack.png" alt="Attack"><img class="w-hover" src="hover1.png" alt="" aria-hidden="true"></div>
         <div class="w-quote">"Fortune favors those who strike first."</div>
         <div class="w-boost">
           <div class="w-boost-lbl">Boost Attack Power</div>
@@ -2345,7 +2433,7 @@ body::after{
         <div class="pn" id="PN"></div>
         <div class="pa" id="PA"></div>
         <div class="pb3" id="PB"></div>
-        <a class="ps3" id="PL2" href="#" target="_blank" rel="noopener" style="display:none"><span aria-hidden="true">✦</span><span id="PLT"></span></a>
+        <a class="ps3" id="PL2" href="#" target="_blank" rel="noopener noreferrer" style="display:none"><span aria-hidden="true">✦</span><span id="PLT"></span></a>
         <div class="pm">
           <div><div class="pml">Forged</div><div class="pmv" id="PCr">—</div></div>
           <div><div class="pml">Refined</div><div class="pmv" id="PUp">—</div></div>

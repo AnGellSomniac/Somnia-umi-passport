@@ -927,6 +927,20 @@ startNftCountdown();
     });
   }
 
+  // Rune image fallback: if rune.png missing, show inline SVG crest
+  const runeImg=nav.querySelector('.nv-crest-img');
+  const runeFallback=nav.querySelector('.nv-crest-fallback');
+  if(runeImg&&runeFallback){
+    runeImg.addEventListener('error',()=>{
+      runeImg.style.display='none';
+      runeFallback.style.display='block';
+    });
+    if(runeImg.complete&&runeImg.naturalWidth===0){
+      runeImg.style.display='none';
+      runeFallback.style.display='block';
+    }
+  }
+
   // Diamond hover glint (shimmer neighbor diamonds on tab hover)
   tabs.forEach(t=>{
     t.addEventListener('mouseenter',()=>{

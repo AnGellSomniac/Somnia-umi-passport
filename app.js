@@ -1,3 +1,10 @@
+/* ethers CDN fallback — if local ethers.min.js failed to load, fetch from CDN (replaces inline onerror on the script tag) */
+if(typeof ethers==='undefined'){
+  const _eth=document.createElement('script');
+  _eth.src='https://cdnjs.cloudflare.com/ajax/libs/ethers/6.15.0/ethers.umd.min.js';
+  document.head.appendChild(_eth);
+}
+
 const CFG={
   50312:{umi:'0x91Ee1c6C191dc6440B8058d99d2Fa94B8691adff',hub:'0x9FFeEd29C8f3A568e7042e43c35b447C096461AE',exp:'https://shannon-explorer.somnia.network'},
   5031:{umi:'0xfa9c15D8B508968fCDbdB9F495C8A493C19d7351',hub:'0x0000000000000000000000000000000000000000',exp:'https://explorer.somnia.network'}
@@ -145,7 +152,7 @@ function initRef(){
   try{
     const url=new URL(window.location.href);
     const ref=url.searchParams.get('ref');
-    if(ref&&ref.length===42&&ref.startsWith('0x')){
+    if(ref&&/^0x[a-fA-F0-9]{40}$/.test(ref)){
       localStorage.setItem('refBy',ref);
     }
   }catch(e){}
@@ -221,16 +228,16 @@ async function W(){
     $('fBtn').disabled=false;
     buildContractsGrid();
     checkProfile();
-  }catch(e){console.error(e);alert(e.message);}
+  }catch(e){console.error(e);alert('Failed to connect wallet. Check MetaMask and network.');}
 }
 
 function buildContractsGrid(){
   const g=$('contractsGrid');let html='';
   for(const[chainId,c] of Object.entries(CFG)){
     const netName=chainId==='5031'?'Mainnet':'Testnet';
-    html+='<div class="contract-card"><div class="cc-label"><span class="cc-dot live"></span>UMI Passport · '+netName+'</div><div class="cc-addr">'+c.umi+'</div><a class="cc-link" href="'+c.exp+'/address/'+c.umi+'" target="_blank">View on Explorer →</a></div>';
+    html+='<div class="contract-card"><div class="cc-label"><span class="cc-dot live"></span>UMI Passport · '+netName+'</div><div class="cc-addr">'+c.umi+'</div><a class="cc-link" href="'+c.exp+'/address/'+c.umi+'" target="_blank" rel="noopener noreferrer">View on Explorer →</a></div>';
     if(c.hub&&c.hub!=='0x0000000000000000000000000000000000000000'){
-      html+='<div class="contract-card"><div class="cc-label"><span class="cc-dot live"></span>GameHub · '+netName+'</div><div class="cc-addr">'+c.hub+'</div><a class="cc-link" href="'+c.exp+'/address/'+c.hub+'" target="_blank">View on Explorer →</a></div>';
+      html+='<div class="contract-card"><div class="cc-label"><span class="cc-dot live"></span>GameHub · '+netName+'</div><div class="cc-addr">'+c.hub+'</div><a class="cc-link" href="'+c.exp+'/address/'+c.hub+'" target="_blank" rel="noopener noreferrer">View on Explorer →</a></div>';
     }else{
       html+='<div class="contract-card" style="opacity:.5"><div class="cc-label"><span class="cc-dot" style="background:var(--text-faint)"></span>GameHub · '+netName+'</div><div class="cc-addr" style="opacity:.4">Coming soon</div></div>';
     }
@@ -294,10 +301,36 @@ async function LP(){
       $('PC').style.display='block';$('FT').textContent='◈ Refine Your Identity';
       $('PN').textContent=p.nickname;$('PA').textContent=ad;$('PB').textContent=p.bio||'';
       $('N').value=p.nickname;$('A').value=p.avatarUrl;$('B').value=p.bio||'';$('S').value=p.socialUrl||'';
-      if(p.avatarUrl&&(p.avatarUrl.startsWith('https://')||p.avatarUrl.startsWith('http://'))){$('AV').innerHTML='<img src="'+p.avatarUrl.replace(/"/g,'&quot;')+'" alt="Warrior avatar" onerror="this.parentElement.innerHTML=\'<div class=avp aria-hidden=true>◈</div>\'">';}
+      if(p.avatarUrl){
+        try{
+          const u=new URL(p.avatarUrl);
+          if(u.protocol==='https:'||u.protocol==='http:'){
+            const av=$('AV');av.textContent='';
+            const img=document.createElement('img');
+            img.alt='Warrior avatar';
+            img.addEventListener('error',()=>{
+              av.textContent='';
+              const d=document.createElement('div');
+              d.className='avp';d.setAttribute('aria-hidden','true');d.textContent='◈';
+              av.appendChild(d);
+            });
+            img.src=u.href;
+            av.appendChild(img);
+          }
+        }catch(e){}
+      }
       $('PCr').textContent=new Date(Number(p.createdAt)*1000).toLocaleDateString();
       $('PUp').textContent=new Date(Number(p.updatedAt)*1000).toLocaleDateString();
-      if(p.socialUrl&&(p.socialUrl.startsWith('https://')||p.socialUrl.startsWith('http://'))){$('PL2').style.display='inline-flex';$('PL2').href=p.socialUrl;$('PLT').textContent='Visit';}
+      if(p.socialUrl){
+        try{
+          const su=new URL(p.socialUrl);
+          if(su.protocol==='https:'||su.protocol==='http:'){
+            $('PL2').style.display='inline-flex';
+            $('PL2').href=su.href;
+            $('PLT').textContent='Visit';
+          }
+        }catch(e){}
+      }
     }
   }catch(e){}
 }
@@ -523,7 +556,8 @@ async function CR(){
     $('clB').style.display='none';LG();
     celebrateClaim(amtTxt,'Spoils secured');
   }catch(e){
-    alert(e.reason||'Claim failed');
+    console.error('Claim:',e);
+    alert('Claim failed. Try again or check your wallet.');
     $('clBtn').disabled=false;$('clBtn').textContent='Claim Reward';
   }
 }
@@ -762,6 +796,15 @@ document.addEventListener('click',(e)=>{
 const _slA=$('slA');if(_slA)_slA.addEventListener('input',()=>uB('A'));
 const _slD=$('slD');if(_slD)_slD.addEventListener('input',()=>uB('D'));
 
+/* Image fallback on load error (replaces inline onerror) */
+document.querySelectorAll('img[data-fallback]').forEach(img=>{
+  img.addEventListener('error',()=>{
+    img.style.display='none';
+    const n=img.nextElementSibling;
+    if(n)n.style.display='flex';
+  });
+});
+
 function startNftCountdown(){
   const upd=()=>{
     const now=new Date();
@@ -787,4 +830,71 @@ startNftCountdown();
   };
   img.onerror=function(){};
   img.src='logo.png';
+})();
+
+// Chain-reaction grid: generate cells with staggered delays for infecting-light wave
+(function initGridCells(){
+  const host=document.querySelector('.grid-cells');
+  if(!host){console.warn('[grid-cells] host not found');return;}
+  const CELL=60,PERIOD=9,STEP=0.14;
+  let rT=0;
+  function build(){
+    const cols=Math.ceil(window.innerWidth/CELL);
+    const rows=Math.ceil(window.innerHeight/CELL);
+    host.style.gridTemplateColumns='repeat('+cols+','+CELL+'px)';
+    host.style.gridTemplateRows='repeat('+rows+','+CELL+'px)';
+    const frag=document.createDocumentFragment();
+    for(let r=0;r<rows;r++){
+      for(let c=0;c<cols;c++){
+        const d=document.createElement('div');
+        d.className='gc';
+        const base=((r+c)*STEP+Math.random()*0.4)%PERIOD;
+        d.style.setProperty('--d','-'+base.toFixed(2)+'s');
+        const rnd=Math.random();
+        let h;
+        if(rnd<0.55)h=310+Math.random()*30;
+        else if(rnd<0.9)h=270+Math.random()*20;
+        else h=35+Math.random()*10;
+        d.style.setProperty('--h',h.toFixed(0));
+        frag.appendChild(d);
+      }
+    }
+    host.textContent='';
+    host.appendChild(frag);
+  }
+  build();
+  window.addEventListener('resize',()=>{
+    clearTimeout(rT);
+    rT=setTimeout(build,250);
+  });
+})();
+
+// Living warrior: 3D tilt follows cursor, smooth reset on leave
+(function initLiveWarriors(){
+  if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const MAX=6;
+  document.querySelectorAll('.w-img-live').forEach(el=>{
+    let raf=0,rect=null;
+    function refresh(){rect=el.getBoundingClientRect();}
+    function onMove(e){
+      if(!rect)refresh();
+      const x=(e.clientX-rect.left)/rect.width-0.5;
+      const y=(e.clientY-rect.top)/rect.height-0.5;
+      const rx=(-y*MAX).toFixed(2);
+      const ry=(x*MAX).toFixed(2);
+      if(raf)cancelAnimationFrame(raf);
+      raf=requestAnimationFrame(()=>{
+        el.style.transform='perspective(800px) rotateX('+rx+'deg) rotateY('+ry+'deg)';
+      });
+    }
+    function onLeave(){
+      if(raf)cancelAnimationFrame(raf);
+      el.style.transform='perspective(800px) rotateX(0deg) rotateY(0deg)';
+    }
+    el.addEventListener('mouseenter',refresh);
+    el.addEventListener('mousemove',onMove);
+    el.addEventListener('mouseleave',onLeave);
+    window.addEventListener('scroll',refresh,{passive:true});
+    window.addEventListener('resize',refresh);
+  });
 })();

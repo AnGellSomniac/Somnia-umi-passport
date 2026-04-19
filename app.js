@@ -888,6 +888,60 @@ startNftCountdown();
   },{passive:true});
 })();
 
+// Grand Nav v2: scroll compaction, mobile toggle, hover diamond sync
+(function initNav2(){
+  const nav=document.getElementById('nav2');
+  if(!nav)return;
+  const btn=document.getElementById('nvMenuBtn');
+  const tabs=Array.from(nav.querySelectorAll('.nv-tab'));
+  const mql=window.matchMedia('(max-width:860px)');
+
+  // Scroll compaction
+  let last=0,schedT=0;
+  function onScroll(){
+    const y=window.scrollY||0;
+    if(y>64 && last<=64) nav.classList.add('compact');
+    else if(y<=32 && last>32) nav.classList.remove('compact');
+    last=y;
+  }
+  window.addEventListener('scroll',()=>{
+    if(schedT)return;
+    schedT=requestAnimationFrame(()=>{schedT=0;onScroll();});
+  },{passive:true});
+
+  // Mobile toggle
+  if(btn){
+    btn.addEventListener('click',()=>{
+      const open=nav.classList.toggle('open');
+      btn.setAttribute('aria-expanded',open?'true':'false');
+    });
+    // Close on tab click (mobile only)
+    tabs.forEach(t=>t.addEventListener('click',()=>{
+      if(mql.matches){nav.classList.remove('open');btn.setAttribute('aria-expanded','false');}
+    }));
+    // Close on outside click
+    document.addEventListener('click',e=>{
+      if(!nav.contains(e.target) && nav.classList.contains('open')){
+        nav.classList.remove('open');btn.setAttribute('aria-expanded','false');
+      }
+    });
+  }
+
+  // Diamond hover glint (shimmer neighbor diamonds on tab hover)
+  tabs.forEach(t=>{
+    t.addEventListener('mouseenter',()=>{
+      const p=t.previousElementSibling, n=t.nextElementSibling;
+      if(p&&p.classList.contains('nv-dia'))p.classList.add('hot');
+      if(n&&n.classList.contains('nv-dia'))n.classList.add('hot');
+    });
+    t.addEventListener('mouseleave',()=>{
+      const p=t.previousElementSibling, n=t.nextElementSibling;
+      if(p&&p.classList.contains('nv-dia'))p.classList.remove('hot');
+      if(n&&n.classList.contains('nv-dia'))n.classList.remove('hot');
+    });
+  });
+})();
+
 // Living warrior: 3D tilt follows cursor, smooth reset on leave
 (function initLiveWarriors(){
   if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;

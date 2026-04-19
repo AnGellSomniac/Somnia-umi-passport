@@ -228,11 +228,18 @@ body::after{
 }
 .hero-divider{width:240px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:24px auto 0}
 
+/* Hide brand per design (rune in nav replaces top-left logo) */
+.hdr .brand{display:none}
+
 /* === Grand Nav v2 === */
 .nav2{
   position:relative;
-  margin:0 -16px 14px;
-  padding:14px 18px 12px;
+  width:100vw;
+  margin-left:calc(50% - 50vw);
+  margin-right:calc(50% - 50vw);
+  margin-bottom:14px;
+  padding:14px 40px 12px;
+  overflow:visible;
   background:
     radial-gradient(ellipse 70% 140% at 50% 50%, rgba(178,98,217,.22), transparent 70%),
     radial-gradient(ellipse 40% 120% at 10% 50%, rgba(232,90,142,.14), transparent 75%),
@@ -294,11 +301,16 @@ body::after{
 .nv-dia.hot{box-shadow:0 0 18px rgba(255,200,160,.95),0 0 28px rgba(255,180,220,.55);transform:rotate(45deg) scale(1.3)}
 .nv-dia-owner{background:linear-gradient(135deg,#c8a8ff,#b262d9)}
 .nv-crest{
-  position:relative;width:54px;height:54px;flex:0 0 auto;
+  position:relative;width:84px;height:84px;flex:0 0 auto;
+  margin-top:-28px;
   display:flex;align-items:center;justify-content:center;
   transition:transform .35s ease;
 }
-.nv-crest svg{width:100%;height:100%;position:relative;z-index:1;filter:drop-shadow(0 0 10px rgba(255,200,160,.35))}
+.nv-crest svg,.nv-crest .nv-crest-img{
+  width:100%;height:100%;position:relative;z-index:1;
+  object-fit:contain;
+  filter:drop-shadow(0 4px 14px rgba(178,98,217,.55)) drop-shadow(0 0 18px rgba(255,200,160,.35));
+}
 .nv-crest-aura{
   position:absolute;inset:-12px;border-radius:50%;
   background:radial-gradient(circle,rgba(255,200,160,.35),rgba(178,98,217,.25) 45%,transparent 70%);
@@ -322,7 +334,7 @@ body::after{
 .nv-menu[aria-expanded="true"] span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
 /* Scroll-compact state */
 .nav2.compact{padding:8px 18px 6px}
-.nav2.compact .nv-crest{transform:scale(.78)}
+.nav2.compact .nv-crest{transform:scale(.72);margin-top:-18px}
 .hero-under{padding:22px 0 26px;transition:max-height .45s ease, opacity .45s ease, padding .45s ease, margin .45s ease}
 .nav2.compact + .hero-under{max-height:0;opacity:0;padding:0;margin:0;overflow:hidden;pointer-events:none}
 /* Mobile */
@@ -330,7 +342,7 @@ body::after{
   .nav2{margin:0 -16px 10px;padding:10px 14px 10px 60px}
   .nv-menu{display:flex}
   .nv-row{gap:0;flex-direction:column}
-  .nv-crest{width:40px;height:40px;order:0}
+  .nv-crest{width:60px;height:60px;order:0;margin-top:-18px}
   .nv-crest-aura{inset:-8px}
   .nv-dia{display:none}
   .nv-side{
@@ -2101,7 +2113,8 @@ body::after{
       <button type="button" class="tab nv-tab" role="tab" id="tab-chronicles" aria-selected="false" aria-controls="t-chronicles" tabindex="-1" data-t="chronicles">Chronicles</button>
     </div>
     <div class="nv-crest" aria-hidden="true">
-      <svg viewBox="0 0 48 48" fill="none">
+      <img class="nv-crest-img" src="rune.png" alt="">
+      <svg class="nv-crest-fallback" viewBox="0 0 48 48" fill="none" style="display:none">
         <defs>
           <radialGradient id="crestG" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stop-color="#ffd6b0" stop-opacity="1"/>
@@ -2112,7 +2125,6 @@ body::after{
         <circle cx="24" cy="24" r="22" fill="url(#crestG)" opacity=".35"/>
         <path d="M24 4L8 11v14c0 9 7 16 16 18 9-2 16-9 16-18V11l-16-7z" stroke="#ffc8a0" stroke-width="1.5" stroke-linejoin="round" fill="rgba(42,20,64,.55)"/>
         <circle cx="24" cy="22" r="6" stroke="#ffc8a0" stroke-width="1.5" fill="none"/>
-        <path d="M24 16v12M18 22h12" stroke="#ffc8a0" stroke-width="1.2" opacity=".7"/>
       </svg>
       <span class="nv-crest-aura"></span>
     </div>

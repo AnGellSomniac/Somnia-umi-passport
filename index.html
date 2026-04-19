@@ -65,44 +65,67 @@ body::before{
   position:fixed;
   inset:0;
   background:
-    /* Diagonal light sweep (bright pink→purple radial) */
-    radial-gradient(ellipse 30% 30% at 50% 50%, rgba(255,140,220,.55) 0%, rgba(180,120,255,.38) 35%, transparent 65%),
     /* Ambient color wash */
-    radial-gradient(ellipse 70% 50%, rgba(255,120,180,.26), transparent 55%),
-    radial-gradient(ellipse 60% 50%, rgba(130,90,255,.22), transparent 55%),
-    radial-gradient(ellipse 50% 40%, rgba(255,180,100,.12), transparent 60%),
-    /* Grid texture */
-    linear-gradient(rgba(255,200,220,.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,200,220,.05) 1px, transparent 1px);
+    radial-gradient(ellipse 70% 50%, rgba(255,120,180,.22), transparent 55%),
+    radial-gradient(ellipse 60% 50%, rgba(130,90,255,.20), transparent 55%),
+    radial-gradient(ellipse 50% 40%, rgba(255,180,100,.10), transparent 60%),
+    /* Faint grid texture */
+    linear-gradient(rgba(255,200,220,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,200,220,.04) 1px, transparent 1px);
   background-size:
-    200% 200%,
     150% 150%, 140% 140%, 160% 160%,
-    44px 44px, 44px 44px;
+    60px 60px, 60px 60px;
   background-position:
-    0% 100%,
     15% 20%, 85% 75%, 50% 50%,
     0 0, 0 0;
-  background-repeat:no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat;
+  background-repeat:no-repeat, no-repeat, no-repeat, repeat, repeat;
   z-index:-2;
   pointer-events:none;
-  animation:pageAuraFlow 14s ease-in-out infinite alternate;
+  animation:pageAuraFlow 36s ease-in-out infinite alternate;
 }
 @keyframes pageAuraFlow{
-  0%{
-    background-position:
-      0% 100%,
-      10% 15%, 85% 75%, 50% 40%,
-      0 0, 0 0;
-  }
-  100%{
-    background-position:
-      100% 0%,
-      55% 50%, 40% 45%, 35% 65%,
-      0 0, 0 0;
-  }
+  0%{background-position:10% 15%, 85% 75%, 50% 40%, 0 0, 0 0;}
+  50%{background-position:55% 50%, 40% 45%, 35% 65%, 0 0, 0 0;}
+  100%{background-position:80% 70%, 15% 25%, 60% 50%, 0 0, 0 0;}
 }
 @media(prefers-reduced-motion:reduce){
   body::before{animation:none}
+}
+
+/* ===== Chain-reaction grid cells ===== */
+.grid-cells{
+  position:fixed;inset:0;
+  z-index:-1;
+  pointer-events:none;
+  overflow:hidden;
+  display:grid;
+  gap:0;
+}
+.gc{position:relative}
+.gc::before{
+  content:'';
+  position:absolute;
+  inset:4px;
+  border-radius:5px;
+  background:radial-gradient(circle at center,
+    hsla(var(--h,325),80%,70%,.55) 0%,
+    hsla(var(--h,325),70%,60%,.30) 40%,
+    transparent 75%);
+  opacity:0;
+  transform:scale(.5);
+  animation:cellInfect 9s ease-in-out infinite;
+  animation-delay:var(--d,0s);
+  mix-blend-mode:screen;
+  filter:blur(2px);
+}
+@keyframes cellInfect{
+  0%,85%,100%{opacity:0;transform:scale(.5)}
+  4%{opacity:.9;transform:scale(1.15)}
+  12%{opacity:.55;transform:scale(1)}
+  28%{opacity:0;transform:scale(.8)}
+}
+@media(prefers-reduced-motion:reduce){
+  .grid-cells{display:none}
 }
 body::after{
   content:'';
@@ -1891,6 +1914,9 @@ body::after{
     <div class="cbt-sub" id="cbSub">Glory is yours</div>
   </div>
 </div>
+
+<!-- Infecting grid cells (chain-reaction glow) -->
+<div class="grid-cells" aria-hidden="true"></div>
 
 <!-- Floating petals -->
 <div class="petals" aria-hidden="true">

@@ -836,14 +836,15 @@ startNftCountdown();
 (function initGridCells(){
   const host=document.querySelector('.grid-cells');
   if(!host){console.warn('[grid-cells] host not found');return;}
-  const CELL=60,PERIOD=9,STEP=0.14;
-  let rT=0;
+  const CELL=60,PERIOD=9,STEP=0.14,HOLD=480;
+  let rT=0,cells=[],cols=0,rows=0,lastIdx=-1,raf=0,mx=-1,my=-1;
   function build(){
-    const cols=Math.ceil(window.innerWidth/CELL);
-    const rows=Math.ceil(window.innerHeight/CELL);
+    cols=Math.ceil(window.innerWidth/CELL);
+    rows=Math.ceil(window.innerHeight/CELL);
     host.style.gridTemplateColumns='repeat('+cols+','+CELL+'px)';
     host.style.gridTemplateRows='repeat('+rows+','+CELL+'px)';
     const frag=document.createDocumentFragment();
+    cells=[];
     for(let r=0;r<rows;r++){
       for(let c=0;c<cols;c++){
         const d=document.createElement('div');
@@ -856,17 +857,40 @@ startNftCountdown();
         else if(rnd<0.9)h=270+Math.random()*20;
         else h=35+Math.random()*10;
         d.style.setProperty('--h',h.toFixed(0));
+        cells.push(d);
         frag.appendChild(d);
       }
     }
     host.textContent='';
     host.appendChild(frag);
+    lastIdx=-1;
   }
   build();
   window.addEventListener('resize',()=>{
     clearTimeout(rT);
     rT=setTimeout(build,250);
   });
+  function ignite(idx){
+    const cell=cells[idx];
+    if(!cell)return;
+    cell.classList.add('hot');
+    if(cell._t)clearTimeout(cell._t);
+    cell._t=setTimeout(()=>{cell.classList.remove('hot');cell._t=0;},HOLD);
+  }
+  function tick(){
+    raf=0;
+    if(mx<0||my<0)return;
+    const c=Math.floor(mx/CELL),r=Math.floor(my/CELL);
+    if(c<0||r<0||c>=cols||r>=rows)return;
+    const idx=r*cols+c;
+    if(idx===lastIdx)return;
+    lastIdx=idx;
+    ignite(idx);
+  }
+  window.addEventListener('mousemove',e=>{
+    mx=e.clientX;my=e.clientY;
+    if(!raf)raf=requestAnimationFrame(tick);
+  },{passive:true});
 })();
 
 // Living warrior: 3D tilt follows cursor, smooth reset on leave

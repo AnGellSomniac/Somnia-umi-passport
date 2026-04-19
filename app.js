@@ -836,7 +836,7 @@ startNftCountdown();
 (function initGridCells(){
   const host=document.querySelector('.grid-cells');
   if(!host){console.warn('[grid-cells] host not found');return;}
-  const CELL=60,PERIOD=9,STEP=0.14,HOLD=480;
+  const CELL=60,HOLD=480;
   let rT=0,cells=[],cols=0,rows=0,lastIdx=-1,raf=0,mx=-1,my=-1;
   function build(){
     cols=Math.ceil(window.innerWidth/CELL);
@@ -845,18 +845,13 @@ startNftCountdown();
     host.style.gridTemplateRows='repeat('+rows+','+CELL+'px)';
     const frag=document.createDocumentFragment();
     cells=[];
+    const mid=cols/2;
     for(let r=0;r<rows;r++){
       for(let c=0;c<cols;c++){
         const d=document.createElement('div');
         d.className='gc';
-        const base=((r+c)*STEP+Math.random()*0.4)%PERIOD;
-        d.style.setProperty('--d','-'+base.toFixed(2)+'s');
-        const rnd=Math.random();
-        let h;
-        if(rnd<0.55)h=310+Math.random()*30;
-        else if(rnd<0.9)h=270+Math.random()*20;
-        else h=35+Math.random()*10;
-        d.style.setProperty('--h',h.toFixed(0));
+        // Left half = Attack (pink ~330), right half = Protect (purple ~280)
+        d.style.setProperty('--hot-h', c<mid ? '330' : '280');
         cells.push(d);
         frag.appendChild(d);
       }

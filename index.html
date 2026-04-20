@@ -6,7 +6,7 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src 'self' fonts.gstatic.com; img-src 'self' https: data:; connect-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'">
 <title>Steal or Protect — Chronicles of Somnia</title>
 <script src="ethers.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Chakra+Petch:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="hover1.png">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -33,99 +33,138 @@ input:focus-visible,textarea:focus-visible{
   .petals,.petal{display:none !important}
 }
 :root{
-  --pink:#e85a8e;
-  --pink-light:#ffb3c8;
-  --pink-deep:#8b1f4a;
-  --purple:#b262d9;
-  --purple-light:#cfbdff;
-  --purple-deep:#3d2a80;
-  --gold:#ffc8a0;
-  --cream:#f4ebd0;
-  --bg:#0a0612;
-  --bg-raised:#150a24;
-  --bg-card:rgba(20,12,34,.65);
-  --border:rgba(255,200,220,.15);
-  --border-bright:rgba(255,200,220,.35);
-  --text:#f4ebd0;
-  --text-dim:rgba(244,235,208,.7);
-  --text-faint:rgba(244,235,208,.55);
-  --red:#ff5577;
-  --green:#7dd8a8;
+  /* === NEW light esports-lobby palette (2026-04-20) === */
+  --red:#DC2626;             /* primary accent — frames, CTAs, Attack */
+  --red-bright:#E63946;      /* hover / emphasis */
+  --red-deep:#991B1B;        /* pressed / deep accent */
+  --red-soft:#FEE2E2;        /* tinted fill for subtle surfaces */
+  --blue:#2563EB;            /* Protect faction accent */
+  --blue-bright:#3B82F6;
+  --blue-soft:#DBEAFE;
+  --accent-2:#F59E0B;        /* rewards/gold highlight (subtle, not Arcane gold) */
+
+  --bg:#F5F7FA;              /* page surface */
+  --bg-raised:#FFFFFF;       /* cards / panels */
+  --bg-card:#FFFFFF;
+  --bg-muted:#E8ECF0;        /* dividers, wash */
+
+  --text:#0F172A;            /* primary text — deep slate */
+  --text-dim:#475569;        /* secondary */
+  --text-faint:#94A3B8;      /* tertiary */
+
+  --border:#E2E8F0;          /* neutral divider */
+  --border-bright:#CBD5E1;   /* stronger divider */
+
+  --green:#16A34A;
+
+  /* === Legacy aliases (Arcane-era) mapped to new palette so no component breaks during rewrite === */
+  --pink:var(--red);
+  --pink-light:var(--red-bright);
+  --pink-deep:var(--red-deep);
+  --purple:var(--blue);
+  --purple-light:var(--blue-bright);
+  --purple-deep:#1D4ED8;
+  --gold:var(--accent-2);
+  --cream:var(--text);
 }
 body{
-  font-family:'Inter','Segoe UI Symbol','Segoe UI Emoji','Apple Color Emoji','Noto Color Emoji',sans-serif;
+  font-family:'Chakra Petch','Inter','Segoe UI',sans-serif;
   background:var(--bg);
   color:var(--text);
   min-height:100vh;
   overflow-x:hidden;
   position:relative;
 }
+/* Light surface — subtle diagonal red wash + soft center vignette */
 body::before{
   content:'';
   position:fixed;
   inset:0;
   background:
-    radial-gradient(ellipse 90% 70% at 50% 45%, transparent 0%, rgba(10,6,18,.35) 55%, rgba(10,6,18,.75) 100%),
-    linear-gradient(180deg, rgba(10,6,18,.39), rgba(10,6,18,.44)),
-    url('fone.webp') center/cover no-repeat fixed;
-  z-index:-2;
+    radial-gradient(ellipse 80% 55% at 50% 32%, rgba(255,255,255,.8), transparent 75%),
+    linear-gradient(135deg, rgba(254,226,226,.45) 0%, rgba(245,247,250,0) 40%),
+    linear-gradient(225deg, rgba(219,234,254,.35) 0%, rgba(245,247,250,0) 40%),
+    var(--bg);
+  z-index:-3;
   pointer-events:none;
 }
-
-/* Petals */
-.petals{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-.petal{position:absolute;width:8px;height:8px;border-radius:60% 30% 60% 30%;animation:fall linear infinite}
-.petal:nth-child(1){left:8%;background:rgba(255,120,180,.6);animation-duration:14s;animation-delay:0s}
-.petal:nth-child(2){left:22%;background:rgba(200,150,255,.5);animation-duration:17s;animation-delay:-3s;width:6px;height:6px}
-.petal:nth-child(3){left:38%;background:rgba(255,180,120,.5);animation-duration:11s;animation-delay:-5s;width:10px;height:10px}
-.petal:nth-child(4){left:54%;background:rgba(255,100,160,.6);animation-duration:15s;animation-delay:-1s}
-.petal:nth-child(5){left:68%;background:rgba(180,130,255,.4);animation-duration:12s;animation-delay:-7s;width:7px;height:7px}
-.petal:nth-child(6){left:82%;background:rgba(255,200,140,.5);animation-duration:16s;animation-delay:-4s}
-.petal:nth-child(7){left:92%;background:rgba(255,140,200,.5);animation-duration:18s;animation-delay:-9s;width:5px;height:5px}
-@keyframes fall{0%{transform:translateY(-20px) rotate(0deg);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
-
-/* Header */
-.hdr{
-  padding:18px 32px;
-  display:flex;align-items:center;justify-content:space-between;
-  backdrop-filter:blur(20px);
-  position:sticky;top:0;z-index:100;
-  background:rgba(10,6,18,.75);
-  border-bottom:1px solid var(--border);
-  flex-wrap:wrap;gap:12px;
+/* Perspective grid floor — sits at bottom of viewport */
+body::after{
+  content:'';
+  position:fixed;
+  left:50%;
+  bottom:-35vh;
+  width:220vw;
+  height:85vh;
+  transform:translateX(-50%) perspective(600px) rotateX(62deg);
+  transform-origin:50% 0;
+  background:
+    linear-gradient(to right, rgba(220,38,38,.22) 1px, transparent 1px) 0 0/60px 60px,
+    linear-gradient(to bottom, rgba(220,38,38,.18) 1px, transparent 1px) 0 0/60px 60px,
+    linear-gradient(to bottom, transparent 0%, rgba(245,247,250,0) 30%, var(--bg) 85%);
+  mask-image:radial-gradient(ellipse 70% 100% at 50% 0%, #000 30%, transparent 85%);
+  -webkit-mask-image:radial-gradient(ellipse 70% 100% at 50% 0%, #000 30%, transparent 85%);
+  z-index:-2;
+  pointer-events:none;
+  opacity:.75;
 }
-.brand{display:flex;align-items:center;gap:14px}
+@media(prefers-reduced-motion:reduce){body::after{opacity:.55}}
+
+/* Petals — disabled (Arcane-era effect, removed with design pivot) */
+.petals{display:none}
+
+/* Header — light esports lobby */
+.hdr{
+  padding:16px 32px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+  background:rgba(255,255,255,.85);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-bottom:2px solid var(--red);
+  flex-wrap:wrap;gap:12px;
+  box-shadow:0 4px 24px rgba(15,23,42,.06);
+}
+/* Red angular accent strips on header edges */
+.hdr::before,.hdr::after{
+  content:'';position:absolute;top:0;width:140px;height:4px;
+  background:linear-gradient(90deg,var(--red),var(--red-bright));
+  clip-path:polygon(0 0,100% 0,calc(100% - 12px) 100%,0 100%);
+}
+.hdr::before{left:0}
+.hdr::after{right:0;transform:scaleX(-1)}
+
+.brand{display:flex;align-items:center;gap:12px}
 .emblem{
-  width:48px;height:48px;
-  border-radius:50%;
+  width:44px;height:44px;
   display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(135deg,rgba(255,140,180,.2),rgba(180,130,255,.2));
-  border:1.5px solid rgba(255,170,200,.4);
-  box-shadow:0 0 20px rgba(255,140,180,.25),inset 0 0 10px rgba(255,200,220,.1);
+  background:var(--red);
+  border:none;
+  clip-path:polygon(14% 0,100% 0,100% 86%,86% 100%,0 100%,0 14%);
+  color:#fff;
   position:relative;
 }
-.emblem::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:1px solid rgba(255,140,180,.2);animation:breathe 3s ease-in-out infinite}
-@keyframes breathe{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:.8;transform:scale(1.05)}}
-.emblem svg{width:24px;height:24px}
-.brand-name{font-family:'Cinzel',serif;font-size:17px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#fff;text-shadow:0 0 16px rgba(255,180,220,.3)}
-.brand-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--text-dim);letter-spacing:1px;margin-top:2px}
+.emblem::after{content:none}
+.emblem svg{width:22px;height:22px;fill:#fff;stroke:#fff}
+.brand-name{font-family:'Russo One',sans-serif;font-size:18px;font-weight:400;letter-spacing:3px;text-transform:uppercase;color:var(--text);text-shadow:none}
+.brand-sub{font-family:'Chakra Petch',sans-serif;font-style:normal;font-size:11px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase;margin-top:3px;font-weight:500}
 
-.hs{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.hs{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
 .si{text-align:right}
-.sl{font-family:'Cinzel',serif;font-size:10px;color:var(--text-faint);letter-spacing:2px;text-transform:uppercase}
-.sv{font-family:'Cinzel',serif;font-size:15px;font-weight:600}
+.sl{font-family:'Chakra Petch',sans-serif;font-size:10px;color:var(--text-faint);letter-spacing:2.5px;text-transform:uppercase;font-weight:600}
+.sv{font-family:'Russo One',sans-serif;font-size:16px;font-weight:400;color:var(--text);letter-spacing:1px}
 .cb{
-  font-family:'Cinzel',serif;font-weight:600;font-size:12px;letter-spacing:3px;
-  padding:11px 24px;min-height:44px;
-  background:linear-gradient(135deg,var(--pink),var(--purple));
-  border:none;border-radius:24px;
+  font-family:'Russo One',sans-serif;font-weight:400;font-size:12px;letter-spacing:3px;
+  padding:12px 26px;min-height:44px;
+  background:var(--red);
+  border:none;
+  clip-path:polygon(10px 0,100% 0,calc(100% - 10px) 100%,0 100%);
   color:#fff;cursor:pointer;text-transform:uppercase;
-  box-shadow:0 4px 20px rgba(232,90,142,.4),inset 0 1px 0 rgba(255,220,230,.4);
-  transition:all .3s;
+  box-shadow:0 4px 16px rgba(220,38,38,.3);
+  transition:background .2s ease, transform .2s ease, box-shadow .2s ease;
 }
-.cb:hover{transform:translateY(-1px);box-shadow:0 6px 28px rgba(232,90,142,.55),inset 0 1px 0 rgba(255,220,230,.5)}
-.cb:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
-.cb.on{background:linear-gradient(135deg,var(--purple-deep),var(--pink-deep))}
+.cb:hover{background:var(--red-bright);transform:translateY(-1px);box-shadow:0 6px 22px rgba(220,38,38,.42)}
+.cb:focus-visible{outline:2px solid var(--red-deep);outline-offset:3px}
+.cb.on{background:var(--red-deep)}
 
 .main{max-width:1400px;margin:0 auto;padding:32px 24px;position:relative;z-index:1}
 
@@ -1883,6 +1922,96 @@ body::before{
 @media(prefers-reduced-motion:reduce){
   .wm-backdrop,.wm-modal,.wm-icon,.wm-icon::before,.wm-step-title,.wm-step-lore,.wm-step-body,.tab-pulse::before,.tab-pulse::after,.wm-modal::after{animation:none}
 }
+
+/* ============================================================ */
+/* === STAGE 1 COMPAT LAYER (temporary, 2026-04-20 pivot) ===   */
+/* === Forces light theme + new fonts on Arcane-era components. */
+/* === Replace per-component in Stage 2+. ==================== */
+/* ============================================================ */
+
+/* Typography migration */
+[class*="-name"],.brand-name,.hero-title,.nv-tab,.cb,.sl,.sv,.w-label,.w-level,
+.tab,.tl,.chapter,.bcm,.bv,.bs,.kv,.kl,.rl,.rv,.btn-primary,.btn-secondary,
+h1,h2,h3,h4{font-family:'Russo One',sans-serif !important;font-weight:400 !important}
+p,span,div,label,input,textarea,button,.tab,.fs,.wm-step-body,.w-quote,.hero-sub,
+.brand-sub{font-family:'Chakra Petch','Inter',sans-serif !important}
+
+/* Flip all dark backgrounds → white/light */
+.nav2,.panel,.card,.w-img,.bc-card,.bc-hero,.rc-card,.tab-row,.tabs,.wm-modal,
+.op-row,.kpi,.rank-row,.tbl,.ref-card,.boost-card,.arena,.vs-seal,.mini,.chip,
+.stat,.badge,.qst,.qitem,.lb-row,.lb-head,.section,.hcard,.ind,.pill,.strip,
+.ppb,.w-boost,[class*="panel"],[class*="card"]{
+  background:var(--bg-raised) !important;
+  color:var(--text) !important;
+  border-color:var(--border) !important;
+}
+
+/* Force legible text color globally on light bg */
+body,.main,.nv-tab,.tl,.tab,.fs,.hero-sub,.brand-sub,.w-quote,
+.wm-step-title,.wm-step-lore,.wm-step-body{color:var(--text) !important}
+
+/* Arcane gradient text → solid dark slate */
+.hero-title,.hero-title em,.hero-sub,.w-quote,.bcm,.brand-name{
+  -webkit-text-fill-color:initial !important;
+  background:none !important;
+  color:var(--text) !important;
+  text-shadow:none !important;
+}
+.hero-title em{color:var(--red) !important}
+
+/* Dim text variants */
+.text-dim,.sl,.brand-sub,.chapter,.hero-sub,.w-quote{color:var(--text-dim) !important}
+
+/* Nav v2 — flip dark glass band to light red-accented strip */
+.nav2{
+  background:rgba(255,255,255,.92) !important;
+  border-top:2px solid var(--red) !important;
+  border-bottom:2px solid var(--red) !important;
+  backdrop-filter:blur(8px);
+}
+.nav2::before,.nav2::after{background:linear-gradient(90deg,transparent 8%,var(--red) 50%,transparent 92%) !important}
+.nv-edge-l,.nv-edge-r{background:radial-gradient(ellipse 100% 80% at 0% 50%, rgba(220,38,38,.18), transparent 70%) !important}
+.nv-edge-r{transform:scaleX(-1)}
+.nv-tab{color:var(--text-dim) !important}
+.nv-tab:hover,.nv-tab.active{color:var(--red) !important}
+.nv-tab::after{background:var(--red) !important}
+.nv-dia{border-color:var(--red) !important;background:var(--red-soft) !important}
+
+/* Chapter / hero divider lines → red */
+.chapter::before,.chapter::after,.hero-divider{
+  background:linear-gradient(90deg,transparent,var(--red),transparent) !important;
+}
+
+/* Primary CTA buttons → red angular */
+.btn-primary,.cb,.primary,.action-primary{
+  background:var(--red) !important;color:#fff !important;border:none !important;
+  box-shadow:0 4px 16px rgba(220,38,38,.3) !important;
+}
+.btn-primary:hover,.cb:hover,.primary:hover{background:var(--red-bright) !important}
+
+/* Input fields on light */
+input,textarea,select{
+  background:#fff !important;color:var(--text) !important;
+  border:1.5px solid var(--border) !important;
+}
+input:focus,textarea:focus,select:focus{border-color:var(--red) !important}
+
+/* Borders that were bright-Arcane → neutral slate */
+[style*="border"],.rank-row,.lb-row,.qst,.kpi{border-color:var(--border) !important}
+
+/* Faction colors remapped (Attack=red, Protect=blue) */
+.atk,.attack,[data-side="atk"]{--faction:var(--red)}
+.def,.defense,.protect,[data-side="def"]{--faction:var(--blue)}
+
+/* Modal backdrop lighter */
+.wm-backdrop{background:rgba(15,23,42,.72) !important}
+.wm-modal{background:#fff !important;color:var(--text) !important}
+
+/* Remove Arcane glow overlays that fight the light theme */
+.hero-title,.brand-name,.sv,.wm-step-title{text-shadow:none !important}
+
+/* ============================================================ */
+/* === end Stage 1 compat layer =============================== */
 </style>
 </head>
 <body>

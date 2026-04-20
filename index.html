@@ -88,27 +88,27 @@ body::before{
   z-index:-3;
   pointer-events:none;
 }
-/* Perspective grid floor — sits at bottom of viewport */
+/* Perspective grid floor — dramatic 3D plane at bottom */
 body::after{
   content:'';
   position:fixed;
   left:50%;
-  bottom:-35vh;
-  width:220vw;
-  height:85vh;
-  transform:translateX(-50%) perspective(600px) rotateX(62deg);
+  bottom:-25vh;
+  width:260vw;
+  height:90vh;
+  transform:translateX(-50%) perspective(520px) rotateX(58deg);
   transform-origin:50% 0;
   background:
-    linear-gradient(to right, rgba(220,38,38,.22) 1px, transparent 1px) 0 0/60px 60px,
-    linear-gradient(to bottom, rgba(220,38,38,.18) 1px, transparent 1px) 0 0/60px 60px,
-    linear-gradient(to bottom, transparent 0%, rgba(245,247,250,0) 30%, var(--bg) 85%);
-  mask-image:radial-gradient(ellipse 70% 100% at 50% 0%, #000 30%, transparent 85%);
-  -webkit-mask-image:radial-gradient(ellipse 70% 100% at 50% 0%, #000 30%, transparent 85%);
+    linear-gradient(to right, rgba(220,38,38,.42) 1.5px, transparent 1.5px) 0 0/72px 72px,
+    linear-gradient(to bottom, rgba(220,38,38,.34) 1.5px, transparent 1.5px) 0 0/72px 72px;
+  mask-image:linear-gradient(180deg,#000 0%,#000 55%,transparent 100%),radial-gradient(ellipse 75% 100% at 50% 0%, #000 30%, transparent 90%);
+  mask-composite:intersect;
+  -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 55%,transparent 100%);
   z-index:-2;
   pointer-events:none;
-  opacity:.75;
+  opacity:1;
 }
-@media(prefers-reduced-motion:reduce){body::after{opacity:.55}}
+@media(prefers-reduced-motion:reduce){body::after{opacity:.85}}
 
 /* Petals — disabled (Arcane-era effect, removed with design pivot) */
 .petals{display:none}
@@ -2345,6 +2345,182 @@ input:focus,textarea:focus,select:focus{border-color:var(--red) !important}
 
 /* ============================================================ */
 /* === end Stage 2 =========================================== */
+
+/* ============================================================ */
+/* === STAGE 3 — Defense placeholder + Leaderboards + NFT ==== */
+/* ============================================================ */
+
+/* Defense placeholder — mirrors attack.png horizontally + blue hue-rotate */
+.def-fallback{
+  transform:scaleX(-1);
+  filter:hue-rotate(195deg) saturate(.85) brightness(1.05);
+  opacity:.92;
+}
+/* "Placeholder" label for defense card (only shown when using fallback) */
+.w-img.def .def-fallback + .placeholder-tag,
+.w-img.def::before{
+  content:'AWAITING ARTWORK';
+  position:absolute;top:12px;left:50%;transform:translateX(-50%);
+  font-family:'Chakra Petch',sans-serif;font-size:9px;letter-spacing:2px;
+  background:rgba(37,99,235,.9);color:#fff;padding:3px 10px;
+  z-index:5;border-radius:0;pointer-events:none;
+  clip-path:polygon(4px 0, 100% 0, calc(100% - 4px) 100%, 0 100%);
+}
+
+/* ---- Leaderboards (Weekly XP / Monthly Glory) ---- */
+.lbrow{display:grid !important;grid-template-columns:1fr 1fr !important;gap:18px !important;margin-top:18px !important}
+@media(max-width:780px){.lbrow{grid-template-columns:1fr !important}}
+.lbrow .crd{
+  background:#fff !important;border:2px solid var(--border-bright) !important;
+  border-radius:0 !important;
+  clip-path:polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%) !important;
+  padding:18px 22px !important;
+}
+.lbrow .crd .ch{
+  font-family:'Russo One',sans-serif !important;
+  font-size:13px !important;letter-spacing:3px !important;text-transform:uppercase !important;
+  color:var(--red) !important;margin-bottom:14px !important;
+  padding-bottom:10px;border-bottom:2px solid var(--red);
+}
+.lb{background:transparent !important;border:none !important;padding:0 !important}
+.lbe,.lb .lbe{
+  font-family:'Chakra Petch',sans-serif !important;color:var(--text-dim) !important;
+  background:var(--bg-muted) !important;padding:14px 16px !important;
+  border:1px dashed var(--border-bright) !important;border-radius:0 !important;
+  text-align:center;letter-spacing:.5px;
+}
+.lb-row,.lbi{
+  display:flex;justify-content:space-between;align-items:center;
+  background:var(--bg) !important;border:1px solid var(--border) !important;
+  border-radius:0 !important;padding:10px 14px !important;
+  margin-bottom:6px;
+  font-family:'Chakra Petch',sans-serif !important;color:var(--text) !important;
+}
+.lb-row:hover,.lbi:hover{border-color:var(--red) !important}
+.lb-row .rank,.lbi .rank{font-family:'Russo One',sans-serif !important;color:var(--red) !important;min-width:32px}
+
+/* ---- NFT Trophy (Sovereign's Trophy section) ---- */
+.nft-trophy-wrap{
+  padding:24px !important;
+  display:flex !important;flex-direction:column !important;align-items:center !important;
+  background:#fff !important;
+}
+.nft-title-row{text-align:center;margin-bottom:20px}
+.nft-title{
+  font-family:'Russo One',sans-serif !important;
+  font-size:24px !important;letter-spacing:3px !important;text-transform:uppercase !important;
+  color:var(--red) !important;text-shadow:none !important;background:none !important;
+  -webkit-text-fill-color:initial !important;margin-bottom:8px;
+}
+.nft-lore{
+  font-family:'Chakra Petch',sans-serif !important;font-style:normal !important;
+  font-size:13px !important;color:var(--text-dim) !important;line-height:1.5 !important;
+  max-width:560px;margin:0 auto;letter-spacing:.3px !important;
+  background:none !important;-webkit-text-fill-color:initial !important;
+}
+.nft-stage{padding:10px 0 20px !important;background:none !important;border:none !important}
+.nft-halo-wrap{
+  position:relative;width:300px;height:300px;
+  display:flex;align-items:center;justify-content:center;
+  background:none !important;border:none !important;
+}
+/* Hide Arcane corner ornaments */
+.nft-corner{display:none !important}
+
+.nft-frame{
+  position:relative;width:280px;height:280px;
+  background:linear-gradient(180deg,#FDF8F3,#F5EDE3) !important;
+  border:3px solid var(--red) !important;
+  border-radius:0 !important;
+  clip-path:polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 22px 100%, 0 calc(100% - 22px));
+  overflow:hidden !important;
+  box-shadow:0 14px 40px rgba(220,38,38,.22);
+  display:flex;align-items:center;justify-content:center;
+}
+.nft-img{width:100%;height:100%;object-fit:cover;filter:blur(8px) saturate(.9);opacity:.55}
+.nft-img-fb{
+  position:absolute;inset:0;display:flex !important;flex-direction:column;
+  align-items:center;justify-content:center;gap:8px;
+  background:linear-gradient(180deg,#FDF8F3,#F5EDE3);
+  color:var(--red);
+}
+.nft-img-fb-emblem svg{width:48px;height:48px;stroke:var(--red);fill:var(--red)}
+.nft-img-fb-name{font-family:'Russo One',sans-serif !important;font-size:13px !important;letter-spacing:2px !important;text-transform:uppercase}
+.nft-img-fb-file{font-family:'Chakra Petch',sans-serif !important;font-size:10px !important;color:var(--text-dim) !important;letter-spacing:1px}
+.nft-overlay{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:10px;
+  background:rgba(15,23,42,.55);backdrop-filter:blur(2px);
+}
+.nft-claiming-soon{
+  font-family:'Russo One',sans-serif !important;
+  font-size:18px !important;letter-spacing:4px !important;text-transform:uppercase !important;
+  color:#fff !important;text-shadow:0 2px 8px rgba(0,0,0,.4);
+  background:none !important;-webkit-text-fill-color:initial !important;
+}
+.nft-divider{width:80px;height:2px;background:var(--red);margin:4px 0}
+.nft-overlay-sub{
+  font-family:'Chakra Petch',sans-serif !important;font-style:normal !important;
+  font-size:11px !important;color:rgba(255,255,255,.85) !important;letter-spacing:1.5px !important;
+  text-align:center;padding:0 16px;
+  background:none !important;-webkit-text-fill-color:initial !important;
+}
+
+/* NFT countdown grid — 4 cells: Days / Hours / Minutes / Seconds */
+.nft-cd-grid{
+  display:grid !important;grid-template-columns:repeat(4,1fr) !important;
+  gap:10px !important;width:100%;max-width:520px;margin:18px auto 8px;
+}
+.nft-cd-cell{
+  background:var(--red) !important;color:#fff !important;
+  padding:14px 8px !important;text-align:center;
+  border-radius:0 !important;border:none !important;
+  clip-path:polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+  box-shadow:0 6px 16px rgba(220,38,38,.22);
+}
+.nft-cd-num{
+  font-family:'Russo One',sans-serif !important;
+  font-size:28px !important;letter-spacing:1px !important;
+  color:#fff !important;text-shadow:none !important;
+  background:none !important;-webkit-text-fill-color:initial !important;
+  line-height:1;
+}
+.nft-cd-lbl{
+  font-family:'Chakra Petch',sans-serif !important;
+  font-size:9px !important;letter-spacing:2px !important;text-transform:uppercase !important;
+  color:rgba(255,255,255,.85) !important;margin-top:4px;font-weight:600;
+}
+.nft-cd-caption{
+  font-family:'Chakra Petch',sans-serif !important;font-style:normal !important;
+  font-size:11px !important;letter-spacing:2.5px !important;text-transform:uppercase !important;
+  color:var(--text-dim) !important;margin-top:14px;text-align:center;font-weight:600;
+  background:none !important;-webkit-text-fill-color:initial !important;
+}
+
+/* Container around NFT section gets red header strip */
+.crd:has(.nft-trophy-wrap){
+  background:#fff !important;border:2px solid var(--red) !important;
+  border-radius:0 !important;padding:0 !important;
+  clip-path:polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+  margin-top:24px;
+}
+.crd:has(.nft-trophy-wrap) .ch{
+  background:var(--red) !important;color:#fff !important;
+  padding:12px 22px !important;margin:0 !important;
+  font-family:'Russo One',sans-serif !important;font-size:13px !important;
+  letter-spacing:3px !important;text-transform:uppercase !important;
+}
+
+/* Mobile sizing */
+@media(max-width:600px){
+  .nft-halo-wrap{width:240px;height:240px}
+  .nft-frame{width:220px;height:220px}
+  .nft-cd-num{font-size:22px !important}
+  .nft-title{font-size:20px !important}
+}
+
+/* ============================================================ */
+/* === end Stage 3 =========================================== */
 </style>
 </head>
 <body>
@@ -2692,7 +2868,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--red) !important}
           <div class="w-label def">Protect</div>
           <div class="w-level def" id="defLv">Lv 1</div>
         </div>
-        <div class="w-img def w-img-live"><img src="defense.png" alt="Defense"></div>
+        <div class="w-img def w-img-live"><img src="attack.png" alt="Defense placeholder" class="def-fallback"></div>
         <div class="w-quote">"Stand firm when others falter."</div>
         <div class="w-boost">
           <div class="w-boost-lbl">Boost Defense Power</div>

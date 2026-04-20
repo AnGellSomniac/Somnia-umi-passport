@@ -65,7 +65,8 @@ body::before{
   position:fixed;
   inset:0;
   background:
-    linear-gradient(180deg, rgba(10,6,18,.78), rgba(10,6,18,.88)),
+    radial-gradient(ellipse 90% 70% at 50% 45%, transparent 0%, rgba(10,6,18,.35) 55%, rgba(10,6,18,.75) 100%),
+    linear-gradient(180deg, rgba(10,6,18,.39), rgba(10,6,18,.44)),
     url('fone.webp') center/cover no-repeat fixed;
   z-index:-2;
   pointer-events:none;
@@ -556,8 +557,8 @@ body::before{
 .warrior.def:hover .w-rune{filter:drop-shadow(0 0 8px rgba(178,98,217,.85))}
 
 /* Image gets subtle spotlight wash from top + faction tint at base */
-.w-img.atk{box-shadow:0 10px 30px rgba(0,0,0,.4),inset 0 30px 60px rgba(255,200,160,.08),inset 0 -40px 80px rgba(232,90,142,.18)}
-.w-img.def{box-shadow:0 10px 30px rgba(0,0,0,.4),inset 0 30px 60px rgba(255,200,160,.08),inset 0 -40px 80px rgba(130,100,220,.18)}
+.w-img.atk{box-shadow:0 14px 40px rgba(0,0,0,.55),inset 0 40px 70px rgba(255,200,160,.10),inset 0 -50px 90px rgba(232,90,142,.22),inset 0 0 24px rgba(255,200,220,.06)}
+.w-img.def{box-shadow:0 14px 40px rgba(0,0,0,.55),inset 0 40px 70px rgba(255,200,160,.10),inset 0 -50px 90px rgba(130,100,220,.22),inset 0 0 24px rgba(255,200,220,.06)}
 
 /* Respect user motion preference (DESIGN_BRIEF §7) */
 @media(prefers-reduced-motion:reduce){
@@ -582,17 +583,34 @@ body::before{
   width:100%;max-width:380px;margin:10px auto;
   aspect-ratio:4/5;border-radius:18px;overflow:hidden;
   position:relative;
-  background:linear-gradient(135deg,rgba(20,10,30,.8),rgba(10,6,18,.9));
-  box-shadow:0 10px 30px rgba(0,0,0,.4),inset 0 0 20px rgba(255,200,220,.05);
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 22%, rgba(255,200,160,.18), transparent 65%),
+    radial-gradient(ellipse 90% 70% at 50% 95%, rgba(40,22,62,.55), transparent 75%),
+    linear-gradient(180deg, rgba(30,18,46,.32) 0%, rgba(15,8,26,.62) 100%);
+  box-shadow:0 14px 40px rgba(0,0,0,.55),inset 0 0 80px rgba(0,0,0,.45),inset 0 0 24px rgba(255,200,220,.06);
 }
 .w-img.atk{border:2px solid rgba(232,90,142,.4)}
 .w-img.def{border:2px solid rgba(130,100,220,.4)}
-.w-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
-.w-img:hover img{transform:scale(1.05)}
+.w-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s;will-change:transform}
 .w-img::after{
   content:'';position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(180deg,transparent 50%,rgba(13,8,24,.7));
+  background:
+    radial-gradient(ellipse 55% 35% at 28% 58%, rgba(232,90,142,.10), transparent 72%),
+    radial-gradient(ellipse 60% 40% at 76% 38%, rgba(178,98,217,.10), transparent 72%),
+    linear-gradient(180deg,transparent 58%,rgba(13,8,24,.62));
+  animation:wMist 14s ease-in-out infinite alternate;
 }
+.w-img.def::after{
+  background:
+    radial-gradient(ellipse 55% 35% at 30% 55%, rgba(178,98,217,.12), transparent 72%),
+    radial-gradient(ellipse 60% 40% at 74% 40%, rgba(140,100,220,.10), transparent 72%),
+    linear-gradient(180deg,transparent 58%,rgba(13,8,24,.62));
+}
+@keyframes wMist{
+  0%{transform:translate(-1.5%,-1%) scale(1)}
+  100%{transform:translate(1.5%,1%) scale(1.04)}
+}
+@media(prefers-reduced-motion:reduce){.w-img::after{animation:none}}
 .w-quote{
   font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;
   text-align:center;margin:8px 0 16px;line-height:1.5;
@@ -2212,7 +2230,7 @@ body::before{
           <div class="w-label def">Protect</div>
           <div class="w-level def" id="defLv">Lv 1</div>
         </div>
-        <div class="w-img def"><img src="defense.png" alt="Defense"></div>
+        <div class="w-img def w-img-live"><img src="defense.png" alt="Defense"></div>
         <div class="w-quote">"Stand firm when others falter."</div>
         <div class="w-boost">
           <div class="w-boost-lbl">Boost Defense Power</div>

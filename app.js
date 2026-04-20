@@ -901,31 +901,125 @@ startNftCountdown();
   });
 })();
 
-// Living warrior: 3D tilt follows cursor, smooth reset on leave
+// Living warrior: faux-3D tilt + drag-to-rotate ±90° (180° total swing)
 (function initLiveWarriors(){
   if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
-  const MAX=6;
+  const HOVER_MAX=18;     // hover tilt range (deg)
+  const DRAG_MAX=90;      // drag rotation range (deg) — total swing 180°
+  const FADE_FROM=50;     // begin fade/blur after this angle
+  const PERSP=1100;
+  const LERP=0.16;
+
   document.querySelectorAll('.w-img-live').forEach(el=>{
-    let raf=0,rect=null;
+    let rect=null;
+    let curY=0,curX=0,tgtY=0,tgtX=0;
+    let hovering=false,dragging=false;
+    let dragStartX=0,dragStartY=0,dragStartRot=0,dragMoved=false;
+    let raf=0,idle=0;
+
     function refresh(){rect=el.getBoundingClientRect();}
+
+    function apply(){
+      const ay=Math.abs(curY);
+      const t=ay>FADE_FROM ? (ay-FADE_FROM)/(DRAG_MAX-FADE_FROM) : 0;
+      const fade=Math.max(.18, 1 - t*0.78);
+      const blur=t*5;
+      el.style.transform='perspective('+PERSP+'px) rotateX('+curX.toFixed(2)+'deg) rotateY('+curY.toFixed(2)+'deg)';
+      el.style.filter='saturate('+(1+(hovering?.15:0))+') brightness('+(1+(hovering?.06:0))+') blur('+blur.toFixed(2)+'px)';
+      el.style.opacity=fade.toFixed(3);
+    }
+
+    function tick(){
+      curY += (tgtY-curY)*LERP;
+      curX += (tgtX-curX)*LERP;
+      apply();
+      if(Math.abs(curY-tgtY)>0.05 || Math.abs(curX-tgtX)>0.05){
+        raf=requestAnimationFrame(tick);
+      } else { curY=tgtY; curX=tgtX; apply(); raf=0; }
+    }
+    function schedule(){ if(!raf) raf=requestAnimationFrame(tick); }
+
+    // Idle ambient float (when not hovered or dragged)
+    function idleLoop(){
+      if(!hovering && !dragging){
+        const t=performance.now()/1000;
+        tgtY = Math.sin(t*0.7)*2.5;
+        tgtX = Math.cos(t*0.5)*1.2;
+        schedule();
+      }
+      idle=requestAnimationFrame(idleLoop);
+    }
+    idle=requestAnimationFrame(idleLoop);
+
+    // Hover tilt
     function onMove(e){
+      if(dragging) return;
       if(!rect)refresh();
       const x=(e.clientX-rect.left)/rect.width-0.5;
       const y=(e.clientY-rect.top)/rect.height-0.5;
-      const rx=(-y*MAX).toFixed(2);
-      const ry=(x*MAX).toFixed(2);
-      if(raf)cancelAnimationFrame(raf);
-      raf=requestAnimationFrame(()=>{
-        el.style.transform='perspective(800px) rotateX('+rx+'deg) rotateY('+ry+'deg)';
-      });
+      tgtX=-y*HOVER_MAX;
+      tgtY=x*HOVER_MAX;
+      schedule();
     }
+    function onEnter(){ hovering=true; refresh(); }
     function onLeave(){
-      if(raf)cancelAnimationFrame(raf);
-      el.style.transform='perspective(800px) rotateX(0deg) rotateY(0deg)';
+      if(dragging) return;
+      hovering=false;
+      // idleLoop will resume gentle motion
     }
-    el.addEventListener('mouseenter',refresh);
+
+    // Drag-to-rotate (mouse + touch)
+    function getX(e){ return e.clientX ?? (e.touches&&e.touches[0]?.clientX) ?? 0; }
+    function getY(e){ return e.clientY ?? (e.touches&&e.touches[0]?.clientY) ?? 0; }
+
+    function onDown(e){
+      if(!rect)refresh();
+      dragStartX=getX(e);
+      dragStartY=getY(e);
+      dragStartRot=curY;
+      dragMoved=false;
+      dragging=false; // becomes true after threshold
+    }
+    function onDrag(e){
+      if(dragStartX===null) return;
+      const cx=getX(e), cy=getY(e);
+      const dx=cx-dragStartX, dy=cy-dragStartY;
+      if(!dragging){
+        if(Math.abs(dx)<6 && Math.abs(dy)<6) return;
+        if(Math.abs(dx)<Math.abs(dy)) { dragStartX=null; return; } // vertical → let page scroll
+        dragging=true; dragMoved=true;
+        el.style.cursor='grabbing';
+        document.body.style.userSelect='none';
+      }
+      if(e.cancelable && e.type==='touchmove') e.preventDefault();
+      const delta=(dx/rect.width)*DRAG_MAX*2;
+      tgtY=Math.max(-DRAG_MAX, Math.min(DRAG_MAX, dragStartRot+delta));
+      tgtX=0;
+      schedule();
+    }
+    function onUp(){
+      if(dragging){
+        dragging=false;
+        el.style.cursor='';
+        document.body.style.userSelect='';
+        // spring back to center
+        tgtY=0; tgtX=0;
+        schedule();
+      }
+      dragStartX=null;
+    }
+
+    el.style.cursor='grab';
+    el.addEventListener('mouseenter',onEnter);
     el.addEventListener('mousemove',onMove);
     el.addEventListener('mouseleave',onLeave);
+    el.addEventListener('mousedown',onDown);
+    window.addEventListener('mousemove',onDrag);
+    window.addEventListener('mouseup',onUp);
+    el.addEventListener('touchstart',onDown,{passive:true});
+    el.addEventListener('touchmove',onDrag,{passive:false});
+    window.addEventListener('touchend',onUp);
+    window.addEventListener('touchcancel',onUp);
     window.addEventListener('scroll',refresh,{passive:true});
     window.addEventListener('resize',refresh);
   });

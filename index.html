@@ -2012,6 +2012,339 @@ input:focus,textarea:focus,select:focus{border-color:var(--red) !important}
 
 /* ============================================================ */
 /* === end Stage 1 compat layer =============================== */
+
+/* ============================================================ */
+/* === STAGE 2 — Arena: Warrior cards + VS block ============== */
+/* ============================================================ */
+
+/* Arena grid — cleaner 3-column layout */
+.arena{
+  display:grid !important;
+  grid-template-columns:1fr 280px 1fr;
+  gap:24px !important;
+  align-items:stretch;
+  padding:0 !important;
+  background:transparent !important;
+  border:none !important;
+  box-shadow:none !important;
+}
+@media(max-width:900px){
+  .arena{grid-template-columns:1fr !important;gap:18px !important}
+}
+
+/* ---- Warrior card frame (notch-cut red outer border + white inner) ---- */
+.warrior{
+  position:relative !important;
+  padding:3px !important;
+  background:var(--faction, var(--red)) !important;
+  clip-path:polygon(0 0, calc(100% - 26px) 0, 100% 26px, 100% 100%, 0 100%) !important;
+  display:flex !important;flex-direction:column !important;
+  min-height:580px;
+  overflow:visible !important;
+  border:none !important;
+  border-radius:0 !important;
+  box-shadow:0 16px 40px rgba(220,38,38,.18) !important;
+  animation:none !important;
+  transform:none !important;
+  transition:transform .25s ease, box-shadow .25s ease !important;
+}
+.warrior.atk{--faction:var(--red)}
+.warrior.def{--faction:var(--blue)}
+.warrior.def{box-shadow:0 16px 40px rgba(37,99,235,.18) !important}
+.warrior:hover{transform:translateY(-3px) !important}
+.warrior.atk:hover{box-shadow:0 22px 50px rgba(220,38,38,.28) !important}
+.warrior.def:hover{box-shadow:0 22px 50px rgba(37,99,235,.28) !important}
+
+/* White interior with matching notch (sits inside the red frame) */
+.warrior::before{
+  content:'' !important;position:absolute !important;inset:3px !important;
+  background:#ffffff !important;
+  clip-path:polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%) !important;
+  z-index:0 !important;
+  animation:none !important;
+  border:none !important;
+  opacity:1 !important;
+}
+.warrior::after{content:none !important}
+.warrior > *{position:relative;z-index:2}
+
+/* Hide decorative rune SVGs (they were Arcane-era corner glyphs) */
+.warrior .w-rune{display:none !important}
+
+/* Card header row: big label + stat badge */
+.w-top{
+  display:flex !important;align-items:center !important;justify-content:space-between !important;
+  padding:20px 24px 16px !important;
+  margin:0 !important;
+  background:transparent !important;
+  border-bottom:2px solid var(--faction, var(--red)) !important;
+  position:relative !important;
+}
+.w-label{
+  font-family:'Russo One',sans-serif !important;
+  font-size:22px !important;letter-spacing:4px !important;
+  color:var(--faction, var(--red)) !important;text-transform:uppercase !important;
+  text-shadow:none !important;background:none !important;-webkit-text-fill-color:initial !important;
+}
+.w-level{
+  font-family:'Russo One',sans-serif !important;
+  font-size:11px !important;letter-spacing:2px !important;
+  padding:6px 10px !important;
+  background:var(--faction, var(--red)) !important;color:#fff !important;
+  border:none !important;border-radius:0 !important;
+  clip-path:polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%) !important;
+}
+
+/* Warrior image frame — beige-tinted with subtle inner depth */
+.w-img{
+  width:calc(100% - 32px) !important;
+  max-width:none !important;
+  margin:16px 16px 12px !important;
+  aspect-ratio:4/5 !important;
+  border-radius:0 !important;
+  overflow:hidden !important;
+  position:relative !important;
+  background:
+    radial-gradient(ellipse 70% 90% at 50% 100%, rgba(220,38,38,.14), transparent 68%),
+    linear-gradient(180deg, #FDF8F3 0%, #F5EDE3 100%) !important;
+  border:1.5px solid var(--faction, var(--red)) !important;
+  box-shadow:inset 0 0 30px rgba(220,38,38,.08),0 8px 20px rgba(15,23,42,.12) !important;
+  clip-path:polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px)) !important;
+}
+.w-img.def{
+  background:
+    radial-gradient(ellipse 70% 90% at 50% 100%, rgba(37,99,235,.14), transparent 68%),
+    linear-gradient(180deg, #F3F6FD 0%, #E3EAF5 100%) !important;
+  box-shadow:inset 0 0 30px rgba(37,99,235,.08),0 8px 20px rgba(15,23,42,.12) !important;
+}
+.w-img::after{
+  content:'' !important;
+  position:absolute !important;inset:auto 0 0 0 !important;height:40% !important;
+  background:linear-gradient(180deg,transparent,rgba(220,38,38,.10)) !important;
+  animation:none !important;pointer-events:none !important;
+}
+.w-img.def::after{background:linear-gradient(180deg,transparent,rgba(37,99,235,.10)) !important}
+.w-img img{object-fit:contain !important;object-position:center bottom !important;padding:8px !important}
+
+/* Quote text under image */
+.w-quote{
+  font-family:'Chakra Petch',sans-serif !important;
+  font-style:normal !important;font-size:13px !important;font-weight:500 !important;
+  text-align:center !important;margin:4px 18px 12px !important;
+  padding:0 !important;color:var(--text-dim) !important;
+  line-height:1.5 !important;letter-spacing:.3px !important;
+  background:none !important;-webkit-text-fill-color:initial !important;
+  animation:none !important;
+}
+
+/* Boost panel — slim, understated */
+.w-boost{
+  margin:0 18px 14px !important;padding:12px 14px !important;
+  border-top:1px solid var(--border) !important;
+  border-bottom:1px solid var(--border) !important;
+  background:var(--bg-muted) !important;
+}
+.w-boost-lbl{
+  font-family:'Chakra Petch',sans-serif !important;
+  font-size:10px !important;letter-spacing:2px !important;
+  color:var(--text-dim) !important;margin-bottom:8px !important;font-weight:600 !important;
+}
+.w-boost-row{font-family:'Chakra Petch',sans-serif !important;color:var(--text) !important;font-size:11px !important}
+.w-bv{color:var(--text-dim) !important}
+.w-bc{color:var(--faction, var(--red)) !important}
+
+/* Slider recolor */
+.w-slider::-webkit-slider-thumb{background:var(--faction, var(--red)) !important;box-shadow:0 0 0 3px rgba(220,38,38,.18) !important}
+.w-slider.def-s::-webkit-slider-thumb{background:var(--blue) !important;box-shadow:0 0 0 3px rgba(37,99,235,.18) !important}
+.w-slider::-webkit-slider-runnable-track,.w-slider::-moz-range-track{background:rgba(15,23,42,.08) !important}
+
+/* Big red CTA button at bottom of card */
+.b-btn,.w-fight-btn,.btnS,.btnP,.b-btn.steal,.b-btn.protect{
+  font-family:'Russo One',sans-serif !important;
+  font-size:14px !important;letter-spacing:3px !important;
+  padding:18px 24px !important;margin:auto 18px 18px !important;
+  min-height:56px !important;
+  background:var(--faction, var(--red)) !important;color:#fff !important;
+  border:none !important;border-radius:0 !important;
+  clip-path:polygon(12px 0, 100% 0, calc(100% - 12px) 100%, 0 100%) !important;
+  text-transform:uppercase !important;cursor:pointer !important;
+  box-shadow:0 6px 18px rgba(220,38,38,.28) !important;
+  display:flex !important;align-items:center !important;justify-content:center !important;gap:10px !important;
+  transition:transform .2s ease, box-shadow .2s ease, background .2s ease !important;
+}
+.warrior.def .b-btn{box-shadow:0 6px 18px rgba(37,99,235,.28) !important}
+.b-btn:hover{transform:translateY(-1px) !important;filter:brightness(1.08)}
+.b-btn svg{width:18px;height:18px;stroke:#fff;fill:none}
+.b-btn svg path{stroke:#fff !important;fill:rgba(255,255,255,.25) !important}
+.bf-lbl{background:none !important;-webkit-text-fill-color:initial !important;color:#fff !important}
+
+/* ---- Central VS / Battle-Core block ---- */
+.bc{
+  position:relative !important;
+  background:#fff !important;
+  border:2px solid var(--red) !important;
+  clip-path:polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px)) !important;
+  padding:24px 18px !important;
+  display:flex !important;flex-direction:column !important;align-items:center !important;justify-content:space-between !important;
+  gap:16px !important;
+  min-height:580px !important;
+  box-shadow:0 12px 32px rgba(220,38,38,.12) !important;
+}
+.bc-tl{
+  font-family:'Chakra Petch',sans-serif !important;
+  font-size:11px !important;letter-spacing:3px !important;
+  color:var(--text-dim) !important;text-transform:uppercase !important;
+  text-align:center !important;font-weight:600 !important;margin-top:8px !important;
+}
+.bc-timer-ring{
+  width:auto !important;height:auto !important;
+  display:flex !important;align-items:center !important;justify-content:center !important;
+  background:none !important;border:none !important;
+  padding:0 !important;margin:0 !important;
+}
+.bc-timer-ring-svg{display:none !important}
+.bc-timer-ring::before,.bc-timer-ring::after{display:none !important}
+.bc-tm{
+  font-family:'Russo One',sans-serif !important;
+  font-size:42px !important;letter-spacing:2px !important;
+  color:var(--red) !important;
+  text-shadow:none !important;background:none !important;-webkit-text-fill-color:initial !important;
+  line-height:1 !important;
+  text-align:center !important;
+}
+.vs-seal{
+  font-family:'Russo One',sans-serif !important;
+  font-size:28px !important;letter-spacing:4px !important;
+  color:var(--text) !important;
+  background:none !important;border:none !important;
+  -webkit-text-fill-color:initial !important;
+  padding:0 !important;margin:4px 0 !important;
+  animation:none !important;
+}
+.fog-wrap{background:none !important;border:none !important;padding:0 !important;text-align:center !important}
+.fog-icon-wrap{display:none !important}
+.fog-title{
+  font-family:'Chakra Petch',sans-serif !important;
+  font-size:10px !important;letter-spacing:2.5px !important;
+  color:var(--text-faint) !important;text-transform:uppercase !important;font-weight:600 !important;
+  margin-bottom:4px !important;
+}
+.fog-total{
+  font-family:'Russo One',sans-serif !important;
+  font-size:22px !important;letter-spacing:2px !important;
+  color:var(--red) !important;text-transform:uppercase !important;
+  margin:4px 0 !important;
+}
+.fog-msg{
+  font-family:'Chakra Petch',sans-serif !important;
+  font-size:11px !important;color:var(--text-dim) !important;letter-spacing:.5px !important;
+  font-weight:400 !important;
+}
+.snipe-warn{
+  font-family:'Chakra Petch',sans-serif !important;
+  font-size:11px !important;color:var(--red) !important;background:var(--red-soft) !important;
+  padding:6px 12px !important;letter-spacing:1px !important;
+  border:1px solid var(--red) !important;border-radius:0 !important;
+  clip-path:polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+}
+.gm-lock{
+  font-family:'Chakra Petch',sans-serif !important;
+  font-size:11px !important;color:var(--text-dim) !important;
+  background:var(--bg-muted) !important;padding:6px 12px !important;
+  border:1px solid var(--border) !important;border-radius:0 !important;
+}
+.bc-st{
+  font-family:'Chakra Petch',sans-serif !important;
+  font-size:11px !important;color:var(--text-dim) !important;
+}
+
+/* Claim bar under arena */
+.claim-bar{
+  background:#fff !important;border:2px solid var(--red) !important;
+  border-radius:0 !important;
+  clip-path:polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+  margin-top:20px !important;padding:18px 22px !important;
+  font-family:'Chakra Petch',sans-serif !important;
+}
+.claim-info{color:var(--text-dim) !important;letter-spacing:.5px}
+.claim-amt{font-family:'Russo One',sans-serif !important;color:var(--red) !important;font-size:18px !important;margin-left:6px}
+.claim-btn{
+  font-family:'Russo One',sans-serif !important;font-size:12px !important;letter-spacing:2px !important;
+  background:var(--red) !important;color:#fff !important;border:none !important;
+  padding:12px 20px !important;min-height:44px !important;
+  clip-path:polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%) !important;
+  border-radius:0 !important;box-shadow:0 4px 14px rgba(220,38,38,.28) !important;
+  text-transform:uppercase !important;cursor:pointer !important;
+  transition:background .2s ease, transform .2s ease;
+}
+.claim-btn:hover{background:var(--red-bright) !important;transform:translateY(-1px)}
+
+/* Hero title — center clean gaming header */
+.hero-title{
+  font-family:'Russo One',sans-serif !important;
+  font-size:48px !important;font-weight:400 !important;letter-spacing:3px !important;
+  text-transform:uppercase !important;color:var(--text) !important;
+  text-shadow:none !important;
+}
+.hero-title em{color:var(--red) !important;font-family:'Russo One',sans-serif !important;font-style:normal !important;font-size:1em !important}
+.hero-sub{
+  font-family:'Chakra Petch',sans-serif !important;font-style:normal !important;
+  font-size:13px !important;letter-spacing:4px !important;text-transform:uppercase !important;
+  color:var(--text-dim) !important;font-weight:500 !important;
+  background:none !important;-webkit-text-fill-color:initial !important;animation:none !important;
+}
+.hero-divider{background:var(--red) !important;height:2px !important;width:120px !important}
+
+/* Pools (Daily Treasury / Your Spoils) — light card */
+.pools{gap:18px !important;margin-bottom:22px !important}
+.pool{
+  background:#fff !important;border:2px solid var(--border-bright) !important;
+  border-radius:0 !important;
+  clip-path:polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
+  padding:18px 20px !important;
+}
+.pool-label{font-family:'Chakra Petch',sans-serif !important;color:var(--text-dim) !important;letter-spacing:2px !important;font-size:11px !important;text-transform:uppercase !important;font-weight:600}
+.pool-value{font-family:'Russo One',sans-serif !important;color:var(--red) !important;font-size:28px !important;letter-spacing:1px !important}
+.pool-value .unit{color:var(--text-dim) !important;font-size:14px !important;margin-left:6px}
+.pool-sub{font-family:'Chakra Petch',sans-serif !important;color:var(--text-faint) !important;font-size:11px !important;margin-top:4px}
+.pool-icon svg path{stroke:var(--red) !important}
+
+/* Yesterday's banner */
+.yday-banner{
+  background:var(--red-soft) !important;border:1px solid var(--red) !important;
+  border-radius:0 !important;padding:12px 16px !important;
+  clip-path:polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+  font-family:'Chakra Petch',sans-serif !important;color:var(--red-deep) !important;
+}
+.yd-text{font-family:'Russo One',sans-serif !important;letter-spacing:1px}
+.yd-sub{font-family:'Chakra Petch',sans-serif !important;color:var(--text-dim) !important}
+
+/* crd — outer battlefield container */
+.crd{
+  background:transparent !important;border:none !important;box-shadow:none !important;padding:0 !important;margin:0 !important;
+}
+.ch{
+  font-family:'Russo One',sans-serif !important;
+  font-size:14px !important;letter-spacing:3px !important;text-transform:uppercase !important;
+  color:var(--red) !important;margin-bottom:16px !important;
+}
+
+/* srow (below arena stats) — simple light row */
+.srow{background:transparent !important;border:none !important;gap:14px !important}
+.sc{
+  background:#fff !important;border:2px solid var(--border-bright) !important;
+  border-radius:0 !important;
+  clip-path:polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+  padding:14px 16px !important;
+}
+.sc .v{font-family:'Russo One',sans-serif !important;color:var(--red) !important}
+.sc .l{font-family:'Chakra Petch',sans-serif !important;color:var(--text-dim) !important;letter-spacing:2px;text-transform:uppercase;font-size:10px !important;font-weight:600}
+.xp-bar{background:var(--bg-muted) !important;border-radius:0 !important;height:4px !important}
+.xp-bar-fill{background:var(--red) !important;border-radius:0 !important}
+.xp-prog{font-family:'Chakra Petch',sans-serif !important;color:var(--text-dim) !important;font-size:10px !important;letter-spacing:1px}
+
+/* ============================================================ */
+/* === end Stage 2 =========================================== */
 </style>
 </head>
 <body>

@@ -65,79 +65,9 @@ body::before{
   position:fixed;
   inset:0;
   background:
-    /* Ambient color wash */
-    radial-gradient(ellipse 70% 50%, rgba(255,120,180,.22), transparent 55%),
-    radial-gradient(ellipse 60% 50%, rgba(130,90,255,.20), transparent 55%),
-    radial-gradient(ellipse 50% 40%, rgba(255,180,100,.10), transparent 60%),
-    /* Faint grid texture */
-    linear-gradient(rgba(255,200,220,.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,200,220,.04) 1px, transparent 1px);
-  background-size:
-    150% 150%, 140% 140%, 160% 160%,
-    60px 60px, 60px 60px;
-  background-position:
-    15% 20%, 85% 75%, 50% 50%,
-    0 0, 0 0;
-  background-repeat:no-repeat, no-repeat, no-repeat, repeat, repeat;
+    linear-gradient(180deg, rgba(10,6,18,.78), rgba(10,6,18,.88)),
+    url('fone.webp') center/cover no-repeat fixed;
   z-index:-2;
-  pointer-events:none;
-  animation:pageAuraFlow 36s ease-in-out infinite alternate;
-}
-@keyframes pageAuraFlow{
-  0%{background-position:10% 15%, 85% 75%, 50% 40%, 0 0, 0 0;}
-  50%{background-position:55% 50%, 40% 45%, 35% 65%, 0 0, 0 0;}
-  100%{background-position:80% 70%, 15% 25%, 60% 50%, 0 0, 0 0;}
-}
-@media(prefers-reduced-motion:reduce){
-  body::before{animation:none}
-}
-
-/* ===== Chain-reaction grid cells ===== */
-.grid-cells{
-  position:fixed;inset:0;
-  z-index:0;
-  pointer-events:none;
-  overflow:hidden;
-  display:grid;
-  gap:0;
-}
-.gc{position:relative}
-.gc::after{
-  content:'';
-  position:absolute;
-  inset:3px;
-  border-radius:3px;
-  pointer-events:none;
-  background:transparent;
-  border:1.5px solid hsla(var(--hot-h,330),92%,65%,.95);
-  box-shadow:
-    0 0 14px hsla(var(--hot-h,330),95%,65%,.7),
-    0 0 28px hsla(var(--hot-h,330),90%,55%,.35),
-    inset 0 0 10px hsla(var(--hot-h,330),95%,75%,.35);
-  opacity:0;
-  transform:scale(.88);
-  transition:opacity .5s ease-out, transform .55s ease-out;
-}
-.gc.hot::after{
-  opacity:1;
-  transform:scale(1);
-  transition:opacity .08s ease-out, transform .14s ease-out;
-}
-@media(prefers-reduced-motion:reduce){
-  .grid-cells{display:none}
-}
-body::after{
-  content:'';
-  position:fixed;
-  inset:0;
-  background-image:
-    radial-gradient(1px 1px at 15% 25%,rgba(255,220,180,.5),transparent),
-    radial-gradient(1px 1px at 75% 15%,rgba(255,200,220,.4),transparent),
-    radial-gradient(1.5px 1.5px at 45% 65%,rgba(200,180,255,.4),transparent),
-    radial-gradient(1px 1px at 85% 55%,rgba(255,230,200,.3),transparent),
-    radial-gradient(1px 1px at 10% 75%,rgba(255,180,200,.4),transparent),
-    radial-gradient(2px 2px at 60% 35%,rgba(200,200,255,.3),transparent);
-  z-index:-1;
   pointer-events:none;
 }
 
@@ -2024,9 +1954,6 @@ body::after{
     <div class="cbt-sub" id="cbSub">Glory is yours</div>
   </div>
 </div>
-
-<!-- Infecting grid cells (chain-reaction glow) -->
-<div class="grid-cells" aria-hidden="true"></div>
 
 <!-- Floating petals -->
 <div class="petals" aria-hidden="true">

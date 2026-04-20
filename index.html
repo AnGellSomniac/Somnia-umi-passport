@@ -75,35 +75,33 @@ body{
   overflow-x:hidden;
   position:relative;
 }
-/* Light surface — subtle diagonal red wash + soft center vignette */
+/* Main surface — soft bluish-gray glassy gradient (like 123.png) */
 body::before{
   content:'';
   position:fixed;
   inset:0;
   background:
-    radial-gradient(ellipse 80% 55% at 50% 32%, rgba(255,255,255,.8), transparent 75%),
-    linear-gradient(135deg, rgba(254,226,226,.45) 0%, rgba(245,247,250,0) 40%),
-    linear-gradient(225deg, rgba(219,234,254,.35) 0%, rgba(245,247,250,0) 40%),
-    var(--bg);
+    radial-gradient(ellipse 90% 60% at 50% 30%, rgba(255,255,255,.7), transparent 75%),
+    linear-gradient(180deg, #EEF2F8 0%, #E5EBF3 55%, #F5F7FA 100%);
   z-index:-3;
   pointer-events:none;
 }
-/* Perspective grid floor — dramatic 3D plane at bottom */
+/* Perspective grid floor — confined to BOTTOM ~35% only, like a 3D floor */
 body::after{
   content:'';
   position:fixed;
   left:50%;
-  bottom:-25vh;
-  width:260vw;
-  height:90vh;
-  transform:translateX(-50%) perspective(520px) rotateX(58deg);
+  bottom:0;
+  width:220vw;
+  height:45vh;
+  transform:translateX(-50%) perspective(560px) rotateX(60deg);
   transform-origin:50% 0;
   background:
-    linear-gradient(to right, rgba(220,38,38,.42) 1.5px, transparent 1.5px) 0 0/72px 72px,
-    linear-gradient(to bottom, rgba(220,38,38,.34) 1.5px, transparent 1.5px) 0 0/72px 72px;
-  mask-image:linear-gradient(180deg,#000 0%,#000 55%,transparent 100%),radial-gradient(ellipse 75% 100% at 50% 0%, #000 30%, transparent 90%);
-  mask-composite:intersect;
-  -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 55%,transparent 100%);
+    linear-gradient(to right, rgba(220,38,38,.55) 2px, transparent 2px) 0 0/70px 70px,
+    linear-gradient(to bottom, rgba(220,38,38,.45) 2px, transparent 2px) 0 0/70px 70px,
+    linear-gradient(180deg, rgba(255,255,255,.6) 0%, rgba(245,247,250,.2) 50%, transparent 100%);
+  mask-image:linear-gradient(180deg, #000 0%, #000 60%, transparent 100%);
+  -webkit-mask-image:linear-gradient(180deg, #000 0%, #000 60%, transparent 100%);
   z-index:-2;
   pointer-events:none;
   opacity:1;
@@ -1962,20 +1960,57 @@ body,.main,.nv-tab,.tl,.tab,.fs,.hero-sub,.brand-sub,.w-quote,
 /* Dim text variants */
 .text-dim,.sl,.brand-sub,.chapter,.hero-sub,.w-quote{color:var(--text-dim) !important}
 
-/* Nav v2 — flip dark glass band to light red-accented strip */
+/* Nav v2 — RED full-bleed bar with diagonal cuts (matching 123.png) */
 .nav2{
-  background:rgba(255,255,255,.92) !important;
-  border-top:2px solid var(--red) !important;
-  border-bottom:2px solid var(--red) !important;
-  backdrop-filter:blur(8px);
+  background:linear-gradient(90deg, var(--red) 0%, var(--red-bright) 50%, var(--red) 100%) !important;
+  border-top:none !important;
+  border-bottom:none !important;
+  backdrop-filter:none !important;
+  padding:12px 40px !important;
+  /* Diagonal cuts on left/right edges */
+  clip-path:polygon(0 0, calc(100% - 60px) 0, 100% 100%, 60px 100%, 0 100%);
+  box-shadow:0 6px 24px rgba(220,38,38,.25) !important;
 }
-.nav2::before,.nav2::after{background:linear-gradient(90deg,transparent 8%,var(--red) 50%,transparent 92%) !important}
-.nv-edge-l,.nv-edge-r{background:radial-gradient(ellipse 100% 80% at 0% 50%, rgba(220,38,38,.18), transparent 70%) !important}
-.nv-edge-r{transform:scaleX(-1)}
-.nv-tab{color:var(--text-dim) !important}
-.nv-tab:hover,.nv-tab.active{color:var(--red) !important}
-.nv-tab::after{background:var(--red) !important}
-.nv-dia{border-color:var(--red) !important;background:var(--red-soft) !important}
+.nav2::before,.nav2::after{
+  background:linear-gradient(90deg, rgba(255,255,255,.5) 0%, rgba(255,255,255,.85) 50%, rgba(255,255,255,.5) 100%) !important;
+  height:2px !important;
+}
+.nv-edge-l,.nv-edge-r{
+  background:none !important;
+  width:80px !important;
+}
+.nv-edge-l{
+  background:linear-gradient(90deg, rgba(255,255,255,.18) 0%, transparent 100%) !important;
+}
+.nv-edge-r{
+  background:linear-gradient(270deg, rgba(255,255,255,.18) 0%, transparent 100%) !important;
+  transform:none;
+}
+
+/* Menu tabs — white text on red bar */
+.nv-tab{
+  color:rgba(255,255,255,.85) !important;
+  font-family:'Russo One',sans-serif !important;
+  font-size:11px !important;letter-spacing:2.5px !important;
+  text-shadow:0 1px 2px rgba(0,0,0,.15);
+  transition:color .2s ease, transform .2s ease !important;
+}
+.nv-tab:hover{color:#fff !important;transform:translateY(-1px)}
+.nv-tab.active,.nv-tab[aria-selected="true"]{
+  color:#fff !important;
+  text-shadow:0 0 12px rgba(255,255,255,.5), 0 1px 2px rgba(0,0,0,.2);
+}
+.nv-tab::after{background:#fff !important;height:2px !important}
+
+/* Diamond dividers — white diamonds on red bar */
+.nv-dia{
+  border-color:rgba(255,255,255,.55) !important;
+  background:rgba(255,255,255,.12) !important;
+}
+.nv-dia-owner{border-color:rgba(255,255,255,.75) !important;background:rgba(255,255,255,.2) !important}
+
+/* Central rune — hidden per user request (2026-04-20) */
+.nv-crest,.nv-crest-img,.nv-crest-svg,.nv-crest-aura{display:none !important}
 
 /* Chapter / hero divider lines → red */
 .chapter::before,.chapter::after,.hero-divider{
@@ -2279,21 +2314,47 @@ input:focus,textarea:focus,select:focus{border-color:var(--red) !important}
 }
 .claim-btn:hover{background:var(--red-bright) !important;transform:translateY(-1px)}
 
-/* Hero title — center clean gaming header */
+/* Hero title — BIG bold (matching 123.png "STEAL or PROTECT") */
+.hero-wrap{padding:36px 0 28px !important}
 .hero-title{
   font-family:'Russo One',sans-serif !important;
-  font-size:48px !important;font-weight:400 !important;letter-spacing:3px !important;
+  font-size:64px !important;font-weight:400 !important;letter-spacing:4px !important;
   text-transform:uppercase !important;color:var(--text) !important;
   text-shadow:none !important;
+  line-height:1 !important;
+  margin:0 !important;
 }
-.hero-title em{color:var(--red) !important;font-family:'Russo One',sans-serif !important;font-style:normal !important;font-size:1em !important}
+.hero-title em{
+  color:var(--red) !important;
+  font-family:'Russo One',sans-serif !important;
+  font-style:normal !important;
+  font-size:.5em !important;
+  letter-spacing:2px !important;
+  text-transform:lowercase !important;
+  vertical-align:middle !important;
+  margin:0 10px !important;
+  font-weight:400 !important;
+}
 .hero-sub{
   font-family:'Chakra Petch',sans-serif !important;font-style:normal !important;
-  font-size:13px !important;letter-spacing:4px !important;text-transform:uppercase !important;
-  color:var(--text-dim) !important;font-weight:500 !important;
+  font-size:11px !important;letter-spacing:4px !important;text-transform:uppercase !important;
+  color:var(--red) !important;font-weight:500 !important;
+  margin-top:8px !important;
   background:none !important;-webkit-text-fill-color:initial !important;animation:none !important;
 }
-.hero-divider{background:var(--red) !important;height:2px !important;width:120px !important}
+.hero-divider{display:none !important}
+.chapter{display:none !important}
+
+/* Pull hero closer to nav (remove gap) */
+.hero-under{margin-top:4px !important}
+
+/* Main container — no left/right padding overflow of grid */
+.main{max-width:1280px !important;padding:20px 24px 40px !important}
+
+@media(max-width:700px){
+  .hero-title{font-size:40px !important;letter-spacing:2px !important}
+  .hero-title em{font-size:.55em !important;margin:0 6px !important}
+}
 
 /* Pools (Daily Treasury / Your Spoils) — light card */
 .pools{gap:18px !important;margin-bottom:22px !important}

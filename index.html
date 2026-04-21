@@ -2871,6 +2871,95 @@ input:focus,textarea:focus,select:focus{border-color:var(--red) !important}
 
 /* ============================================================ */
 /* === end Stage 4 =========================================== */
+
+/* ============================================================ */
+/* === STAGE 5 — responsive + a11y final pass ================= */
+/* ============================================================ */
+
+/* Tighter main on small viewports */
+@media(max-width:600px){
+  .main{padding:16px 14px 36px !important}
+  .pnl:not(#t-game) .crd{padding:18px 18px !important}
+  .hero-title{font-size:34px !important;letter-spacing:1.5px !important}
+  .hero-title em{font-size:.5em !important;margin:0 4px !important}
+  .hero-sub{font-size:12px !important;letter-spacing:2px !important}
+  #t-chronicles .hero-title{font-size:28px !important}
+  .pnl:not(#t-game) .ch{font-size:12px !important;letter-spacing:2px !important}
+  .owner-title{font-size:14px !important;letter-spacing:2px !important}
+  .gmr{grid-template-columns:1fr !important}
+  .arena{gap:14px !important}
+  .warrior{min-height:460px !important}
+}
+
+/* Chronicles — force single column on tablet/mobile */
+@media(max-width:780px){
+  #t-chronicles .crd > div[style*="grid-template-columns"]{
+    display:block !important;
+  }
+  #t-chronicles .crd > div[style*="grid-template-columns"] > div[style*="padding:40px"]{
+    padding:24px !important;
+  }
+  #t-chronicles .crd > div[style*="grid-template-columns"] > div[style*="linear-gradient"]{
+    min-height:200px !important;
+    padding:20px !important;
+    border-left:none !important;border-right:none !important;
+    border-top:1px solid var(--border-bright) !important;
+  }
+}
+
+/* Passport — stack on mobile */
+@media(max-width:600px){
+  .fg{grid-template-columns:1fr !important;gap:12px !important;padding:16px !important}
+  .ppb{flex-direction:column !important;gap:18px !important;text-align:center;padding:18px !important}
+  .pm{grid-template-columns:repeat(3,1fr) !important;gap:10px !important}
+  .owner-grid{grid-template-columns:1fr !important}
+  .owner-actions{flex-direction:column !important}
+  .owner-btn{width:100% !important}
+}
+
+/* Touch target minimum — WCAG 2.5.5 / Material 48dp */
+.b-btn, .gmb, .fb, .claim-btn, .ref-copy, .owner-btn{
+  min-height:44px !important;
+}
+@media(max-width:600px){
+  .b-btn, .gmb, .fb, .claim-btn, .ref-copy, .owner-btn{
+    width:100%;
+  }
+  .ref-row{flex-direction:column !important;align-items:stretch !important}
+}
+
+/* Accessibility — visible focus rings on all interactive elements */
+.b-btn:focus-visible, .gmb:focus-visible, .fb:focus-visible,
+.claim-btn:focus-visible, .ref-copy:focus-visible, .owner-btn:focus-visible,
+.ref-input:focus-visible, .fi:focus-visible, .gmi:focus-visible{
+  outline:3px solid var(--red-deep) !important;
+  outline-offset:3px !important;
+  border-radius:0;
+}
+.nv-tab:focus-visible{
+  outline:3px solid #fff !important;
+  outline-offset:-4px !important;
+}
+.quest:focus-visible, .about-step:focus-visible, .contract-card:focus-visible{
+  outline:3px solid var(--red) !important;
+  outline-offset:2px !important;
+}
+
+/* Reduced motion — kill hover transforms */
+@media(prefers-reduced-motion:reduce){
+  .b-btn:hover, .gmb:hover, .fb:hover, .claim-btn:hover,
+  .ref-copy:hover, .owner-btn:hover, .warrior:hover,
+  .quest:hover, .about-step:hover, .contract-card:hover,
+  .pool:hover, .sc:hover{
+    transform:none !important;
+  }
+}
+
+/* Contrast guard — ensure body text defaults to dark on light */
+body{color:var(--text)}
+
+/* ============================================================ */
+/* === end Stage 5 =========================================== */
 </style>
 </head>
 <body>

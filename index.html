@@ -75,38 +75,28 @@ body{
   overflow-x:hidden;
   position:relative;
 }
-/* Main surface — soft bluish-gray glassy gradient (like 123.png) */
+/* Main surface — 3.png cityscape photo background */
 body::before{
   content:'';
   position:fixed;
   inset:0;
   background:
-    radial-gradient(ellipse 90% 60% at 50% 30%, rgba(255,255,255,.7), transparent 75%),
-    linear-gradient(180deg, #EEF2F8 0%, #E5EBF3 55%, #F5F7FA 100%);
+    url("3.webp") center center / cover no-repeat fixed;
   z-index:-3;
   pointer-events:none;
 }
-/* Perspective grid floor — confined to BOTTOM ~35% only, like a 3D floor */
+/* Readability veil — soft white wash so content stays legible over the photo */
 body::after{
   content:'';
   position:fixed;
-  left:50%;
-  bottom:0;
-  width:220vw;
-  height:45vh;
-  transform:translateX(-50%) perspective(560px) rotateX(60deg);
-  transform-origin:50% 0;
+  inset:0;
   background:
-    linear-gradient(to right, rgba(220,38,38,.55) 2px, transparent 2px) 0 0/70px 70px,
-    linear-gradient(to bottom, rgba(220,38,38,.45) 2px, transparent 2px) 0 0/70px 70px,
-    linear-gradient(180deg, rgba(255,255,255,.6) 0%, rgba(245,247,250,.2) 50%, transparent 100%);
-  mask-image:linear-gradient(180deg, #000 0%, #000 60%, transparent 100%);
-  -webkit-mask-image:linear-gradient(180deg, #000 0%, #000 60%, transparent 100%);
+    radial-gradient(ellipse 80% 55% at 50% 40%, rgba(255,255,255,.55), rgba(255,255,255,.25) 70%, rgba(255,255,255,.15) 100%),
+    linear-gradient(180deg, rgba(245,247,250,.35) 0%, rgba(245,247,250,.15) 60%, rgba(245,247,250,.55) 100%);
   z-index:-2;
   pointer-events:none;
-  opacity:1;
 }
-@media(prefers-reduced-motion:reduce){body::after{opacity:.85}}
+@media(prefers-reduced-motion:reduce){body::after{opacity:1}}
 
 /* Petals — disabled (Arcane-era effect, removed with design pivot) */
 .petals{display:none}

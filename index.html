@@ -3732,21 +3732,24 @@ body{color:var(--text)}
 
 .warrior.atk{
   background:url('card-attack.png') center/100% 100% no-repeat !important;
-  aspect-ratio:408/598 !important;
+  aspect-ratio:3392/5056 !important;
   width:100% !important;
   max-width:380px !important;
   margin:0 auto !important;
   position:relative !important;
+  display:block !important;
   border:none !important;
   box-shadow:none !important;
   padding:0 !important;
   clip-path:none !important;
-  overflow:hidden !important;
+  overflow:visible !important;
+  min-height:0 !important;
+  height:auto !important;
 }
 .warrior.atk::before,
-.warrior.atk::after{content:none !important; display:none !important}
+.warrior.atk::after{content:none !important; display:none !important; background:none !important}
 
-/* Hide parts already drawn into the PNG (header, label, runes, quote, boost label) */
+/* Hide parts already drawn into the PNG (header, runes, quote, boost label) */
 .warrior.atk > .w-rune,
 .warrior.atk > .w-quote,
 .warrior.atk .w-boost-lbl,
@@ -3757,6 +3760,7 @@ body{color:var(--text)}
   position:absolute !important;
   top:2.5% !important; right:5% !important;
   left:auto !important;
+  width:auto !important;
   display:flex !important; gap:0 !important; padding:0 !important;
   margin:0 !important; border:none !important; background:transparent !important;
   z-index:3 !important;
@@ -3770,15 +3774,17 @@ body{color:var(--text)}
   font-size:11px !important; letter-spacing:.12em !important;
   padding:3px 9px !important; border-radius:0 !important;
   text-shadow:none !important;
+  clip-path:none !important;
 }
 
-/* Photo slot — the white square in the middle of the PNG */
+/* Photo slot — slightly wider than the white square so the warrior fills it */
 .warrior.atk > .w-img{
   position:absolute !important;
-  top:18.4% !important;
-  left:30.5% !important;
-  width:45% !important;
-  height:43.6% !important;
+  top:13% !important;
+  left:18% !important;
+  width:64% !important;
+  height:60% !important;
+  aspect-ratio:auto !important;
   margin:0 !important; padding:0 !important;
   background:transparent !important;
   border:none !important;
@@ -3787,21 +3793,28 @@ body{color:var(--text)}
   clip-path:none !important;
   overflow:hidden !important;
   z-index:2 !important;
+  max-width:none !important;
 }
 .warrior.atk > .w-img::before,
-.warrior.atk > .w-img::after{content:none !important; display:none !important}
-.warrior.atk > .w-img img{
+.warrior.atk > .w-img::after{content:none !important; display:none !important; background:none !important; animation:none !important}
+.warrior.atk > .w-img img,
+.warrior.atk > .w-img .w-hover{
+  position:absolute !important;
+  inset:0 !important;
   width:100% !important; height:100% !important;
   object-fit:contain !important;
+  object-position:center bottom !important;
+  padding:0 !important;
+  margin:0 !important;
   background:transparent !important;
 }
 
 /* Boost slider — sits in the upper bar of the lower section */
 .warrior.atk > .w-boost{
   position:absolute !important;
-  top:87% !important;
-  left:7.5% !important; right:7.5% !important;
-  height:4.5% !important;
+  top:83% !important;
+  left:7% !important; right:7% !important;
+  height:5% !important;
   margin:0 !important; padding:0 !important;
   background:transparent !important;
   border:none !important; box-shadow:none !important;
@@ -3810,78 +3823,96 @@ body{color:var(--text)}
 }
 .warrior.atk > .w-boost > .w-slider{
   width:100% !important; margin:0 !important;
+  height:18px !important;
   background:transparent !important;
+  -webkit-appearance:none !important;
+  appearance:none !important;
 }
-.warrior.atk > .w-boost > .w-slider::-webkit-slider-runnable-track,
+.warrior.atk > .w-boost > .w-slider::-webkit-slider-runnable-track{
+  background:transparent !important;
+  height:6px !important;
+  border:none !important;
+}
 .warrior.atk > .w-boost > .w-slider::-moz-range-track{
   background:transparent !important;
   height:6px !important;
+  border:none !important;
 }
 .warrior.atk > .w-boost > .w-slider::-webkit-slider-thumb{
+  -webkit-appearance:none !important;
+  appearance:none !important;
   background:#fff !important;
-  box-shadow:0 0 8px rgba(0,0,0,.4),0 0 0 2px var(--red) !important;
+  box-shadow:0 0 8px rgba(0,0,0,.5),0 0 0 2px var(--red) !important;
   width:18px !important; height:18px !important;
   border-radius:50% !important;
+  border:none !important;
+  margin-top:-6px !important;
+  cursor:pointer !important;
 }
 .warrior.atk > .w-boost > .w-slider::-moz-range-thumb{
   background:#fff !important; border:2px solid var(--red) !important;
   width:18px !important; height:18px !important; border-radius:50% !important;
+  box-shadow:0 0 8px rgba(0,0,0,.5) !important;
+  cursor:pointer !important;
 }
 
-/* Strike to Steal button — sits in the lower bar */
+/* Strike to Steal button — sits in the lower bar with a tinted plate so it's readable */
 .warrior.atk > .w-fight-btn{
   position:absolute !important;
-  top:93.5% !important;
-  left:7.5% !important; right:7.5% !important;
+  top:90.5% !important;
+  left:7% !important; right:7% !important;
   width:auto !important;
-  height:5.2% !important;
+  height:6% !important;
   min-height:0 !important;
-  margin:0 !important; padding:0 8px !important;
-  background:transparent !important;
+  margin:0 !important; padding:0 14px !important;
+  background:rgba(0,0,0,.18) !important;
   color:#fff !important;
-  border:none !important;
+  border:1px solid rgba(255,255,255,.55) !important;
   border-radius:0 !important;
   clip-path:none !important;
-  box-shadow:none !important;
+  box-shadow:0 2px 6px rgba(0,0,0,.25) !important;
   display:flex !important;
   align-items:center !important;
   justify-content:center !important;
-  gap:8px !important;
+  gap:10px !important;
   font-family:'Russo One',sans-serif !important;
-  letter-spacing:.18em !important;
-  font-size:11px !important;
+  letter-spacing:.22em !important;
+  font-size:12px !important;
   text-transform:uppercase !important;
   cursor:pointer !important;
   z-index:5 !important;
-  transition:filter .15s ease, transform .1s ease !important;
+  transition:filter .15s ease, transform .1s ease, background .15s ease !important;
 }
 .warrior.atk > .w-fight-btn::before,
-.warrior.atk > .w-fight-btn::after{content:none !important; display:none !important}
+.warrior.atk > .w-fight-btn::after{content:none !important; display:none !important; background:none !important}
 .warrior.atk > .w-fight-btn svg{
-  width:14px !important; height:14px !important;
+  width:16px !important; height:16px !important;
   stroke:#fff !important;
   flex:0 0 auto !important;
 }
 .warrior.atk > .w-fight-btn svg path{stroke:#fff !important; fill:rgba(255,255,255,.25) !important}
 .warrior.atk > .w-fight-btn .bf-lbl{
-  font-size:11px !important;
-  letter-spacing:.18em !important;
+  font-size:12px !important;
+  letter-spacing:.22em !important;
   color:#fff !important;
-  text-shadow:0 1px 2px rgba(0,0,0,.4) !important;
+  text-shadow:0 1px 3px rgba(0,0,0,.6) !important;
+  background:none !important;
 }
 .warrior.atk > .w-fight-btn:hover:not(:disabled){
+  background:rgba(0,0,0,.28) !important;
   filter:brightness(1.15) !important;
   transform:translateY(-1px) !important;
 }
 .warrior.atk > .w-fight-btn:active:not(:disabled){transform:translateY(1px) !important}
-.warrior.atk > .w-fight-btn:disabled{opacity:.5 !important; cursor:not-allowed !important}
+.warrior.atk > .w-fight-btn:disabled{opacity:.55 !important; cursor:not-allowed !important}
 
 /* Mobile: keep full card visible */
 @media (max-width:600px){
   .warrior.atk{max-width:300px !important}
   .warrior.atk > .w-top > .w-level{font-size:9px !important; padding:2px 6px !important}
-  .warrior.atk > .w-fight-btn{font-size:9px !important}
-  .warrior.atk > .w-fight-btn .bf-lbl{font-size:9px !important; letter-spacing:.14em !important}
+  .warrior.atk > .w-fight-btn{font-size:10px !important; padding:0 8px !important}
+  .warrior.atk > .w-fight-btn .bf-lbl{font-size:10px !important; letter-spacing:.16em !important}
+  .warrior.atk > .w-fight-btn svg{width:13px !important; height:13px !important}
 }
 
 /* ============================================================ */

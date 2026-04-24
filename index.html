@@ -3778,12 +3778,14 @@ body{color:var(--text)}
 }
 
 /* Photo slot — slightly wider than the white square so the warrior fills it */
+/* Photo slot: pixel-detected from card-attack.png (3392x5056) —
+   white square spans x[1024..3072] y[1024..3072] → 30.19%/20.25%/60.40%/40.50% */
 .warrior.atk > .w-img{
   position:absolute !important;
-  top:13% !important;
-  left:18% !important;
-  width:64% !important;
-  height:60% !important;
+  top:20.25% !important;
+  left:30.19% !important;
+  width:60.40% !important;
+  height:40.50% !important;
   aspect-ratio:auto !important;
   margin:0 !important; padding:0 !important;
   background:transparent !important;
@@ -3802,24 +3804,25 @@ body{color:var(--text)}
   position:absolute !important;
   inset:0 !important;
   width:100% !important; height:100% !important;
-  object-fit:contain !important;
-  object-position:center bottom !important;
+  object-fit:cover !important;
+  object-position:center top !important;
   padding:0 !important;
   margin:0 !important;
   background:transparent !important;
 }
 
-/* Boost slider — sits in the upper bar of the lower section */
+/* Boost slider — pixel-detected upper red bar: y[82.50%..84.97%] x[3.10%..99.85%] */
 .warrior.atk > .w-boost{
   position:absolute !important;
-  top:83% !important;
-  left:7% !important; right:7% !important;
-  height:5% !important;
+  top:82.50% !important;
+  left:3.10% !important; right:0.15% !important;
+  height:2.47% !important;
   margin:0 !important; padding:0 !important;
   background:transparent !important;
   border:none !important; box-shadow:none !important;
   display:flex !important; align-items:center !important;
   z-index:4 !important;
+  overflow:visible !important;
 }
 .warrior.atk > .w-boost > .w-slider{
   width:100% !important; margin:0 !important;
@@ -3856,21 +3859,22 @@ body{color:var(--text)}
   cursor:pointer !important;
 }
 
-/* Strike to Steal button — sits in the lower bar with a tinted plate so it's readable */
+/* Strike to Steal — pixel-detected lower red bar: y[88.98%..93.14%] x[3.10%..99.85%].
+   Button is transparent; the red bar is baked into the PNG. We only overlay text+icon. */
 .warrior.atk > .w-fight-btn{
   position:absolute !important;
-  top:90.5% !important;
-  left:7% !important; right:7% !important;
+  top:88.98% !important;
+  left:3.10% !important; right:0.15% !important;
   width:auto !important;
-  height:6% !important;
+  height:4.15% !important;
   min-height:0 !important;
   margin:0 !important; padding:0 14px !important;
-  background:rgba(0,0,0,.18) !important;
+  background:transparent !important;
   color:#fff !important;
-  border:1px solid rgba(255,255,255,.55) !important;
+  border:none !important;
   border-radius:0 !important;
   clip-path:none !important;
-  box-shadow:0 2px 6px rgba(0,0,0,.25) !important;
+  box-shadow:none !important;
   display:flex !important;
   align-items:center !important;
   justify-content:center !important;
@@ -3881,7 +3885,7 @@ body{color:var(--text)}
   text-transform:uppercase !important;
   cursor:pointer !important;
   z-index:5 !important;
-  transition:filter .15s ease, transform .1s ease, background .15s ease !important;
+  transition:filter .15s ease, transform .1s ease !important;
 }
 .warrior.atk > .w-fight-btn::before,
 .warrior.atk > .w-fight-btn::after{content:none !important; display:none !important; background:none !important}
@@ -3899,9 +3903,8 @@ body{color:var(--text)}
   background:none !important;
 }
 .warrior.atk > .w-fight-btn:hover:not(:disabled){
-  background:rgba(0,0,0,.28) !important;
-  filter:brightness(1.15) !important;
-  transform:translateY(-1px) !important;
+  background:rgba(255,255,255,.08) !important;
+  filter:brightness(1.12) !important;
 }
 .warrior.atk > .w-fight-btn:active:not(:disabled){transform:translateY(1px) !important}
 .warrior.atk > .w-fight-btn:disabled{opacity:.55 !important; cursor:not-allowed !important}

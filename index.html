@@ -6,7 +6,7 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src 'self' fonts.gstatic.com; img-src 'self' https: data:; connect-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'">
 <title>Steal or Protect — Chronicles of Somnia</title>
 <script src="ethers.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Chakra+Petch:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Chakra+Petch:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Oxanium:wght@200;300;400;500;600;700;800&family=Saira:wght@100;200;300;400&family=Big+Shoulders+Display:wght@100..900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="hover1.png">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -3165,6 +3165,727 @@ body{color:var(--text)}
 
 /* ============================================================ */
 /* === end Stage 7 =========================================== */
+
+/* ============================================================ */
+/* === STAGE 8 — Welcome gate (wallet connect landing) ======= */
+/* Scoped under #CS.welcome-gate so nothing leaks into game UI */
+
+#CS.welcome-gate{
+  --wg-red:#e11b33;
+  --wg-red-dark:#b2142a;
+  --wg-intensity:0.09;
+  --wg-tint:0.5;
+  --wg-glow:rgba(225,27,51,.55);
+  --wg-mood-a:rgba(225,27,51,.17);
+  --wg-mood-b:rgba(40,8,12,.27);
+
+  position:fixed !important;
+  inset:0 !important;
+  margin:0 !important;
+  padding:0 !important;
+  max-width:none !important;
+  width:100%; height:100%;
+  z-index:9999;
+  overflow:hidden;
+  color:#fff;
+  background:#000;
+  font-family:'Chakra Petch',sans-serif;
+}
+#CS.welcome-gate *{box-sizing:border-box}
+
+.wg-stage{
+  position:absolute; inset:0;
+  overflow:hidden;
+  background:
+    url('3.webp') center center / cover no-repeat,
+    #d7e3ec;
+}
+/* (Removed .wg-stage::before dark overlay and .wg-mood-tint
+    to show 3.webp without any darkening.) */
+
+.wg-canvas{
+  position:absolute;
+  top:50%; left:50%;
+  width:1920px; height:1080px;
+  transform:translate(-50%,-50%);
+  z-index:1;
+}
+
+.wg-fx-layer{
+  position:absolute; inset:0;
+  pointer-events:none;
+  z-index:3;
+  overflow:hidden;
+}
+.wg-particle{
+  position:absolute;
+  opacity:0;
+  left:0; right:0;
+  width:100%; height:2px;
+  top:var(--y);
+  background:rgba(225,27,51,.55);
+  box-shadow:0 0 12px rgba(225,27,51,.8);
+  mix-blend-mode:screen;
+  animation:wgGlitchTear var(--dur) steps(1,end) var(--delay) infinite;
+}
+@keyframes wgGlitchTear{
+  0%,92%{opacity:0; transform:translateX(0)}
+  93%   {opacity:1; transform:translateX(-6px)}
+  96%   {opacity:1; transform:translateX(8px)}
+  100%  {opacity:0; transform:translateX(0)}
+}
+
+/* Top bar */
+.wg-topbar{
+  position:absolute; top:0; left:0; right:0;
+  height:56px; z-index:10;
+  display:flex; align-items:stretch;
+}
+.wg-logo-flag{
+  width:117px; height:23px;
+  background:linear-gradient(180deg,var(--wg-red) 0%,var(--wg-red-dark) 100%);
+  clip-path:polygon(0 0,100% 0,78% 100%,0 100%);
+  flex:0 0 auto;
+}
+.wg-topnav{
+  flex:1; height:25px;
+  background:#fff;
+  clip-path:polygon(46px 0,100% 0,100% 100%,0 100%);
+  margin-left:-46px;
+}
+
+/* Disconnect — hidden until connected */
+.wg-disconnect{
+  position:absolute;
+  top:0; right:48px;
+  height:25px;
+  padding:0 30px 0 42px;
+  background:#fff;
+  clip-path:polygon(18px 0,100% 0,calc(100% - 18px) 100%,0 100%);
+  display:none;
+  align-items:center;
+  gap:10px;
+  font-family:'Oxanium',sans-serif;
+  font-weight:700;
+  font-size:12px;
+  letter-spacing:.28em;
+  text-transform:uppercase;
+  color:#15090c;
+  z-index:11;
+  cursor:pointer;
+  transition:background .15s,color .15s;
+  border:0;
+  min-height:25px;
+}
+#CS.welcome-gate.wg-connected .wg-disconnect{display:flex}
+.wg-disconnect:hover{background:var(--wg-red); color:#fff}
+.wg-disconnect .wg-dc-dot{
+  width:7px; height:7px; border-radius:50%;
+  background:var(--wg-red);
+  box-shadow:0 0 8px rgba(225,27,51,.8);
+}
+.wg-disconnect:hover .wg-dc-dot{background:#fff; box-shadow:0 0 8px rgba(255,255,255,.8)}
+
+.wg-slot-id{
+  position:absolute;
+  top:34px; right:52px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10.5px;
+  letter-spacing:.24em;
+  color:#7a5e63;
+  z-index:11;
+  opacity:0;
+  transition:opacity .25s;
+}
+.wg-slot-id .wg-sep{color:#3c2428; margin:0 8px}
+.wg-slot-id .wg-val{color:#c99aa0}
+#CS.welcome-gate.wg-connected .wg-slot-id{opacity:1}
+
+/* HUD corners */
+.wg-hud-corner{
+  position:absolute;
+  width:120px; height:120px;
+  pointer-events:none;
+  z-index:7;
+}
+.wg-hud-corner svg{width:100%; height:100%; display:block}
+.wg-hud-tl{top:80px; left:30px}
+.wg-hud-tr{top:80px; right:30px; transform:scaleX(-1)}
+.wg-hud-bl{bottom:260px; left:30px; transform:scaleY(-1)}
+.wg-hud-br{bottom:260px; right:30px; transform:scale(-1,-1)}
+
+/* Hero */
+.wg-hero{
+  position:absolute;
+  left:50%; top:42%;
+  transform:translate(-50%,-50%);
+  width:1100px;
+  display:flex; flex-direction:column; align-items:center;
+  text-align:center;
+  z-index:5;
+}
+.wg-steal-row{
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:0;
+}
+.wg-word{
+  font-family:'Big Shoulders Display','Saira','Oxanium',sans-serif;
+  font-weight:100;
+  font-variation-settings:'wght' 70;
+  font-size:148px;
+  line-height:1;
+  color:#000;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  margin:0;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+.wg-conj{
+  font-family:'Oxanium',sans-serif;
+  font-weight:500;
+  font-size:42px;
+  color:var(--wg-red);
+  text-transform:lowercase;
+  letter-spacing:.4em;
+  margin:10px 0;
+}
+
+.wg-subtitle{
+  margin-top:16px;
+  font-family:'Oxanium',sans-serif;
+  font-weight:600;
+  font-size:15px;
+  letter-spacing:.38em;
+  color:var(--wg-red);
+  text-transform:uppercase;
+  position:relative;
+  padding:0 22px;
+}
+.wg-subtitle::before,
+.wg-subtitle::after{
+  content:"";
+  position:absolute; top:50%;
+  width:60px; height:1px;
+  background:var(--wg-red);
+  opacity:.7;
+}
+.wg-subtitle::before{right:100%}
+.wg-subtitle::after{left:100%}
+
+.wg-hero p{
+  margin-top:22px;
+  max-width:520px;
+  padding:14px 22px;
+  font-family:'Chakra Petch',sans-serif;
+  font-size:15px;
+  line-height:1.55;
+  color:#1a0a0d;
+  background:rgba(255,255,255,.55);
+  border:1px solid rgba(225,27,51,.45);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+  clip-path:polygon(12px 0,100% 0,calc(100% - 12px) 100%,0 100%);
+}
+
+/* CTA */
+.wg-cta-wrap{margin-top:32px; display:inline-block; position:relative}
+.wg-cta{
+  position:relative;
+  padding:16px 80px;
+  border:0; cursor:pointer;
+  background:var(--wg-red);
+  clip-path:polygon(18px 0,100% 0,calc(100% - 18px) 100%,0 100%);
+  color:#fff;
+  font-family:'Oxanium',sans-serif;
+  font-weight:700;
+  font-size:15px;
+  letter-spacing:.26em;
+  text-transform:uppercase;
+  text-shadow:0 1px 0 rgba(0,0,0,.25);
+  transition:filter .15s,transform .1s,background .15s;
+  box-shadow:0 10px calc(20px + 40px * var(--wg-intensity)) var(--wg-glow);
+  z-index:2;
+  min-height:44px;
+}
+.wg-cta:hover{background:#f0253d}
+.wg-cta:active{transform:translateY(1px)}
+.wg-cta-ghost{
+  position:absolute;
+  inset:0;
+  background:rgba(225,27,51,.35);
+  clip-path:polygon(18px 0,100% 0,calc(100% - 18px) 100%,0 100%);
+  transform:translate(6px,6px);
+  z-index:1;
+  pointer-events:none;
+}
+
+/* Bottom panel */
+.wg-bottom-panel{
+  position:absolute;
+  left:50%; bottom:30px;
+  transform:translateX(-50%);
+  width:min(1680px,calc(100% - 80px));
+  height:180px;
+  z-index:6;
+}
+.wg-bp-bg{display:none !important}
+.wg-bp-stroke{display:none !important}
+/* Bottom area sits on bare 3.webp — only chips themselves get the hero-p plate */
+#CS.welcome-gate .wg-bottom-panel,
+#CS.welcome-gate .wg-bp-title,
+#CS.welcome-gate .wg-bp-inner,
+#CS.welcome-gate .wg-bp-sub,
+#CS.welcome-gate .wg-chips,
+#CS.welcome-gate .wg-chip-wrap{
+  background:transparent !important;
+  background-color:transparent !important;
+  border:none !important;
+  outline:none !important;
+  box-shadow:none !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+}
+#CS.welcome-gate .wg-bottom-panel::before,
+#CS.welcome-gate .wg-bottom-panel::after,
+#CS.welcome-gate .wg-bp-title::before,
+#CS.welcome-gate .wg-bp-title::after{background:transparent !important; content:none !important}
+/* Chips get the same translucent plate as .wg-hero p */
+#CS.welcome-gate .wg-chip{
+  background:rgba(255,255,255,.55) !important;
+  border:1px solid rgba(225,27,51,.45) !important;
+  backdrop-filter:blur(6px) !important;
+  -webkit-backdrop-filter:blur(6px) !important;
+  clip-path:polygon(12px 0,100% 0,calc(100% - 12px) 100%,0 100%) !important;
+  height:auto !important;
+  padding:12px 18px 14px !important;
+}
+#CS.welcome-gate .wg-chip-wrap:hover .wg-chip{
+  background:rgba(255,255,255,.7) !important;
+  border-color:rgba(225,27,51,.7) !important;
+}
+#CS.welcome-gate .wg-chip-wrap.coming:hover .wg-chip{
+  background:rgba(255,255,255,.55) !important;
+  border-color:rgba(225,27,51,.45) !important;
+}
+.wg-bp-title{
+  position:absolute; top:0; left:50%;
+  transform:translateX(-50%);
+  height:24px;
+  display:flex; align-items:center; gap:16px;
+  padding:0 30px;
+  font-family:'Oxanium',sans-serif;
+  font-weight:700; font-size:13px; letter-spacing:.28em;
+  color:var(--wg-red);
+  z-index:3;
+}
+.wg-bp-inner{
+  position:absolute; left:0; right:0; top:40px;
+  text-align:center;
+}
+.wg-bp-sub{
+  font-family:'Oxanium',sans-serif;
+  font-weight:400; font-size:22px;
+  letter-spacing:.28em;
+  color:#15090c;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:42px;
+  padding:0 24px;
+}
+.wg-bp-sub .wg-dot{color:var(--wg-red); font-size:18px; margin:0}
+
+/* Chips */
+.wg-chips{
+  position:absolute;
+  left:50%; top:82px;
+  transform:translateX(-50%);
+  display:flex; gap:18px;
+  width:calc(100% - 40px);
+  max-width:1240px;
+  justify-content:center;
+  z-index:3;
+}
+.wg-chip-wrap{
+  position:relative;
+  flex:1 1 0;
+  min-width:0;
+  max-width:300px;
+}
+.wg-chip{
+  position:relative;
+  width:100%; height:48px;
+  background:transparent;
+  clip-path:none;
+  padding:7px 18px 0;
+  color:#2a1418;
+  font-family:'JetBrains Mono',monospace;
+  cursor:pointer;
+  transition:transform .15s;
+  display:block;
+  text-decoration:none;
+}
+.wg-chip-wrap:hover .wg-chip{transform:translateY(-2px); background:transparent}
+.wg-chip-wrap.coming:hover .wg-chip{transform:none; background:transparent}
+.wg-chip.active{background:transparent; outline:none}
+.wg-chip.coming{background:transparent; cursor:default}
+.wg-chip .wg-addr{
+  font-size:10.5px; letter-spacing:.04em;
+  color:#2a1418;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  line-height:1.4;
+}
+.wg-chip.coming .wg-addr{
+  color:#8a7478;
+  font-family:'Chakra Petch',sans-serif;
+  font-size:12px; padding-top:10px;
+}
+.wg-chip .wg-view{
+  margin-top:4px;
+  font-family:'Oxanium',sans-serif;
+  font-weight:700; font-size:10.5px;
+  letter-spacing:.22em;
+  color:var(--wg-red);
+}
+.wg-online{
+  position:absolute;
+  left:14px;
+  top:calc(100% + 6px);
+  display:flex; align-items:center; gap:7px;
+  font-family:'Oxanium',sans-serif;
+  font-weight:700; font-size:11px;
+  letter-spacing:.22em;
+  color:#18d26e;
+  opacity:0;
+  transform:translateY(-4px);
+  transition:opacity .18s,transform .18s;
+  pointer-events:none;
+  text-shadow:0 0 10px rgba(24,210,110,.4);
+  z-index:4;
+}
+.wg-online .wg-dot-g{
+  width:8px; height:8px; border-radius:50%;
+  background:#18d26e;
+  box-shadow:0 0 8px rgba(24,210,110,.9),0 0 2px rgba(24,210,110,1);
+  animation:wgPulseDot 1.3s ease-in-out infinite;
+}
+@keyframes wgPulseDot{
+  0%,100%{opacity:1; transform:scale(1)}
+  50%   {opacity:.55; transform:scale(.8)}
+}
+.wg-chip-wrap:hover .wg-online{opacity:1; transform:translateY(0)}
+.wg-chip-wrap.coming .wg-online{display:none}
+
+/* (Removed .wg-scanlines — no scanline darkening over the background.) */
+
+/* Mobile layout (<=820px) — drop the fixed 1920x1080 canvas */
+@media (max-width:820px){
+  #CS.welcome-gate{overflow:auto}
+  .wg-stage{
+    position:relative;
+    width:100%;
+    height:auto;
+    min-height:100vh;
+    min-height:100dvh;
+    overflow:visible;
+    padding:0 16px 24px;
+    display:flex;
+    flex-direction:column;
+  }
+  .wg-canvas{
+    position:relative;
+    top:auto; left:auto;
+    width:100%; height:auto;
+    flex:1;
+    transform:none !important;
+    display:flex;
+    flex-direction:column;
+    padding-top:64px;
+    padding-bottom:24px;
+  }
+  .wg-topbar{
+    position:fixed;
+    top:0; left:0; right:0;
+    height:48px;
+    z-index:50;
+  }
+  .wg-logo-flag{width:90px; height:20px}
+  .wg-topnav{height:22px; clip-path:polygon(36px 0,100% 0,100% 100%,0 100%); margin-left:-36px}
+  .wg-disconnect{
+    position:fixed;
+    top:0; right:12px;
+    height:22px;
+    padding:0 16px 0 22px;
+    font-size:10px;
+    letter-spacing:.2em;
+    z-index:51;
+  }
+  .wg-slot-id{
+    position:fixed;
+    top:30px; right:14px;
+    font-size:9px;
+    letter-spacing:.18em;
+    z-index:51;
+  }
+  .wg-hud-corner{display:none}
+  .wg-hero{
+    position:relative;
+    left:auto; top:auto;
+    transform:none;
+    width:100%;
+    max-width:100%;
+    margin:24px auto 32px;
+    padding:0 8px;
+  }
+  .wg-steal-row{flex-direction:column; gap:4px}
+  .wg-word{font-size:clamp(48px,14vw,88px); line-height:1}
+  .wg-conj{font-size:clamp(18px,4.5vw,24px); margin:4px 0}
+  .wg-subtitle{
+    font-size:12px;
+    letter-spacing:.3em;
+    margin-top:14px;
+    padding:0 16px;
+  }
+  .wg-subtitle::before,
+  .wg-subtitle::after{width:28px}
+  .wg-hero p{
+    font-size:13px;
+    max-width:92%;
+    margin-top:18px;
+    padding:12px 18px;
+    line-height:1.5;
+  }
+  .wg-cta-wrap{margin-top:22px}
+  .wg-cta{
+    padding:14px 48px;
+    font-size:13px;
+    letter-spacing:.22em;
+  }
+  .wg-bottom-panel{
+    position:relative;
+    left:auto; bottom:auto;
+    transform:none;
+    width:100%;
+    height:auto;
+    margin-top:auto;
+    padding-bottom:8px;
+  }
+  .wg-bp-bg{
+    clip-path:polygon(
+      0 16px,16px 0,
+      calc(50% - 110px) 0,
+      calc(50% - 95px) 14px,
+      calc(50% + 95px) 14px,
+      calc(50% + 110px) 0,
+      calc(100% - 16px) 0,100% 16px,
+      100% calc(100% - 16px),calc(100% - 16px) 100%,
+      16px 100%,0 calc(100% - 16px)
+    );
+  }
+  .wg-bp-stroke{display:none}
+  .wg-bp-title{
+    font-size:11px;
+    letter-spacing:.22em;
+    gap:10px;
+    padding:0 14px;
+  }
+  .wg-bp-inner{position:relative; top:auto; padding:32px 0 12px}
+  .wg-bp-sub{
+    font-size:12px;
+    letter-spacing:.18em;
+    padding:0 16px;
+    gap:6px;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+  .wg-chips{
+    position:relative;
+    left:auto; top:auto;
+    transform:none;
+    flex-direction:column;
+    gap:10px;
+    padding:14px 14px 18px;
+    align-items:stretch;
+  }
+  .wg-chip-wrap{width:100%; flex:0 0 auto; max-width:none}
+  .wg-chip{height:auto; padding:8px 16px 10px}
+  .wg-chip .wg-addr{font-size:10px}
+  .wg-online{position:static; opacity:1; transform:none; margin-top:6px}
+  .wg-chip-wrap.coming .wg-online{display:none}
+  .wg-fx-layer{position:fixed; inset:0}
+}
+
+/* Reduced motion kills decorative animations inside the gate */
+@media (prefers-reduced-motion:reduce){
+  .wg-particle,.wg-online .wg-dot-g{animation:none !important}
+}
+
+/* ============================================================ */
+/* === end Stage 8 =========================================== */
+
+/* ============================================================ */
+/* === STAGE 9 — Attack card frame (PNG-rendered, overlays) === */
+/* Wrap .warrior.atk in card-attack.png; controls are absolutely
+   positioned over the white slot + the two bottom bars.       */
+
+.warrior.atk{
+  background:url('card-attack.png') center/100% 100% no-repeat !important;
+  aspect-ratio:408/598 !important;
+  width:100% !important;
+  max-width:380px !important;
+  margin:0 auto !important;
+  position:relative !important;
+  border:none !important;
+  box-shadow:none !important;
+  padding:0 !important;
+  clip-path:none !important;
+  overflow:hidden !important;
+}
+.warrior.atk::before,
+.warrior.atk::after{content:none !important; display:none !important}
+
+/* Hide parts already drawn into the PNG (header, label, runes, quote, boost label) */
+.warrior.atk > .w-rune,
+.warrior.atk > .w-quote,
+.warrior.atk .w-boost-lbl,
+.warrior.atk .w-boost-row{display:none !important}
+
+/* Top-row: hide "ATTACK" word (it's on the PNG); keep only the level chip in the corner */
+.warrior.atk > .w-top{
+  position:absolute !important;
+  top:2.5% !important; right:5% !important;
+  left:auto !important;
+  display:flex !important; gap:0 !important; padding:0 !important;
+  margin:0 !important; border:none !important; background:transparent !important;
+  z-index:3 !important;
+}
+.warrior.atk > .w-top > .w-label{display:none !important}
+.warrior.atk > .w-top > .w-level{
+  background:rgba(255,255,255,.92) !important;
+  color:#c4112e !important;
+  border:1px solid rgba(255,255,255,.6) !important;
+  font-family:'Russo One',sans-serif !important;
+  font-size:11px !important; letter-spacing:.12em !important;
+  padding:3px 9px !important; border-radius:0 !important;
+  text-shadow:none !important;
+}
+
+/* Photo slot — the white square in the middle of the PNG */
+.warrior.atk > .w-img{
+  position:absolute !important;
+  top:18.4% !important;
+  left:30.5% !important;
+  width:45% !important;
+  height:43.6% !important;
+  margin:0 !important; padding:0 !important;
+  background:transparent !important;
+  border:none !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  clip-path:none !important;
+  overflow:hidden !important;
+  z-index:2 !important;
+}
+.warrior.atk > .w-img::before,
+.warrior.atk > .w-img::after{content:none !important; display:none !important}
+.warrior.atk > .w-img img{
+  width:100% !important; height:100% !important;
+  object-fit:contain !important;
+  background:transparent !important;
+}
+
+/* Boost slider — sits in the upper bar of the lower section */
+.warrior.atk > .w-boost{
+  position:absolute !important;
+  top:87% !important;
+  left:7.5% !important; right:7.5% !important;
+  height:4.5% !important;
+  margin:0 !important; padding:0 !important;
+  background:transparent !important;
+  border:none !important; box-shadow:none !important;
+  display:flex !important; align-items:center !important;
+  z-index:4 !important;
+}
+.warrior.atk > .w-boost > .w-slider{
+  width:100% !important; margin:0 !important;
+  background:transparent !important;
+}
+.warrior.atk > .w-boost > .w-slider::-webkit-slider-runnable-track,
+.warrior.atk > .w-boost > .w-slider::-moz-range-track{
+  background:transparent !important;
+  height:6px !important;
+}
+.warrior.atk > .w-boost > .w-slider::-webkit-slider-thumb{
+  background:#fff !important;
+  box-shadow:0 0 8px rgba(0,0,0,.4),0 0 0 2px var(--red) !important;
+  width:18px !important; height:18px !important;
+  border-radius:50% !important;
+}
+.warrior.atk > .w-boost > .w-slider::-moz-range-thumb{
+  background:#fff !important; border:2px solid var(--red) !important;
+  width:18px !important; height:18px !important; border-radius:50% !important;
+}
+
+/* Strike to Steal button — sits in the lower bar */
+.warrior.atk > .w-fight-btn{
+  position:absolute !important;
+  top:93.5% !important;
+  left:7.5% !important; right:7.5% !important;
+  width:auto !important;
+  height:5.2% !important;
+  min-height:0 !important;
+  margin:0 !important; padding:0 8px !important;
+  background:transparent !important;
+  color:#fff !important;
+  border:none !important;
+  border-radius:0 !important;
+  clip-path:none !important;
+  box-shadow:none !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:8px !important;
+  font-family:'Russo One',sans-serif !important;
+  letter-spacing:.18em !important;
+  font-size:11px !important;
+  text-transform:uppercase !important;
+  cursor:pointer !important;
+  z-index:5 !important;
+  transition:filter .15s ease, transform .1s ease !important;
+}
+.warrior.atk > .w-fight-btn::before,
+.warrior.atk > .w-fight-btn::after{content:none !important; display:none !important}
+.warrior.atk > .w-fight-btn svg{
+  width:14px !important; height:14px !important;
+  stroke:#fff !important;
+  flex:0 0 auto !important;
+}
+.warrior.atk > .w-fight-btn svg path{stroke:#fff !important; fill:rgba(255,255,255,.25) !important}
+.warrior.atk > .w-fight-btn .bf-lbl{
+  font-size:11px !important;
+  letter-spacing:.18em !important;
+  color:#fff !important;
+  text-shadow:0 1px 2px rgba(0,0,0,.4) !important;
+}
+.warrior.atk > .w-fight-btn:hover:not(:disabled){
+  filter:brightness(1.15) !important;
+  transform:translateY(-1px) !important;
+}
+.warrior.atk > .w-fight-btn:active:not(:disabled){transform:translateY(1px) !important}
+.warrior.atk > .w-fight-btn:disabled{opacity:.5 !important; cursor:not-allowed !important}
+
+/* Mobile: keep full card visible */
+@media (max-width:600px){
+  .warrior.atk{max-width:300px !important}
+  .warrior.atk > .w-top > .w-level{font-size:9px !important; padding:2px 6px !important}
+  .warrior.atk > .w-fight-btn{font-size:9px !important}
+  .warrior.atk > .w-fight-btn .bf-lbl{font-size:9px !important; letter-spacing:.14em !important}
+}
+
+/* ============================================================ */
+/* === end Stage 9 =========================================== */
 </style>
 </head>
 <body>
@@ -3288,18 +4009,97 @@ body{color:var(--text)}
 
 <main class="main">
 
-<!-- Connect screen -->
-<div id="CS">
-  <div class="cn">
-    <div class="cn-emblem" aria-hidden="true">
-      <svg viewBox="0 0 32 32" fill="none">
-        <path d="M16 2L5 7v10c0 6 4.5 11.5 11 13 6.5-1.5 11-7 11-13V7l-11-5z" stroke="#ffc8a0" stroke-width="1.5" stroke-linejoin="round"/>
-        <circle cx="16" cy="14" r="4" stroke="#ffc8a0" stroke-width="1.5"/>
-      </svg>
+<!-- Connect screen — full-viewport welcome gate (Stage 8) -->
+<div id="CS" class="welcome-gate" role="region" aria-label="Welcome — connect your wallet">
+  <div class="wg-stage">
+
+    <div class="wg-topbar" aria-hidden="true">
+      <div class="wg-logo-flag"></div>
+      <nav class="wg-topnav"></nav>
     </div>
-    <h1 class="cn-title">Two houses await</h1>
-    <p class="cn-sub">"Every sunrise, warriors choose. Every sunset, glory is claimed by the bold. Connect your wallet and write your name into the chronicles."</p>
-    <button class="cb" data-action="wallet" style="font-size:13px;padding:14px 32px">Connect Wallet</button>
+
+    <button type="button" class="wg-disconnect" data-action="wg-disconnect" aria-label="Disconnect wallet">
+      <span class="wg-dc-dot" aria-hidden="true"></span>Disconnect
+    </button>
+
+    <div class="wg-slot-id" aria-hidden="true">
+      <span>SLOT</span><span class="wg-val"> 001</span>
+      <span class="wg-sep">/</span>
+      <span class="wg-val" id="wgSlotAddr">—</span>
+    </div>
+
+    <div class="wg-canvas" id="wgCanvas">
+      <div class="wg-mood-tint" aria-hidden="true"></div>
+      <div class="wg-fx-layer" id="wgFxLayer" aria-hidden="true"></div>
+
+      <div class="wg-hud-corner wg-hud-tl" aria-hidden="true">
+        <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 36 L2 2 L36 2" stroke="#e11b33" stroke-width="1.5" fill="none" opacity=".9"/>
+          <path d="M2 70 L2 50" stroke="#e11b33" stroke-width="1" fill="none" opacity=".5"/>
+          <path d="M50 2 L70 2" stroke="#e11b33" stroke-width="1" fill="none" opacity=".5"/>
+          <circle cx="10" cy="10" r="2" fill="#e11b33"/>
+          <text x="22" y="28" fill="#e11b33" font-family="JetBrains Mono" font-size="8" letter-spacing="1.5">N-01</text>
+        </svg>
+      </div>
+      <div class="wg-hud-corner wg-hud-tr" aria-hidden="true">
+        <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 36 L2 2 L36 2" stroke="#e11b33" stroke-width="1.5" fill="none" opacity=".9"/>
+          <path d="M2 70 L2 50" stroke="#e11b33" stroke-width="1" fill="none" opacity=".5"/>
+          <path d="M50 2 L70 2" stroke="#e11b33" stroke-width="1" fill="none" opacity=".5"/>
+          <circle cx="10" cy="10" r="2" fill="#e11b33"/>
+        </svg>
+      </div>
+      <div class="wg-hud-corner wg-hud-bl" aria-hidden="true">
+        <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 36 L2 2 L36 2" stroke="#e11b33" stroke-width="1.5" fill="none" opacity=".9"/>
+          <circle cx="10" cy="10" r="2" fill="#e11b33"/>
+        </svg>
+      </div>
+      <div class="wg-hud-corner wg-hud-br" aria-hidden="true">
+        <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 36 L2 2 L36 2" stroke="#e11b33" stroke-width="1.5" fill="none" opacity=".9"/>
+          <circle cx="10" cy="10" r="2" fill="#e11b33"/>
+        </svg>
+      </div>
+
+      <div class="wg-hero">
+        <div class="wg-steal-row">
+          <span class="wg-word">Steal</span>
+          <span class="wg-conj">or</span>
+          <span class="wg-word">Protect</span>
+        </div>
+        <div class="wg-subtitle">Chronicles of Somnia</div>
+
+        <p>Every sunrise, warriors choose. Every sunset, glory is claimed by the bold. Connect your wallet and write your name into the chronicles.</p>
+
+        <div class="wg-cta-wrap">
+          <div class="wg-cta-ghost" aria-hidden="true"></div>
+          <button class="wg-cta" type="button" data-action="wallet">Connect Wallet</button>
+        </div>
+      </div>
+
+      <div class="wg-scanlines" aria-hidden="true"></div>
+    </div>
+
+    <div class="wg-bottom-panel">
+      <div class="wg-bp-bg" aria-hidden="true"></div>
+      <svg class="wg-bp-stroke" viewBox="0 0 1680 180" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M 0 28 L 28 0 L 670 0 L 690 24 L 990 24 L 1010 0 L 1652 0 L 1680 28 L 1680 152 L 1652 180 L 28 180 L 0 152 Z"
+              fill="none" stroke="#e11b33" stroke-width="2.5" vector-effect="non-scaling-stroke"/>
+      </svg>
+
+      <div class="wg-bp-title">
+        <span aria-hidden="true">✕</span><span>FORGED ON SOMNIA</span><span aria-hidden="true">✕</span>
+      </div>
+
+      <div class="wg-bp-inner">
+        <div class="wg-bp-sub">OPEN SOURCE<span class="wg-dot" aria-hidden="true">•</span>VERIFIABLE<span class="wg-dot" aria-hidden="true">•</span>IMMUTABLE</div>
+      </div>
+
+      <div class="wg-chips" id="wgChips" aria-label="Somnia deployed contracts">
+        <!-- populated from CFG in app.js -->
+      </div>
+    </div>
   </div>
 </div>
 
@@ -3512,7 +4312,7 @@ body{color:var(--text)}
           <div class="w-label def">Protect</div>
           <div class="w-level def" id="defLv">Lv 1</div>
         </div>
-        <div class="w-img def w-img-live"><img src="attack.png" alt="Defense placeholder" class="def-fallback"></div>
+        <div class="w-img def w-img-live"><img src="defense.png" alt="Defense warrior"></div>
         <div class="w-quote">"Stand firm when others falter."</div>
         <div class="w-boost">
           <div class="w-boost-lbl">Boost Defense Power</div>

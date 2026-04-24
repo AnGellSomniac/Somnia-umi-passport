@@ -224,6 +224,7 @@ async function W(){
     $('cB').textContent=ad.slice(0,6)+'...'+ad.slice(-4);
     $('cB').classList.add('on');
     $('hN').textContent=ch===5031?'Mainnet':'Testnet';
+    wgSetConnected(ad);
     $('CS').style.display='none';
     $('fBtn').disabled=false;
     buildContractsGrid();
@@ -775,6 +776,7 @@ document.addEventListener('click',(e)=>{
     case 'wm-close':wmClose();break;
     case 'wm-step':wmStep(parseInt(arg,10));break;
     case 'wallet':W();break;
+    case 'wg-disconnect':wgDisconnect();break;
     case 'onboard':OB();break;
     case 'play':PL(arg==='atk');break;
     case 'claim-reward':CR();break;
@@ -820,6 +822,125 @@ function startNftCountdown(){
   upd();setInterval(upd,1000);
 }
 startNftCountdown();
+
+/* ===== Welcome gate (Stage 8) — wallet connect landing ===== */
+function wgSetConnected(addr){
+  const gate=$('CS');if(!gate)return;
+  gate.classList.add('wg-connected');
+  const slot=$('wgSlotAddr');
+  if(slot && addr){
+    slot.textContent=addr.slice(0,4)+'…'+addr.slice(-4);
+  }
+}
+function wgSetDisconnected(){
+  const gate=$('CS');if(!gate)return;
+  gate.classList.remove('wg-connected');
+}
+async function wgDisconnect(){
+  try{
+    if(window.ethereum && window.ethereum.request){
+      await window.ethereum.request({
+        method:'wallet_revokePermissions',
+        params:[{eth_accounts:{}}]
+      }).catch(()=>{});
+    }
+  }finally{
+    try{localStorage.removeItem('wowSeen_v2');}catch(e){}
+    location.reload();
+  }
+}
+
+(function initWelcomeGate(){
+  const gate=$('CS');if(!gate)return;
+
+  /* Populate contract chips from CFG */
+  const chipsEl=$('wgChips');
+  if(chipsEl){
+    const rows=[];
+    for(const [chainId,c] of Object.entries(CFG)){
+      const netName=chainId==='5031'?'Mainnet':'Testnet';
+      rows.push({kind:'live',addr:c.umi,label:'UMI Passport · '+netName,exp:c.exp});
+      if(c.hub && c.hub!=='0x0000000000000000000000000000000000000000'){
+        rows.push({kind:'live',addr:c.hub,label:'GameHub · '+netName,exp:c.exp});
+      }else{
+        rows.push({kind:'coming',addr:'GameHub · '+netName,label:'',exp:''});
+      }
+    }
+    let html='';
+    rows.forEach((r,i)=>{
+      if(r.kind==='coming'){
+        html+='<div class="wg-chip-wrap coming"><div class="wg-chip coming"><div class="wg-addr">'+r.addr+' — Coming soon</div></div></div>';
+      }else{
+        const activeCls=(i===0?' active':'');
+        html+='<div class="wg-chip-wrap"><a class="wg-chip'+activeCls+'" href="'+r.exp+'/address/'+r.addr+'" target="_blank" rel="noopener noreferrer" title="'+r.label+'"><div class="wg-addr">'+r.addr+'</div><div class="wg-view">View on Explorer →</div></a><div class="wg-online"><span class="wg-dot-g"></span>ONLINE</div></div>';
+      }
+    });
+    chipsEl.innerHTML=html;
+  }
+
+  /* Glitch tears — skip if reduced motion */
+  const fxLayer=$('wgFxLayer');
+  if(fxLayer && !window.matchMedia('(prefers-reduced-motion:reduce)').matches){
+    const frag=document.createDocumentFragment();
+    for(let i=0;i<2;i++){
+      const p=document.createElement('div');
+      p.className='wg-particle';
+      const dur=3+Math.random()*4;
+      p.style.setProperty('--y',(5+Math.random()*90)+'%');
+      p.style.setProperty('--dur',dur+'s');
+      p.style.setProperty('--delay',(-Math.random()*dur)+'s');
+      frag.appendChild(p);
+    }
+    fxLayer.appendChild(frag);
+  }
+
+  /* Canvas cover-scale and panel stroke sync */
+  const canvas=$('wgCanvas');
+  const BASE_W=1920,BASE_H=1080;
+  function fit(){
+    if(!canvas)return;
+    if(window.matchMedia('(max-width:820px)').matches){canvas.style.transform='';return;}
+    const vw=window.innerWidth,vh=window.innerHeight;
+    const s=Math.max(vw/BASE_W,vh/BASE_H);
+    canvas.style.transform='translate(-50%,-50%) scale('+s+')';
+  }
+  function syncPanelStroke(){
+    if(window.matchMedia('(max-width:820px)').matches)return;
+    const panel=gate.querySelector('.wg-bottom-panel');if(!panel)return;
+    const path=panel.querySelector('.wg-bp-stroke path');if(!path)return;
+    const w=panel.clientWidth,h=panel.clientHeight;if(w<1||h<1)return;
+    /* Notched panel stroke — mirrors .wg-bp-bg clip-path exactly so
+       the red outline traces the same shape (28px corner diagonals +
+       centered title dip from calc(50% ± 170px) to calc(50% ± 150px)). */
+    const cx=w/2;
+    const d='M 0 28 L 28 0 '+
+      'L '+(cx-170)+' 0 L '+(cx-150)+' 24 '+
+      'L '+(cx+150)+' 24 L '+(cx+170)+' 0 '+
+      'L '+(w-28)+' 0 L '+w+' 28 '+
+      'L '+w+' '+(h-28)+' L '+(w-28)+' '+h+' '+
+      'L 28 '+h+' L 0 '+(h-28)+' Z';
+    path.parentNode.setAttribute('viewBox','0 0 '+w+' '+h);
+    path.setAttribute('d',d);
+  }
+  function refresh(){fit();syncPanelStroke();}
+  refresh();
+  window.addEventListener('resize',refresh);
+  window.addEventListener('orientationchange',()=>setTimeout(refresh,100));
+  if(window.visualViewport){window.visualViewport.addEventListener('resize',refresh);}
+  if(window.ResizeObserver){
+    const panel=gate.querySelector('.wg-bottom-panel');
+    if(panel)new ResizeObserver(syncPanelStroke).observe(panel);
+  }
+
+  /* If MetaMask already has an approved account (returning visitor), show
+     the Disconnect + slot-id so they can either re-enter or fully revoke.
+     Does NOT auto-trigger W() — user must click Connect Wallet explicitly. */
+  if(window.ethereum && window.ethereum.request){
+    window.ethereum.request({method:'eth_accounts'})
+      .then(accs=>{if(accs&&accs[0])wgSetConnected(accs[0]);})
+      .catch(()=>{});
+  }
+})();
 
 // Try to load custom logo.png if it exists
 (function(){

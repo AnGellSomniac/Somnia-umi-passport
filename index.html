@@ -4048,6 +4048,42 @@ body{color:var(--text)}
 
 /* ============================================================ */
 /* === end Stage 11 ========================================== */
+
+/* ============================================================ */
+/* === STAGE 12 — Translucent plate behind tab content =======
+   Every .pnl (all 7 tabs share this class) gets a semi-opaque
+   white plate so blocks inside don't blend with the page bg
+   gradient + perspective grid floor. Alpha 0.55 keeps the grid
+   subtly visible through the plate. Notch-cut corners stay in
+   the angular language. Plate inherits per-tab automatically —
+   no per-tab override needed.                                */
+
+.pnl{
+  background: rgba(255,255,255,0.55) !important;
+  padding: 28px 28px 36px !important;
+  margin: 12px 0 32px !important;
+  clip-path: polygon(
+    0 0,
+    calc(100% - 24px) 0,
+    100% 24px,
+    100% calc(100% - 24px),
+    calc(100% - 24px) 100%,
+    24px 100%,
+    0 calc(100% - 24px),
+    0 24px
+  ) !important;
+  box-shadow: 0 10px 32px rgba(15,23,42,0.07) !important;
+}
+
+@media (max-width: 600px){
+  .pnl{
+    padding: 18px 14px 26px !important;
+    margin: 8px 0 24px !important;
+  }
+}
+
+/* ============================================================ */
+/* === end Stage 12 ========================================== */
 </style>
 </head>
 <body>

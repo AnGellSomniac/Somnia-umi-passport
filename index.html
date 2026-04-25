@@ -4084,6 +4084,219 @@ body{color:var(--text)}
 
 /* ============================================================ */
 /* === end Stage 12 ========================================== */
+
+/* ============================================================ */
+/* === STAGE 13 — Typography unification with welcome gate ===
+   Replaces all Russo One (previous heading font) with Oxanium
+   600 to match the welcome gate (#CS / .wg-*). The hero title
+   uses Big Shoulders Display 200 — same thin display feel as
+   the gate's "STEAL" / "PROTECT" big words. Chakra Petch stays
+   for body (already shared with the gate). All three fonts
+   are already preloaded in <link> so no new font requests.
+   Decision changed 2026-04-25 by user request: site-wide
+   typography now mirrors the welcome gate.                   */
+
+/* Wholesale: every element previously assigned Russo One → Oxanium 600 */
+.brand-name, .hero-title, .nv-tab, .cb, .sl, .sv, .w-label, .w-level,
+.tab, .tl, .chapter, .bcm, .bv, .bs, .kv, .kl, .rl, .rv,
+.btn-primary, .btn-secondary, .b-btn, .w-fight-btn, .ch, .bf-lbl,
+.w-boost-lbl, .fog-total, .vs-seal, .bc-tm, .claim-btn, .claim-amt,
+.claim-rank, .yd-text, .nft-title, .nft-overlay-text, .nft-cd-num,
+.nft-cd-lbl, .pool-amt-amount, .pool-label, .gmb, .fb, .rk, .ref-copy,
+.owner-btn, .wm-next, .wm-prev, .wm-skip, .ref-info, .stat-num,
+.kpi .v, .sc .v, .stat .v, .lb-row .lb-name, .lb-head,
+h1, h2, h3, h4{
+  font-family: 'Oxanium', 'Saira', sans-serif !important;
+  font-weight: 600 !important;
+}
+
+/* Tiny uppercase labels — slightly lighter Oxanium 500 */
+.nv-tab, .sl, .w-boost-lbl, .pool-label, .nft-cd-lbl,
+.bv, .bs, .lb-head, .ref-info{
+  font-weight: 500 !important;
+}
+
+/* Big CTAs + faction labels — Oxanium 700 for emphasis */
+.b-btn, .w-fight-btn, .btn-primary, .claim-btn,
+.b-btn .bf-lbl, .w-fight-btn .bf-lbl, .w-label,
+.gmb, .fb{
+  font-weight: 700 !important;
+}
+
+/* Hero title — Big Shoulders Display thin (matches welcome "STEAL" / "PROTECT") */
+.hero-title{
+  font-family: 'Big Shoulders Display', 'Oxanium', sans-serif !important;
+  font-weight: 200 !important;
+  letter-spacing: 0.02em !important;
+}
+.hero-title em{
+  font-family: 'Big Shoulders Display', 'Oxanium', sans-serif !important;
+  font-weight: 200 !important;
+  font-style: normal !important;
+}
+
+/* Body / quotes — Chakra Petch stays, just enforcing on inline-style holdovers */
+.w-quote, p, .hero-sub, .brand-sub, .fog-msg, .bc-tl, .bc-st,
+.snipe-warn, .gm-lock, .yd-sub, .claim-info, .nft-lore, .nft-overlay-sub,
+.fi, .gmi, .ref-input, .about-step, .lb-row, .ref-box, .owner-stat{
+  font-family: 'Chakra Petch', 'Inter', sans-serif !important;
+}
+
+/* Numeric values — tabular nums so digits don't shift */
+.bc-tm, .sv, .stat .v, .sc .v, .pool-amt-amount, .nft-cd-num,
+.fog-total, .claim-amt, .bcm, .ref-info, .stat-num{
+  font-feature-settings: "tnum" !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+/* Inline-style holdovers — kill any leftover Cinzel / Cormorant / Russo One */
+[style*="Cinzel"], [style*="Cormorant"], [style*="Russo"]{
+  font-family: 'Oxanium', sans-serif !important;
+  font-style: normal !important;
+}
+
+/* ============================================================ */
+/* === end Stage 13 ========================================== */
+
+/* ============================================================ */
+/* === STAGE 14 — Trust footer: edge-to-edge, slim, LIVE dot ==
+   .trust-footer goes full viewport width (kills max-width from
+   line 1404 Stage 0). Inner content centered via .trust-inner
+   (max-width 1400). Vertical padding reduced for slim look.
+   .tf-online green pulsing dot mirrors .wg-online from the
+   welcome gate (reuses @keyframes wgPulseDot from line 3574). */
+
+.trust-footer{
+  max-width: none !important;
+  margin: 36px 0 0 !important;
+  padding: 16px 0 20px !important;
+  background: #fff !important;
+  border-top: 3px solid var(--red) !important;
+  border-bottom: none !important;
+  width: 100% !important;
+}
+
+.trust-inner{
+  max-width: 1400px !important;
+  margin: 0 auto !important;
+  padding: 0 24px !important;
+}
+
+/* Slimmer header */
+.trust-header{
+  text-align: center !important;
+  margin-bottom: 12px !important;
+}
+.trust-title{
+  font-family: 'Oxanium', sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 16px !important;
+  letter-spacing: 0.18em !important;
+  color: var(--red) !important;
+  text-transform: uppercase !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 12px !important;
+  flex-wrap: wrap !important;
+}
+.trust-title > span[aria-hidden="true"]:not(.tf-dot-g){
+  color: var(--red) !important;
+  font-size: 14px !important;
+  opacity: 0.85 !important;
+}
+.trust-sub{
+  font-family: 'Chakra Petch', sans-serif !important;
+  font-size: 12px !important;
+  color: var(--text-dim) !important;
+  margin-top: 4px !important;
+  letter-spacing: 0.5px !important;
+}
+
+/* Compact contract cards row */
+.contracts-grid{
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
+  gap: 12px !important;
+}
+.contract-card{
+  padding: 12px 14px !important;
+  background: var(--bg-muted) !important;
+  border: 1.5px solid var(--border-bright) !important;
+  border-radius: 0 !important;
+  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px) !important;
+}
+.cc-label{
+  font-family: 'Oxanium', sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 10px !important;
+  color: var(--red) !important;
+  letter-spacing: 0.16em !important;
+  margin-bottom: 4px !important;
+}
+.cc-addr{
+  font-family: 'JetBrains Mono', 'Consolas', monospace !important;
+  font-size: 11px !important;
+  color: var(--text) !important;
+  word-break: break-all !important;
+  line-height: 1.3 !important;
+}
+.cc-link{
+  font-family: 'Oxanium', sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 10px !important;
+  color: var(--red) !important;
+  letter-spacing: 0.14em !important;
+  margin-top: 6px !important;
+  display: inline-block !important;
+}
+
+.trust-copy{
+  text-align: center !important;
+  margin-top: 14px !important;
+  font-family: 'Chakra Petch', sans-serif !important;
+  font-size: 12px !important;
+  color: var(--text-dim) !important;
+  letter-spacing: 0.3px !important;
+}
+
+/* LIVE on Somnia — green pulsing dot, mirrors .wg-online from welcome gate */
+.tf-online{
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  font-family: 'Oxanium', sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 11px !important;
+  letter-spacing: 0.22em !important;
+  color: #18d26e !important;
+  text-shadow: 0 0 10px rgba(24,210,110,0.4) !important;
+  margin-left: 4px !important;
+  vertical-align: middle !important;
+  text-transform: uppercase !important;
+}
+.tf-online .tf-dot-g{
+  width: 8px !important; height: 8px !important;
+  border-radius: 50% !important;
+  background: #18d26e !important;
+  box-shadow: 0 0 8px rgba(24,210,110,0.9), 0 0 2px rgba(24,210,110,1) !important;
+  animation: wgPulseDot 1.3s ease-in-out infinite !important;
+  flex-shrink: 0 !important;
+}
+
+@media (max-width: 600px){
+  .trust-footer{ padding: 12px 0 16px !important; margin-top: 24px !important; }
+  .trust-inner{ padding: 0 14px !important; }
+  .trust-title{ font-size: 13px !important; gap: 8px !important; }
+  .contracts-grid{ grid-template-columns: 1fr !important; gap: 8px !important; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .tf-online .tf-dot-g{ animation: none !important; }
+}
+
+/* ============================================================ */
+/* === end Stage 14 ========================================== */
 </style>
 </head>
 <body>
@@ -5128,12 +5341,21 @@ body{color:var(--text)}
 
 <!-- Trust footer -->
 <div class="trust-footer">
-  <div class="trust-header">
-    <div class="trust-title">⚔ Forged on Somnia ⚔</div>
-    <div class="trust-sub">Open source · Verifiable · Immutable</div>
+  <div class="trust-inner">
+    <div class="trust-header">
+      <div class="trust-title">
+        <span aria-hidden="true">⚔</span>
+        <span>Forged on Somnia</span>
+        <span aria-hidden="true">⚔</span>
+        <span class="tf-online" role="status" aria-label="Live on Somnia network">
+          <span class="tf-dot-g" aria-hidden="true"></span>LIVE
+        </span>
+      </div>
+      <div class="trust-sub">Open source · Verifiable · Immutable</div>
+    </div>
+    <div class="contracts-grid" id="contractsGrid"></div>
+    <div class="trust-copy">Every battle is on-chain. Every spoil is earned. Every warrior is chronicled forever.</div>
   </div>
-  <div class="contracts-grid" id="contractsGrid"></div>
-  <div class="trust-copy">Every battle is on-chain. Every spoil is earned. Every warrior is chronicled forever.</div>
 </div>
 
 <script src="app.js"></script>

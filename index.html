@@ -3740,6 +3740,297 @@ body{color:var(--text)}
 
 /* ============================================================ */
 /* === end Stage 9 =========================================== */
+
+/* ============================================================ */
+/* === STAGE 10 — CSS port of card-attack.png (symmetric) ====
+   Replicates the painted trading-card look of card-attack.png
+   for both .warrior.atk and .warrior.def: solid faction-color
+   body with diagonal top-right notch + small bottom corner cuts,
+   inner translucent halo, white photo slot with notched corners,
+   white label/quote, and two dark-tinted bottom bars (BOOST +
+   CTA) with chevron-style angular cut ends. Faction colors
+   swap via --faction (red for atk, blue for def). =========== */
+
+/* Outer card body — solid faction color, ESPORTS-card silhouette */
+.warrior{
+  background: var(--faction, var(--red)) !important;
+  padding: 0 !important;
+  border: none !important;
+  box-shadow: 0 16px 38px rgba(15,23,42,0.18) !important;
+  clip-path: polygon(
+    0 0,
+    calc(100% - 38px) 0,
+    100% 38px,
+    100% calc(100% - 14px),
+    calc(100% - 14px) 100%,
+    14px 100%,
+    0 calc(100% - 14px)
+  ) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  position: relative !important;
+  min-height: 540px !important;
+  overflow: hidden !important;
+  isolation: isolate !important;
+}
+.warrior.atk{ box-shadow: 0 16px 38px rgba(220,38,38,0.28) !important; }
+.warrior.def{ box-shadow: 0 16px 38px rgba(37,99,235,0.28) !important; }
+.warrior:hover{ transform: translateY(-3px) !important; }
+.warrior.atk:hover{ box-shadow: 0 22px 48px rgba(220,38,38,0.36) !important; }
+.warrior.def:hover{ box-shadow: 0 22px 48px rgba(37,99,235,0.36) !important; }
+
+/* Translucent halo behind the photo slot (the lighter pink/blue zone in the PNG) */
+.warrior::before{
+  content: '' !important;
+  position: absolute !important;
+  inset: 16px 14px 100px 14px !important;
+  background: linear-gradient(180deg,
+    rgba(255,255,255,0.22) 0%,
+    rgba(255,255,255,0.10) 55%,
+    rgba(255,255,255,0.04) 100%) !important;
+  clip-path: polygon(
+    0 0,
+    calc(100% - 26px) 0,
+    100% 26px,
+    100% 100%,
+    24px 100%,
+    0 calc(100% - 24px)
+  ) !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+  border: none !important;
+  opacity: 1 !important;
+  animation: none !important;
+}
+.warrior::after{ content: none !important; display: none !important; }
+
+/* Top row — faction label + level pill */
+.w-top{
+  background: transparent !important;
+  border: none !important;
+  padding: 16px 22px 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+.w-label{
+  color: #fff !important;
+  font-family: 'Russo One', sans-serif !important;
+  font-size: 22px !important;
+  letter-spacing: 0.18em !important;
+  background: none !important;
+  -webkit-text-fill-color: #fff !important;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.22) !important;
+  text-transform: uppercase !important;
+}
+.w-level{
+  background: rgba(255,255,255,0.94) !important;
+  color: var(--faction, var(--red)) !important;
+  border: none !important;
+  padding: 4px 12px !important;
+  font-family: 'Russo One', sans-serif !important;
+  font-size: 11px !important;
+  letter-spacing: 0.14em !important;
+  border-radius: 999px !important;
+  clip-path: none !important;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.18) !important;
+}
+
+/* Photo slot — white square, notched corners, holds the warrior PNG */
+.w-img{
+  width: calc(100% - 80px) !important;
+  margin: 4px auto 10px !important;
+  aspect-ratio: 1 / 1 !important;
+  background: #fff !important;
+  border: none !important;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.22), inset 0 0 0 1px rgba(0,0,0,0.04) !important;
+  clip-path: polygon(
+    0 0,
+    calc(100% - 18px) 0,
+    100% 18px,
+    100% 100%,
+    18px 100%,
+    0 calc(100% - 18px)
+  ) !important;
+  position: relative !important;
+  z-index: 2 !important;
+  overflow: hidden !important;
+  max-width: none !important;
+}
+.warrior.def .w-img, .w-img.def{
+  background: #fff !important;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.22), inset 0 0 0 1px rgba(0,0,0,0.04) !important;
+}
+.w-img::before, .w-img::after{ content: none !important; display: none !important; background: none !important; animation: none !important; }
+.w-img img{
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  object-position: center bottom !important;
+  padding: 6px !important;
+  margin: 0 !important;
+  background: transparent !important;
+}
+
+/* Quote — small, white-faded, centered */
+.w-quote{
+  color: rgba(255,255,255,0.86) !important;
+  font-family: 'Chakra Petch', sans-serif !important;
+  font-style: normal !important;
+  font-size: 12px !important;
+  text-align: center !important;
+  margin: 2px 22px 6px !important;
+  letter-spacing: 0.4px !important;
+  background: none !important;
+  -webkit-text-fill-color: initial !important;
+  position: relative !important;
+  z-index: 2 !important;
+  line-height: 1.4 !important;
+}
+
+/* Boost bar — dark-tinted band sitting inside the card, chevron cuts at ends */
+.w-boost{
+  background: rgba(0,0,0,0.20) !important;
+  border: none !important;
+  margin: auto 14px 8px !important;
+  padding: 9px 18px !important;
+  position: relative !important;
+  z-index: 2 !important;
+  clip-path: polygon(
+    8px 0,
+    calc(100% - 8px) 0,
+    100% 50%,
+    calc(100% - 8px) 100%,
+    8px 100%,
+    0 50%
+  ) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+}
+.w-boost-lbl{
+  color: rgba(255,255,255,0.94) !important;
+  font-family: 'Russo One', sans-serif !important;
+  font-size: 10px !important;
+  letter-spacing: 0.20em !important;
+  text-transform: uppercase !important;
+  text-align: center !important;
+  margin: 0 !important;
+}
+.w-boost-row{
+  color: rgba(255,255,255,0.7) !important;
+  font-family: 'Chakra Petch', sans-serif !important;
+  font-size: 10px !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  margin: 0 !important;
+  padding: 0 8px !important;
+}
+.w-bv{ color: rgba(255,255,255,0.75) !important; }
+.w-bc{ color: #fff !important; font-weight: 600 !important; }
+
+/* Slider — white thumb on faded white track */
+.w-slider{
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  width: 100% !important;
+  background: transparent !important;
+  height: 14px !important;
+  margin: 0 !important;
+  cursor: pointer !important;
+}
+.w-slider::-webkit-slider-runnable-track{
+  height: 4px !important;
+  background: rgba(255,255,255,0.32) !important;
+  border-radius: 2px !important;
+  border: none !important;
+}
+.w-slider::-moz-range-track{
+  height: 4px !important;
+  background: rgba(255,255,255,0.32) !important;
+  border-radius: 2px !important;
+  border: none !important;
+}
+.w-slider::-webkit-slider-thumb{
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  width: 14px !important; height: 14px !important;
+  background: #fff !important;
+  border: 2px solid var(--faction, var(--red)) !important;
+  border-radius: 50% !important;
+  margin-top: -5px !important;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.5), 0 1px 4px rgba(0,0,0,0.3) !important;
+  cursor: pointer !important;
+}
+.w-slider::-moz-range-thumb{
+  width: 14px !important; height: 14px !important;
+  background: #fff !important;
+  border: 2px solid var(--faction, var(--red)) !important;
+  border-radius: 50% !important;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.5), 0 1px 4px rgba(0,0,0,0.3) !important;
+  cursor: pointer !important;
+}
+.warrior.def .w-slider::-webkit-slider-thumb{ border-color: var(--blue, #2563EB) !important; }
+.warrior.def .w-slider::-moz-range-thumb{ border-color: var(--blue, #2563EB) !important; }
+
+/* CTA — same chevron-cut bar style, slightly darker for hierarchy */
+.b-btn, .w-fight-btn{
+  background: rgba(0,0,0,0.26) !important;
+  color: #fff !important;
+  border: none !important;
+  margin: 0 14px 14px !important;
+  padding: 13px 18px !important;
+  min-height: 46px !important;
+  font-family: 'Russo One', sans-serif !important;
+  font-size: 13px !important;
+  letter-spacing: 0.18em !important;
+  text-transform: uppercase !important;
+  clip-path: polygon(
+    10px 0,
+    calc(100% - 10px) 0,
+    100% 50%,
+    calc(100% - 10px) 100%,
+    10px 100%,
+    0 50%
+  ) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  cursor: pointer !important;
+  position: relative !important;
+  z-index: 2 !important;
+  box-shadow: none !important;
+  transition: background 0.15s ease, filter 0.15s ease, transform 0.1s ease !important;
+}
+.b-btn svg{ width: 16px !important; height: 16px !important; stroke: #fff !important; flex: 0 0 auto !important; }
+.b-btn svg path{ stroke: #fff !important; fill: rgba(255,255,255,0.22) !important; }
+.bf-lbl{
+  color: #fff !important;
+  background: none !important;
+  -webkit-text-fill-color: #fff !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.4) !important;
+}
+.b-btn:hover:not(:disabled){
+  background: rgba(0,0,0,0.36) !important;
+  filter: brightness(1.08) !important;
+}
+.b-btn:active:not(:disabled){ transform: translateY(1px) !important; }
+.b-btn:disabled{ opacity: 0.5 !important; cursor: not-allowed !important; }
+.warrior.def .b-btn{ box-shadow: none !important; }
+
+/* Mobile tweaks — keep card readable on small phones */
+@media (max-width: 600px){
+  .warrior{ min-height: 480px !important; }
+  .w-img{ width: calc(100% - 60px) !important; }
+  .w-label{ font-size: 18px !important; letter-spacing: 0.14em !important; }
+  .b-btn, .w-fight-btn{ font-size: 11px !important; letter-spacing: 0.14em !important; }
+}
+
+/* ============================================================ */
+/* === end Stage 10 ========================================== */
 </style>
 </head>
 <body>
